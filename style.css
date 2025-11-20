@@ -138,8 +138,9 @@ label {
     margin-bottom: 4px;
     font-size: 14px;
 }
+
 /* ================================
-   INPUTS & SELECTS
+   INPUTS
 ================================ */
 select,
 input[type="number"],
@@ -226,7 +227,7 @@ button:active {
 }
 
 /* ================================
-   OBS LINK BOX
+   TEXTBOXES
 ================================ */
 #obs-link,
 #url-output {
@@ -281,31 +282,33 @@ body.light #url-output {
 body.light #sidebar::-webkit-scrollbar-thumb {
     background: #aaa;
 }
+
 /* ================================
-   PREVIEW AREA
+   PREVIEW AREA (CORRIGIDO)
 ================================ */
 #preview-area {
     position: absolute;
     left: 430px;
     top: 0;
     width: calc(100vw - 430px);
-    height: auto;  /* ← AGORA NÃO ESTICA O SVG */
+    height: auto; /* CORRIGIDO */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 0; /* deixa espaço visual */
+    padding: 40px 0; /* melhora visual */
     z-index: 1;
 }
 
 #preview {
-    width: auto;     /* ← Mantém proporção real */
-    height: auto;    /* ← NÃO força 90% da tela */
+    width: auto;       /* CORRIGIDO */
+    height: auto;      /* CORRIGIDO */
     max-width: 95%;
     max-height: 95vh;
     overflow: visible;
 }
+
 /* ================================
-   VIEWBOX DEBUG MODES
+   DEBUG MODES
 ================================ */
 .grid-bg {
     background-image:
@@ -319,7 +322,7 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 /* ================================
-   ANIMAÇÕES DE BRILHO E NEON
+   ANIMAÇÕES NEON
 ================================ */
 @keyframes neonPulse {
     0% {
@@ -344,7 +347,7 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 /* ================================
-   NÉVOA ANIMADA (PASTEL FOG)
+   NÉVOA ANIMADA
 ================================ */
 .pastel-fog {
     position: absolute;
@@ -364,25 +367,20 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 @keyframes fogMove {
-    0% {
-        transform: scale(1) translate(0,0);
-    }
-    50% {
-        transform: scale(1.1) translate(30px,-20px);
-    }
-    100% {
-        transform: scale(1.05) translate(-20px,20px);
-    }
+    0% { transform: scale(1) translate(0,0); }
+    50% { transform: scale(1.1) translate(30px,-20px); }
+    100% { transform: scale(1.05) translate(-20px,20px); }
 }
 
 /* ================================
-   PARTICLES ENHANCED GLOW
+   PARTICLE GLOW
 ================================ */
 .particle-glow {
     filter: blur(1px) drop-shadow(0 0 6px currentColor);
 }
+
 /* ================================
-   GLASS EFFECT (opcional)
+   GLASS EFFECT
 ================================ */
 .glass {
     background: rgba(255, 255, 255, 0.12);
@@ -392,7 +390,7 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 /* ================================
-   TOOLTIP (para configurações avançadas)
+   TOOLTIP
 ================================ */
 .tooltip {
     position: relative;
@@ -424,7 +422,7 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 /* ================================
-   CHECKBOX PREMIUM
+   CHECKBOX
 ================================ */
 .p-check {
     display: flex;
@@ -461,7 +459,7 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 /* ================================
-   MOBILE FIX (se usar em celular)
+   MOBILE FIX
 ================================ */
 @media (max-width: 800px) {
     #sidebar {
