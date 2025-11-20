@@ -107,6 +107,7 @@ document.querySelectorAll(".tab").forEach(tab => {
 });
 
 
+
 /* ============================================================
    TEMA DARK/LIGHT
 ============================================================ */
@@ -119,11 +120,11 @@ toggleThemeBtn.addEventListener("click", () => {
     localStorage.setItem("theme", theme);
 });
 
-// restaurar
 if (localStorage.getItem("theme") === "light") {
     document.body.classList.remove("dark");
     document.body.classList.add("light");
 }
+
 
 
 /* ============================================================
@@ -151,6 +152,7 @@ document.querySelectorAll(".preset").forEach(p => {
 });
 
 
+
 /* ============================================================
    RESOLUÇÕES OBS
 ============================================================ */
@@ -163,6 +165,7 @@ resolutionSelect.addEventListener("change", () => {
         updatePreview();
     }
 });
+
 
 
 /* ============================================================
@@ -217,9 +220,9 @@ function updatePreview() {
     preview.appendChild(defs);
 
 
-    /* =============================
+    /* ============================================================
        FORMAS
-    ============================== */
+    ============================================================= */
 
     let shape;
 
@@ -256,13 +259,10 @@ function updatePreview() {
         });
     }
 
-    /* =============================
-       LINHA HORIZONTAL
-    ============================== */
 
+    /* ========= LINHA H ========= */
     if (type === "line-h") {
         preview.setAttribute("viewBox", `0 0 ${w} ${s * 4}`);
-
         shape = makeSVG("line", {
             x1: 0,
             y1: s * 2,
@@ -271,13 +271,9 @@ function updatePreview() {
         });
     }
 
-    /* =============================
-       LINHA VERTICAL
-    ============================== */
-
+    /* ========= LINHA V ========= */
     if (type === "line-v") {
         preview.setAttribute("viewBox", `0 0 ${s * 4} ${h}`);
-
         shape = makeSVG("line", {
             x1: s * 2,
             y1: 0,
@@ -287,9 +283,10 @@ function updatePreview() {
     }
 
 
-    /* =============================
-       ESTILO DA BORDA
-    ============================== */
+
+    /* ============================================================
+       APLICAR ESTILO
+    ============================================================= */
 
     shape.setAttribute("stroke", "url(#movingGradient)");
     shape.setAttribute("stroke-width", s);
@@ -299,20 +296,20 @@ function updatePreview() {
     shape.setAttribute("opacity", op);
 
 
-    /* =============================
+    /* ============================================================
        GLOW
-    ============================== */
+    ============================================================= */
 
     if (glowSelect.value === "soft") {
         shape.style.filter = "drop-shadow(0 0 6px currentColor)";
     }
 
     if (glowSelect.value === "neon") {
-        shape.style.filter = "drop-shadow(0 0 14px currentColor)";
+        shape.style.filter = "drop-shadow(0 0 18px currentColor)";
     }
 
     if (glowSelect.value === "blurred") {
-        shape.style.filter = "blur(2px) drop-shadow(0 0 10px currentColor)";
+        shape.style.filter = "blur(2px) drop-shadow(0 0 12px currentColor)";
     }
 
     if (glowSelect.value === "none") {
@@ -322,15 +319,16 @@ function updatePreview() {
 
     preview.appendChild(shape);
 
-    /* =============================
-       DEBUG
-    ============================== */
 
+    /* ============================================================
+       DEBUG
+    ============================================================= */
     preview.classList.remove("grid-bg", "viewbox-border");
 
     if (debugSelect.value === "grid") preview.classList.add("grid-bg");
     if (debugSelect.value === "viewbox") preview.classList.add("viewbox-border");
 }
+
 
 
 /* ============================================================
@@ -342,6 +340,7 @@ function makeSVG(tag, attrs) {
     for (let k in attrs) el.setAttribute(k, attrs[k]);
     return el;
 }
+
 
 
 /* ============================================================
@@ -369,6 +368,7 @@ generateBtn.addEventListener("click", () => {
 });
 
 
+
 /* ============================================================
    COPIAR LINK
 ============================================================ */
@@ -381,8 +381,9 @@ copyBtn.addEventListener("click", () => {
 });
 
 
+
 /* ============================================================
-   EXPORTAR SVG
+   EXPORT SVG
 ============================================================ */
 
 document.getElementById("export-svg").addEventListener("click", () => {
@@ -398,8 +399,9 @@ document.getElementById("export-svg").addEventListener("click", () => {
 });
 
 
+
 /* ============================================================
-   SALVAR URL DOS PRESETS
+   SALVAR PRESET COMO URL
 ============================================================ */
 
 saveURLBtn.addEventListener("click", () => {
@@ -419,27 +421,21 @@ saveURLBtn.addEventListener("click", () => {
 });
 
 
+
 /* ============================================================
-   EVENTOS QUE ATUALIZAM O PREVIEW
+   EVENTOS DE ATUALIZAÇÃO DO PREVIEW
 ============================================================ */
 
 [
-    shapeSel,
-    widthInput,
-    heightInput,
-    radiusInput,
-    strokeInput,
-    opacityInput,
-    speedInput,
-    modeSelect,
-    color1,
-    color2,
-    color3,
-    color4,
-    glowSelect,
-    debugSelect
+    shapeSel, widthInput, heightInput, radiusInput,
+    strokeInput, opacityInput, speedInput,
+    modeSelect, color1, color2, color3, color4,
+    glowSelect, debugSelect
 ].forEach(el => el.addEventListener("input", updatePreview));
 
 
-// INICIALIZAÇÃO
+
+/* ============================================================
+   INICIAR
+============================================================ */
 updatePreview();
