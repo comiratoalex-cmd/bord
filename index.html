@@ -12,11 +12,15 @@
     <!-- Fundo com partículas -->
     <canvas id="particles"></canvas>
 
+    <!-- Névoa Pastel -->
+    <!-- (gerada automaticamente pelo script.js) -->
+
     <!-- Painel lateral -->
     <aside id="sidebar">
 
         <h1>Pastel Border Generator</h1>
 
+        <!-- TABS -->
         <div id="tabs">
             <span class="tab active" data-tab="border">Borda</span>
             <span class="tab" data-tab="colors">Cores</span>
@@ -25,8 +29,9 @@
             <span id="toggle-theme">🌙</span>
         </div>
 
-        <!-- BORDA -->
+        <!-- TAB: BORDA -->
         <div id="tab-border" class="tab-content active">
+
             <div class="section-title">Formato & Tamanho</div>
 
             <div class="settings-grid">
@@ -85,16 +90,19 @@
             </div>
         </div>
 
-        <!-- CORES -->
+        <!-- TAB: CORES -->
         <div id="tab-colors" class="tab-content">
+
             <div class="section-title">Cores</div>
 
             <div class="settings-grid">
+
                 <div>
                     <label>Modo:</label>
                     <select id="color-mode">
                         <option value="2">2 cores</option>
                         <option value="4" selected>4 cores</option>
+                        <option value="rainbow-auto">🌈 Rainbow Automático</option>
                     </select>
                 </div>
 
@@ -102,39 +110,57 @@
                 <div><label>Cor 2:</label><input id="color2" type="color" value="#b6d9ff"></div>
                 <div><label>Cor 3:</label><input id="color3" type="color" value="#ffe7a3"></div>
                 <div><label>Cor 4:</label><input id="color4" type="color" value="#e8c8ff"></div>
+
             </div>
         </div>
 
-        <!-- PRESETS -->
+        <!-- TAB: PRESETS -->
         <div id="tab-presets" class="tab-content">
 
-            <div class="section-title">Presets</div>
+            <div class="section-title">Presets Coloridos</div>
 
+            <!-- COLORIDOS E NOVOS -->
+            <div class="preset-button preset" data-preset="rainbow">🌈 Rainbow Pro</div>
+            <div class="preset-button preset" data-preset="candy">🍭 Candy Pop</div>
+            <div class="preset-button preset" data-preset="neon">🔥 Neon Inferno</div>
+            <div class="preset-button preset" data-preset="galaxy">🟪 Galaxy Core</div>
+            <div class="preset-button preset" data-preset="aqua">💧 Aqua Pulse</div>
+            <div class="preset-button preset" data-preset="cyberpink">💥 Cyberpink</div>
+            <div class="preset-button preset" data-preset="tropical">🌅 Tropical Sunrise</div>
+            <div class="preset-button preset" data-preset="aurora">🌌 Aurora Dreams</div>
+            <div class="preset-button preset" data-preset="pride">🏳️‍🌈 Pride Hypercolor</div>
+            <div class="preset-button preset" data-preset="bluetech">🔵 Blue Tech</div>
+            <div class="preset-button preset" data-preset="toxic">☢️ Toxic Matrix</div>
+            <div class="preset-button preset" data-preset="mystic">🔮 Mystic Purple</div>
+
+            <!-- ORIGINAIS -->
+            <br>
             <div class="preset-button preset" data-preset="pastel">🌸 Pastel Dream</div>
             <div class="preset-button preset" data-preset="sakura">🌺 Sakura Pink</div>
             <div class="preset-button preset" data-preset="ocean">🌊 Ocean Breeze</div>
             <div class="preset-button preset" data-preset="space">🚀 Space Vaporwave</div>
-            <div class="preset-button preset" data-preset="toxic">☢️ Toxic Neon</div>
             <div class="preset-button preset" data-preset="sunset">🌅 Sunset Mix</div>
 
             <br>
-            <button id="save-url">Gerar URL</button>
+            <button id="save-url">Gerar URL do Preset</button>
             <input id="url-output" readonly>
+
         </div>
 
-        <!-- AVANÇADO -->
+        <!-- TAB: AVANÇADO -->
         <div id="tab-advanced" class="tab-content">
 
             <div class="section-title">Avançado</div>
 
             <div class="settings-grid">
+
                 <div>
                     <label>Efeito Glow:</label>
                     <select id="glow">
                         <option value="none">Off</option>
                         <option value="soft">Soft</option>
-                        <option value="neon">Neon</option>
-                        <option value="blurred">Blurred</option>
+                        <option value="neon">Neon Pulse</option>
+                        <option value="blurred">Blurred Glow</option>
                     </select>
                 </div>
 
@@ -146,13 +172,15 @@
                         <option value="viewbox">Viewbox</option>
                     </select>
                 </div>
+
             </div>
 
             <br>
             <button id="export-svg">Exportar SVG</button>
+
         </div>
 
-        <!-- OBS -->
+        <!-- LINK OBS -->
         <div class="section-title">Link OBS</div>
 
         <button id="generate">Gerar</button>
