@@ -6,67 +6,126 @@
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="light">
 
-<!-- PAINEL DE CONTROLES -->
-<div id="panel">
+<header>
+    <h1>Pastel Border Generator</h1>
+    <button id="toggle-theme">🌙</button>
+</header>
 
-    <h2>Pastel Border Generator</h2>
+<div id="container">
 
-    <!-- SHAPE -->
-    <label>Forma:</label>
-    <select id="shape">
-        <option value="rect">Retângulo</option>
-        <option value="square">Quadrado</option>
-        <option value="ellipse">Elipse / Círculo</option>
-        <option value="line-h">Linha Horizontal</option>
-        <option value="line-v">Linha Vertical</option>
-    </select>
+    <div id="tabs">
+        <button class="tab active" data-tab="border">Borda</button>
+        <button class="tab" data-tab="colors">Cores</button>
+        <button class="tab" data-tab="presets">Presets</button>
+        <button class="tab" data-tab="advanced">Avançado</button>
+    </div>
 
-    <!-- TAMANHO -->
-    <label>Largura:</label>
-    <input type="number" id="width" value="800">
+    <!-- TAB 1 – BORDA -->
+    <div class="tab-content active" id="tab-border">
 
-    <label>Altura:</label>
-    <input type="number" id="height" value="200">
+        <label>Forma:</label>
+        <select id="shape">
+            <option value="rect">Retângulo</option>
+            <option value="square">Quadrado</option>
+            <option value="ellipse">Elipse</option>
+            <option value="line-h">Linha Horizontal</option>
+            <option value="line-v">Linha Vertical</option>
+        </select>
 
-    <!-- ARREDONDAMENTO -->
-    <label>Raio do Canto:</label>
-    <input type="number" id="radius" value="20">
+        <label>Largura:</label>
+        <input type="number" id="width" value="800">
 
-    <!-- BORDA -->
-    <label>Espessura da Borda:</label>
-    <input type="number" id="stroke" value="8">
+        <label>Altura:</label>
+        <input type="number" id="height" value="200">
 
-    <!-- ANIMAÇÃO -->
-    <label>Velocidade da Animação:</label>
-    <input type="number" id="speed" value="12">
+        <label>Raio do Canto:</label>
+        <input type="range" id="radius" min="0" max="200" value="20">
 
-    <!-- CORES -->
-    <label>Quantidade de Cores:</label>
-    <select id="color-mode">
-        <option value="2">2 cores</option>
-        <option value="4" selected>4 cores</option>
-    </select>
+        <label>Espessura da Borda:</label>
+        <input type="range" id="stroke" min="1" max="50" value="8">
 
-    <label>Cor 1:</label>
-    <input type="color" id="color1" value="#ffb8c6">
+        <label>Opacidade da Borda:</label>
+        <input type="range" id="opacity" min="0" max="1" step="0.01" value="1">
 
-    <label>Cor 2:</label>
-    <input type="color" id="color2" value="#e6b5ff">
+        <label>Velocidade da Animação:</label>
+        <input type="range" id="speed" min="2" max="40" value="12">
 
-    <label>Cor 3:</label>
-    <input type="color" id="color3" value="#9ed6ff">
+        <label>Resolução OBS:</label>
+        <select id="resolution">
+            <option value="800x200">Personalizado</option>
+            <option value="1920x1080">1920 × 1080</option>
+            <option value="2560x1440">2560 × 1440</option>
+            <option value="1080x1920">1080 × 1920</option>
+        </select>
+    </div>
 
-    <label>Cor 4:</label>
-    <input type="color" id="color4" value="#ffe7c0">
+    <!-- TAB 2 – CORES -->
+    <div class="tab-content" id="tab-colors">
 
-    <!-- GERAR OBS -->
-    <button id="generate">Gerar Link para OBS</button>
-    <input type="text" id="obs-link" readonly>
+        <label>Quantidade de Cores:</label>
+        <select id="color-mode">
+            <option value="2">2 Cores</option>
+            <option value="4" selected>4 Cores</option>
+        </select>
+
+        <label>Cor 1:</label>
+        <input type="color" id="color1" value="#ffb8c6">
+
+        <label>Cor 2:</label>
+        <input type="color" id="color2" value="#e6b5ff">
+
+        <label>Cor 3:</label>
+        <input type="color" id="color3" value="#9ed6ff">
+
+        <label>Cor 4:</label>
+        <input type="color" id="color4" value="#ffe7c0">
+
+        <label>Efeito Glow:</label>
+        <select id="glow">
+            <option value="none">Off</option>
+            <option value="soft">Soft Glow</option>
+            <option value="neon">Neon Glow</option>
+            <option value="blurred">Blur Glow</option>
+        </select>
+
+    </div>
+
+    <!-- TAB 3 – PRESETS -->
+    <div class="tab-content" id="tab-presets">
+
+        <div class="preset" data-preset="pastel">🌸 Pastel Dream</div>
+        <div class="preset" data-preset="sakura">🌺 Sakura Pink</div>
+        <div class="preset" data-preset="ocean">🌊 Ocean Breeze</div>
+        <div class="preset" data-preset="space">🌌 Space Vaporwave</div>
+        <div class="preset" data-preset="toxic">☣️ Toxic Neon</div>
+        <div class="preset" data-preset="sunset">🌅 Sunset Mix</div>
+
+        <button id="save-url">Gerar URL com Preset</button>
+        <input id="url-output" readonly>
+    </div>
+
+    <!-- TAB 4 – AVANÇADO -->
+    <div class="tab-content" id="tab-advanced">
+
+        <label>Debug Mode:</label>
+        <select id="debug">
+            <option value="off">Off</option>
+            <option value="grid">Grid</option>
+            <option value="viewbox">Mostrar ViewBox</option>
+        </select>
+
+        <button id="export-svg">Exportar como SVG</button>
+    </div>
+
+    <!-- SAÍDA OBS -->
+    <h3>Link OBS:</h3>
+    <button id="generate">Gerar Link</button>
+    <button id="copy">Copiar</button>
+    <input id="obs-link" readonly>
 
 </div>
-
 
 <!-- PREVIEW -->
 <div id="preview-area">
