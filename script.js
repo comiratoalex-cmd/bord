@@ -133,10 +133,13 @@ function updatePreview() {
     }
 
     // ---------------------------
-    // APLICAR ESTILO
+    // APLICAR ESTILO DIRETO NO SVG
     // ---------------------------
-    shape.classList.add("pastel-gradient");
-    shape.style.setProperty("--stroke", s);
+    shape.setAttribute("stroke", "url(#movingGradient)");
+    shape.setAttribute("stroke-width", s);
+    shape.setAttribute("fill", "none");
+    shape.setAttribute("stroke-linejoin", "round");
+    shape.setAttribute("stroke-linecap", "round");
 
     preview.setAttribute("viewBox", `0 0 ${w} ${h}`);
     preview.appendChild(shape);
