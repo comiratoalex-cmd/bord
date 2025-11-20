@@ -1,102 +1,105 @@
-const preview = document.getElementById("preview");
-const shapeSel = document.getElementById("shape");
-const widthInput = document.getElementById("width");
-const heightInput = document.getElementById("height");
-const radiusInput = document.getElementById("radius");
-const strokeInput = document.getElementById("stroke");
-const speedInput = document.getElementById("speed");
-const uploadInput = document.getElementById("upload");
-
-function updatePreview() {
-    preview.innerHTML = "";
-    const w = +widthInput.value;
-    const h = +heightInput.value;
-    const r = +radiusInput.value;
-    const s = +strokeInput.value;
-    const speed = +speedInput.value;
-    const type = shapeSel.value;
-
-    // Add gradient
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-    defs.innerHTML = `
-        <linearGradient id="movingGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0">
-            <stop offset="0%" stop-color="#ffb8c6"/>
-            <stop offset="25%" stop-color="#e6b5ff"/>
-            <stop offset="50%" stop-color="#9ed6ff"/>
-            <stop offset="75%" stop-color="#7ff0e8"/>
-            <stop offset="100%" stop-color="#ffe7c0"/>
-            <animate attributeName="x1" values="0;-600" dur="${speed}s" repeatCount="indefinite"/>
-            <animate attributeName="x2" values="600;0" dur="${speed}s" repeatCount="indefinite"/>
-        </linearGradient>
-    `;
-    preview.appendChild(defs);
-
-    let shape;
-
-    if (type === "rect") {
-        shape = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        shape.setAttribute("x", s);
-        shape.setAttribute("y", s);
-        shape.setAttribute("width", w - s * 2);
-        shape.setAttribute("height", h - s * 2);
-        shape.setAttribute("rx", r);
-    }
-
-    if (type === "square") {
-        const size = Math.min(w, h);
-        shape = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        shape.setAttribute("x", s);
-        shape.setAttribute("y", s);
-        shape.setAttribute("width", size - s * 2);
-        shape.setAttribute("height", size - s * 2);
-        shape.setAttribute("rx", r);
-    }
-
-    if (type === "ellipse") {
-        shape = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-        shape.setAttribute("cx", w / 2);
-        shape.setAttribute("cy", h / 2);
-        shape.setAttribute("rx", (w / 2) - s);
-        shape.setAttribute("ry", (h / 2) - s);
-    }
-
-    if (type === "line-h") {
-        shape = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        shape.setAttribute("x1", 0);
-        shape.setAttribute("y1", h / 2);
-        shape.setAttribute("x2", w);
-        shape.setAttribute("y2", h / 2);
-    }
-
-    if (type === "line-v") {
-        shape = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        shape.setAttribute("x1", w / 2);
-        shape.setAttribute("y1", 0);
-        shape.setAttribute("x2", w / 2);
-        shape.setAttribute("y2", h);
-    }
-
-    if (type === "png") {
-        return; // PNG contour requires marching squares (posso adicionar depois)
-    }
-
-    shape.classList.add("pastel-gradient");
-    shape.style.setProperty("--stroke", s);
-    preview.setAttribute("viewBox", `0 0 ${w} ${h}`);
-    preview.appendChild(shape);
+/* -------------------------
+   ESTILOS GERAIS
+-------------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    background: #0c0c0f;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: white;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
 }
 
-updatePreview();
+/* -------------------------
+   PAINEL LATERAL (CONTROLES)
+-------------------------- */
+#panel {
+    width: 320px;
+    padding: 20px;
+    background: #141418;
+    border-right: 2px solid #1f1f25;
+    box-shadow: 0 0 20px #0006;
+    overflow-y: auto;
+}
 
-shapeSel.onchange = updatePreview;
-widthInput.oninput = updatePreview;
-heightInput.oninput = updatePreview;
-radiusInput.oninput = updatePreview;
-strokeInput.oninput = updatePreview;
-speedInput.oninput = updatePreview;
+#panel h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-align: left;
+}
 
-document.getElementById("generate").onclick = () => {
-    const url = window.location.origin +
-        `/?shape=${shapeSel.value}&w=${widthInput.value}&h=${heightInput.value}&stroke=${strokeInput.value}&speed=${speedInput.value}`;
-    document.getElementById("obs-link").value = url;
-};
+/* Inputs */
+#panel label {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 14px;
+}
+
+#panel input,
+#panel select {
+    width: 100%;
+    padding: 8px;
+    background: #1d1d23;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+#panel button {
+    width: 100%;
+    padding: 10px;
+    background: #58a6ff;
+    border: none;
+    border-radius: 6px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#panel button:hover {
+    background: #79b7ff;
+}
+
+#obs-link {
+    margin-top: 10px;
+    font-size: 12px;
+    background: #0f0f13;
+}
+
+/* -------------------------
+   ÁREA DE PREVIEW
+-------------------------- */
+#preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#preview {
+    width: 90%;
+    height: 90%;
+    background: transparent;
+}
+
+/* -------------------------
+   CLASSE DO GRADIENTE PASTEL
+-------------------------- */
+.pastel-gradient {
+    stroke: url(#movingGradient);
+    stroke-width: var(--stroke);
+    fill: none;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    animation: movePastel linear infinite;
+}
+
+/* Animação do movimento do gradiente */
+@keyframes movePastel {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -600; }
+}
