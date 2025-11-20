@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Pastel Border Generator</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Pastel Border Generator</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- PAINEL LATERAL -->
 <div id="panel">
+
     <h2>Pastel Border Generator</h2>
 
+    <!-- Escolha da forma -->
     <label>Escolher forma:</label>
     <select id="shape">
         <option value="rect">Retângulo</option>
@@ -20,16 +23,15 @@
         <option value="png">Shape PNG</option>
     </select>
 
-    <div id="size-options">
-        <label>Largura:</label>
-        <input type="number" id="width" value="800">
+    <!-- TAMANHO -->
+    <label>Largura:</label>
+    <input type="number" id="width" value="800">
 
-        <label>Altura:</label>
-        <input type="number" id="height" value="200">
+    <label>Altura:</label>
+    <input type="number" id="height" value="200">
 
-        <label>Raio do canto:</label>
-        <input type="number" id="radius" value="20">
-    </div>
+    <label>Raio do canto:</label>
+    <input type="number" id="radius" value="20">
 
     <label>Espessura da borda:</label>
     <input type="number" id="stroke" value="8">
@@ -37,18 +39,41 @@
     <label>Velocidade da animação:</label>
     <input type="number" id="speed" value="12">
 
+    <!-- CORES -->
+    <label>Quantidade de cores:</label>
+    <select id="color-mode">
+        <option value="2">2 cores</option>
+        <option value="4" selected>4 cores</option>
+    </select>
+
+    <label>Cor 1:</label>
+    <input type="color" id="color1" value="#ffb8c6">
+
+    <label>Cor 2:</label>
+    <input type="color" id="color2" value="#e6b5ff">
+
+    <label>Cor 3:</label>
+    <input type="color" id="color3" value="#9ed6ff">
+
+    <label>Cor 4:</label>
+    <input type="color" id="color4" value="#ffe7c0">
+
+    <!-- PNG -->
     <label>Upload PNG:</label>
     <input type="file" id="upload" accept="image/png">
 
+    <!-- Gerar link -->
     <button id="generate">Gerar Link OBS</button>
-    <input id="obs-link" readonly>
+    <input type="text" id="obs-link" readonly>
 
 </div>
 
+<!-- ÁREA DO PREVIEW -->
 <div id="preview-area">
     <svg id="preview" xmlns="http://www.w3.org/2000/svg"></svg>
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
