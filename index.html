@@ -12,7 +12,6 @@
 
     <h2>Pastel Border Generator</h2>
 
-    <!-- Escolha da forma -->
     <label>Escolher forma:</label>
     <select id="shape">
         <option value="rect">Retângulo</option>
@@ -23,7 +22,6 @@
         <option value="png">Shape PNG</option>
     </select>
 
-    <!-- TAMANHO -->
     <label>Largura:</label>
     <input type="number" id="width" value="800">
 
@@ -39,7 +37,6 @@
     <label>Velocidade da animação:</label>
     <input type="number" id="speed" value="12">
 
-    <!-- CORES -->
     <label>Quantidade de cores:</label>
     <select id="color-mode">
         <option value="2">2 cores</option>
@@ -58,19 +55,17 @@
     <label>Cor 4:</label>
     <input type="color" id="color4" value="#ffe7c0">
 
-    <!-- PNG -->
     <label>Upload PNG:</label>
     <input type="file" id="upload" accept="image/png">
 
-    <!-- Gerar link -->
     <button id="generate">Gerar Link OBS</button>
     <input type="text" id="obs-link" readonly>
 
 </div>
 
-<!-- ÁREA DO PREVIEW -->
+<!-- PREVIEW -->
 <div id="preview-area">
-    <svg id="preview" xmlns="http://www.w3.org/2000/svg"></svg>
+    <svg id="preview"></svg>
 </div>
 
 <script src="script.js"></script>
