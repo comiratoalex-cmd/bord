@@ -140,7 +140,7 @@ label {
 }
 
 /* ================================
-   INPUTS & SELECTS
+   INPUTS / SELECTS
 ================================ */
 select,
 input[type="number"],
@@ -305,7 +305,7 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 /* ================================
-   DEBUG MODES
+   VIEWBOX DEBUG MODES
 ================================ */
 .grid-bg {
     background-image:
@@ -319,7 +319,7 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 /* ================================
-   NEON & GLOW EFFECTS
+   NEON ANIMATION
 ================================ */
 @keyframes neonPulse {
     0% {
@@ -344,7 +344,7 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 /* ================================
-   BACKGROUND FOG
+   PASTEL FOG (NÉVOA)
 ================================ */
 .pastel-fog {
     position: absolute;
@@ -364,9 +364,15 @@ body.light #sidebar::-webkit-scrollbar-thumb {
 }
 
 @keyframes fogMove {
-    0% { transform: scale(1) translate(0,0); }
-    50% { transform: scale(1.1) translate(30px,-20px); }
-    100% { transform: scale(1.05) translate(-20px,20px); }
+    0% {
+        transform: scale(1) translate(0,0);
+    }
+    50% {
+        transform: scale(1.1) translate(30px,-20px);
+    }
+    100% {
+        transform: scale(1.05) translate(-20px,20px);
+    }
 }
 
 /* ================================
