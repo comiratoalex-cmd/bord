@@ -306,15 +306,15 @@ function updatePreview() {
        LINHA HORIZONTAL — corrigida
     ============================================================= */
     if (type === "line-h") {
-        const safeHeight = Math.max(s * 4, 40);
-        preview.setAttribute("viewBox", `0 0 ${w} ${safeHeight}`);
-        shape = makeSVG("line", {
-            x1: 0,
-            y1: safeHeight / 2,
-            x2: w,
-            y2: safeHeight / 2
-        });
-    }
+    const sh = Math.max(stroke * 4, 40);
+    shape = make("line", {
+        x1: 0,
+        y1: sh / 2,
+        x2: w,
+        y2: sh / 2
+    });
+}
+
 
     /* ============================================================
        LINHA VERTICAL — corrigida
