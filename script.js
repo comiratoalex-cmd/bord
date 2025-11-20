@@ -10,6 +10,7 @@ const radiusInput = document.getElementById("radius");
 const strokeInput = document.getElementById("stroke");
 const opacityInput = document.getElementById("opacity");
 const speedInput = document.getElementById("speed");
+const resolutionSel = document.getElementById("resolution");
 
 const modeSelect = document.getElementById("color-mode");
 const color1 = document.getElementById("color1");
@@ -22,46 +23,10 @@ const debugSel = document.getElementById("debug");
 
 const generateBtn = document.getElementById("generate");
 const copyBtn = document.getElementById("copy");
-const obsLink = document.getElementById("obs-link");
-
-const tabs = document.querySelectorAll(".tab");
-const tabContents = document.querySelectorAll(".tab-content");
-const themeToggle = document.getElementById("toggle-theme");
+const obsLinkBox = document.getElementById("obs-link");
 
 /* ============================================================
-   TABS
-============================================================ */
-tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-
-        const target = tab.dataset.tab;
-
-        tabContents.forEach(c => {
-            c.classList.remove("active");
-            if (c.id === "tab-" + target) c.classList.add("active");
-        });
-    });
-});
-
-/* ============================================================
-   TEMA ESCURO / CLARO
-============================================================ */
-themeToggle.addEventListener("click", () => {
-    if (document.body.classList.contains("dark")) {
-        document.body.classList.remove("dark");
-        document.body.classList.add("light");
-        themeToggle.textContent = "☀️";
-    } else {
-        document.body.classList.remove("light");
-        document.body.classList.add("dark");
-        themeToggle.textContent = "🌙";
-    }
-});
-
-/* ============================================================
-   PREVIEW PRINCIPAL
+   FUNÇÃO PRINCIPAL — ATUALIZA PREVIEW
 ============================================================ */
 function updatePreview() {
     preview.innerHTML = "";
@@ -74,28 +39,38 @@ function updatePreview() {
     const speed = +speedInput.value;
     const type = shapeSel.value;
 
-    /* ============================
-       GRADIENTE — LOOP PERFEITO
-    ============================ */
+    const mode = modeSelect.value;
+    const c1 = color1.value;
+    const c2 = color2.value;
+    const c3 = color3.value;
+    const c4 = color4.value;
+
+    const glow = glowSel.value;
+    const debug = debugSel.value;
+
+    /* -----------------------------
+       GRADIENTE COM LOOP PERFEITO
+    ------------------------------ */
     let stops = "";
 
-    if (modeSelect.value === "2") {
+    if (mode === "2") {
         stops = `
-            <stop offset="0%" stop-color="${color1.value}" />
-            <stop offset="100%" stop-color="${color2.value}" />
+            <stop offset="0%" stop-color="${c1}"/>
+            <stop offset="100%" stop-color="${c2}"/>
         `;
     }
 
-    if (modeSelect.value === "4") {
+    if (mode === "4") {
         stops = `
-            <stop offset="0%" stop-color="${color1.value}" />
-            <stop offset="33%" stop-color="${color2.value}" />
-            <stop offset="66%" stop-color="${color3.value}" />
-            <stop offset="100%" stop-color="${color4.value}" />
+            <stop offset="0%" stop-color="${c1}"/>
+            <stop offset="33%" stop-color="${c2}"/>
+            <stop offset="66%" stop-color="${c3}"/>
+            <stop offset="100%" stop-color="${c4}"/>
         `;
     }
 
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+
     defs.innerHTML = `
         <linearGradient id="movingGradient" gradientUnits="userSpaceOnUse">
             ${stops}
@@ -110,44 +85,18 @@ function updatePreview() {
             />
         </linearGradient>
     `;
+
     preview.appendChild(defs);
 
-    /* --------------------------
-       DESENHAR SHAPE
-    --------------------------- */
-    let shape = makeShape(type, w, h, r, s);
-
-    shape.setAttribute("stroke", "url(#movingGradient)");
-    shape.setAttribute("stroke-width", s);
-    shape.setAttribute("stroke-opacity", o);
-    shape.setAttribute("fill", "none");
-
-    if (glowSel.value === "neon") {
-        shape.classList.add("neon-active");
-    }
-
-    if (debugSel.value === "grid") {
-        preview.classList.add("grid-bg");
-    } else {
-        preview.classList.remove("grid-bg");
-    }
-
-    if (debugSel.value === "viewbox") {
-        shape.classList.add("viewbox-border");
-    }
-
-    preview.setAttribute("viewBox", `0 0 ${w} ${h}`);
-    preview.appendChild(shape);
-}
-
-/* ============================
-   SHAPES
-============================ */
-function makeShape(type, w, h, r, s) {
+    /* -----------------------------
+       SHAPES DISPONÍVEIS
+    ------------------------------ */
+    let shape;
 
     if (type === "rect") {
-        return makeSVG("rect", {
-            x: s, y: s,
+        shape = makeSVG("rect", {
+            x: s,
+            y: s,
             width: w - s * 2,
             height: h - s * 2,
             rx: r
@@ -156,8 +105,9 @@ function makeShape(type, w, h, r, s) {
 
     if (type === "square") {
         const size = Math.min(w, h);
-        return makeSVG("rect", {
-            x: s, y: s,
+        shape = makeSVG("rect", {
+            x: s,
+            y: s,
             width: size - s * 2,
             height: size - s * 2,
             rx: r
@@ -165,7 +115,7 @@ function makeShape(type, w, h, r, s) {
     }
 
     if (type === "ellipse") {
-        return makeSVG("ellipse", {
+        shape = makeSVG("ellipse", {
             cx: w / 2,
             cy: h / 2,
             rx: w / 2 - s,
@@ -174,7 +124,7 @@ function makeShape(type, w, h, r, s) {
     }
 
     if (type === "line-h") {
-        return makeSVG("line", {
+        shape = makeSVG("line", {
             x1: s,
             y1: h / 2,
             x2: w - s,
@@ -184,7 +134,7 @@ function makeShape(type, w, h, r, s) {
     }
 
     if (type === "line-v") {
-        return makeSVG("line", {
+        shape = makeSVG("line", {
             x1: w / 2,
             y1: s,
             x2: w / 2,
@@ -192,8 +142,33 @@ function makeShape(type, w, h, r, s) {
             "stroke-linecap": "round"
         });
     }
+
+    shape.setAttribute("stroke", "url(#movingGradient)");
+    shape.setAttribute("stroke-width", s);
+    shape.setAttribute("stroke-opacity", o);
+    shape.setAttribute("fill", "none");
+
+    if (glow === "neon") {
+        shape.classList.add("neon-active");
+    }
+
+    if (debug === "grid") {
+        preview.classList.add("grid-bg");
+    } else {
+        preview.classList.remove("grid-bg");
+    }
+
+    if (debug === "viewbox") {
+        shape.classList.add("viewbox-border");
+    }
+
+    preview.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    preview.appendChild(shape);
 }
 
+/* ============================================================
+   SVG UTILITY
+============================================================ */
 function makeSVG(tag, attrs) {
     const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
     for (let k in attrs) el.setAttribute(k, attrs[k]);
@@ -201,24 +176,27 @@ function makeSVG(tag, attrs) {
 }
 
 /* ============================================================
-   EVENTOS QUE ATUALIZAM O PREVIEW
+   EVENTOS
 ============================================================ */
 [
     shapeSel, widthInput, heightInput, radiusInput, strokeInput,
-    opacityInput, speedInput, modeSelect, color1, color2, color3, color4,
-    glowSel, debugSel
-].forEach(el => el.oninput = updatePreview);
+    opacityInput, speedInput, resolutionSel, modeSelect,
+    color1, color2, color3, color4, glowSel, debugSel
+].forEach(e => e.oninput = updatePreview);
+
+updatePreview();
 
 /* ============================================================
-   GERAR LINK OBS
+   BOTÃO GERAR (CORRIGIDO PARA GITHUB PAGES)
 ============================================================ */
 generateBtn.onclick = () => {
+
     const params = new URLSearchParams({
         shape: shapeSel.value,
         w: widthInput.value,
         h: heightInput.value,
         r: radiusInput.value,
-        s: strokeInput.value,
+        stroke: strokeInput.value,
         o: opacityInput.value,
         speed: speedInput.value,
         mode: modeSelect.value,
@@ -230,19 +208,17 @@ generateBtn.onclick = () => {
         debug: debugSel.value
     });
 
-    obsLink.value =
-        window.location.origin + "/view.html?" + params.toString();
+    const base = window.location.href.replace("index.html", "");
+    const url = base + "view.html?" + params.toString();
+
+    obsLinkBox.value = url;
 };
 
 /* ============================================================
-   COPIAR LINK
+   BOTÃO COPIAR
 ============================================================ */
-copyBtn.onclick = () => {
-    obsLink.select();
-    document.execCommand("copy");
+copyBtn.onclick = async () => {
+    await navigator.clipboard.writeText(obsLinkBox.value);
+    copyBtn.innerText = "Copiado!";
+    setTimeout(() => copyBtn.innerText = "Copiar", 1000);
 };
-
-/* ============================================================
-   INICIAR
-============================================================ */
-updatePreview();
