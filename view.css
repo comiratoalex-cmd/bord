@@ -90,3 +90,37 @@ if (shape === "ellipse") {
     element = `
         <ellipse cx="${w / 2}" cy="${h / 2}" 
                  rx="${w / 2 - s}" ry="${h / 2 - s}"
+                 fill="none" 
+                 stroke="url(#grad)" 
+                 stroke-width="${s}" />
+    `;
+}
+
+if (shape === "line-h") {
+    element = `
+        <line x1="0" y1="${h / 2}" 
+              x2="${w}" y2="${h / 2}" 
+              stroke="url(#grad)" 
+              stroke-width="${s}" />
+    `;
+}
+
+if (shape === "line-v") {
+    element = `
+        <line x1="${w / 2}" y1="0" 
+              x2="${w / 2}" y2="${h}" 
+              stroke="url(#grad)" 
+              stroke-width="${s}" />
+    `;
+}
+
+// Futuro: PNG
+if (shape === "png") {
+    element = `
+        <text x="50%" y="50%" fill="white" font-size="24" text-anchor="middle">
+            PNG mode coming soon
+        </text>
+    `;
+}
+
+preview.innerHTML += element;
