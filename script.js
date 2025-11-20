@@ -22,7 +22,7 @@ const preview = document.getElementById("preview");
 
 
 /* =========================================================
-   UPDATE PREVIEW — LOOP PERFEITO
+   UPDATE PREVIEW (LOOP PERFEITO)
 ========================================================= */
 function updatePreview() {
     preview.innerHTML = "";
@@ -44,7 +44,7 @@ function updatePreview() {
 
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
 
-    /* GRADIENTE DINÂMICO — LOOP REAL */
+    /* GRADIENTE INFINITO */
     const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
     grad.setAttribute("id", "g");
     grad.setAttribute("gradientUnits", "userSpaceOnUse");
@@ -70,20 +70,18 @@ function updatePreview() {
         addStop("100%", c4v);
     }
 
-    /* ANIMAÇÃO INFINITA — SEM PULO, SEM RESET */
+    /* LOOP REAL (SEM RESET) */
     const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
     anim.setAttribute("attributeName", "gradientTransform");
     anim.setAttribute("type", "translate");
     anim.setAttribute("dur", `${speed}s`);
     anim.setAttribute("repeatCount", "indefinite");
-
     anim.setAttribute("keyTimes", "0;0.5;1");
     anim.setAttribute("values", `-${w} 0; 0 0; -${w} 0`);
 
     grad.appendChild(anim);
     defs.appendChild(grad);
     preview.appendChild(defs);
-
 
     /* SHAPE */
     const shape = createShape(shapeSel.value, w, h, r, s);
@@ -98,13 +96,9 @@ function updatePreview() {
 
     preview.appendChild(shape);
 
-
     /* DEBUG */
-    if (debugSel.value === "grid") preview.classList.add("grid-bg");
-    else preview.classList.remove("grid-bg");
-
-    if (debugSel.value === "viewbox") preview.classList.add("viewbox-border");
-    else preview.classList.remove("viewbox-border");
+    preview.classList.toggle("grid-bg", debugSel.value === "grid");
+    preview.classList.toggle("viewbox-border", debugSel.value === "viewbox");
 }
 
 
@@ -176,15 +170,6 @@ function createShape(type, w, h, r, s) {
 
 
 /* =========================================================
-   THEME TOGGLE
-========================================================= */
-document.getElementById("toggle-theme").onclick = () => {
-    document.body.classList.toggle("light");
-    document.body.classList.toggle("dark");
-};
-
-
-/* =========================================================
    TABS
 ========================================================= */
 document.querySelectorAll(".tab").forEach(tab => {
@@ -192,37 +177,14 @@ document.querySelectorAll(".tab").forEach(tab => {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
         tab.classList.add("active");
+
         document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
     };
 });
 
 
 /* =========================================================
-   PRESETS
-========================================================= */
-const presets = {
-    pastel: ["#ffb8c6", "#b6d9ff", "#ffe7a3", "#e8c8ff"],
-    sakura: ["#ffc1dc", "#ff8fbf", "#ff5fa7", "#ff2e95"],
-    ocean: ["#8fd1ff", "#3da9ff", "#0077cc", "#004a8f"],
-    space: ["#ff7bf2", "#7b47ff", "#4cb3ff", "#00f5d4"],
-    toxic: ["#ccff00", "#66ff00", "#00ff88", "#00ffaa"],
-    sunset: ["#ffaf87", "#ff8c42", "#ff3c38", "#a23e48"]
-};
-
-document.querySelectorAll(".preset").forEach(btn => {
-    btn.onclick = () => {
-        const p = presets[btn.dataset.preset];
-        color1.value = p[0];
-        color2.value = p[1];
-        color3.value = p[2];
-        color4.value = p[3];
-        updatePreview();
-    };
-});
-
-
-/* =========================================================
-   COPY
+   COPY BUTTON
 ========================================================= */
 document.getElementById("copy").onclick = () => {
     navigator.clipboard.writeText(
@@ -253,6 +215,7 @@ document.getElementById("generate").onclick = () => {
 
     const base = window.location.href.replace("index.html", "");
     const url = base + "view.html?" + params.toString();
+
     document.getElementById("obs-link").value = url;
 };
 
