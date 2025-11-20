@@ -1,218 +1,209 @@
-/* ============================================================
-   Pastel Border Generator — PAINEL PREMIUM + PARTÍCULAS
-============================================================ */
-
-:root {
-    --bg: #0d0d0f;
-    --panel: #16161a;
-    --panel-light: #1e1e23;
-    --text: #ffffff;
-    --subtext: #bbbb;
-    --accent: #79c0ff;
-    --border: #2b2b33;
-}
-
-body.light {
-    --bg: #f6f7fb;
-    --panel: #ffffff;
-    --panel-light: #f1f1f1;
-    --text: #111;
-    --subtext: #444;
-    --border: #dcdcdc;
-}
-
-/* GLOBAL */
-body {
+/* ================================
+   RESET
+================================ */
+* {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: "Inter", Arial, sans-serif;
-    display: flex;
-    height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    background: #0d0c11;
+    color: #eee;
     overflow: hidden;
 }
 
-/* =========================
-   CANVAS DE PARTÍCULAS
-========================= */
+/* ================================
+   PARTICLES BACKGROUND
+================================ */
 #particles {
     position: fixed;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
-    opacity: .35;
-    filter: blur(1px);
 }
 
-/* =========================
-   PAINEL LATERAL
-========================= */
+/* ================================
+   SIDEBAR (PAINEL)
+================================ */
 #sidebar {
-    width: 420px;
-    background: var(--panel);
-    border-right: 1px solid var(--border);
-    padding: 25px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 430px;
+    height: 100vh;
     overflow-y: auto;
+    padding: 30px;
+    background: rgba(22, 21, 28, 0.85);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    z-index: 10;
 }
 
-#sidebar h1 {
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 15px;
+h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-/* =========================
+/* ================================
    TABS
-========================= */
+================================ */
 #tabs {
     display: flex;
     gap: 10px;
-    align-items: center;
     margin-bottom: 20px;
 }
 
 .tab {
-    padding: 8px 14px;
-    background: var(--panel-light);
-    border-radius: 8px;
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.07);
     cursor: pointer;
     user-select: none;
-    border: 1px solid var(--border);
-    font-size: 14px;
-    transition: .2s;
+    transition: 0.2s;
 }
 
 .tab:hover {
-    background: var(--accent);
-    color: #000;
+    background: rgba(255,255,255,0.15);
 }
 
 .tab.active {
-    background: var(--accent);
-    color: #000;
+    background: linear-gradient(90deg,#ffb8c6,#b6d9ff,#ffe7a3,#e8c8ff);
+    color: #222;
+    font-weight: bold;
 }
 
+/* ================================
+   TOGGLE TEMA
+================================ */
 #toggle-theme {
-    margin-left: auto;
+    padding: 12px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 22px;
 }
 
-/* =========================
-   SEÇÕES / GRID
-========================= */
+/* ================================
+   SECTIONS
+================================ */
 .section-title {
-    color: var(--accent);
     margin: 20px 0 10px;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: bold;
+    opacity: 0.8;
 }
 
 .settings-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px 20px;
-}
-
-.settings-grid.full {
     grid-template-columns: 1fr;
+    gap: 14px;
 }
 
-/* =========================
-   INPUTS GERAIS
-========================= */
-label {
-    font-size: 13px;
-    opacity: .9;
-}
-
-input,
-select {
+/* ================================
+   INPUTS & SELECTS
+================================ */
+select, input[type="number"], input[type="color"] {
     width: 100%;
     padding: 8px 10px;
-    background: var(--panel-light);
     border-radius: 8px;
-    border: 1px solid var(--border);
-    color: var(--text);
+    border: 1px solid #555;
+    background: #18171f;
+    color: #ddd;
 }
 
+/* ================================
+   SLIDERS
+================================ */
 input[type="range"] {
-    cursor: pointer;
+    width: 100%;
+    appearance: none;
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(90deg,#ffb8c6,#b6d9ff,#ffe7a3,#e8c8ff);
+}
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: #ffd6e6;
+    border: 3px solid #fff;
+    cursor: grab;
 }
 
-/* =========================
-   BOTÕES
-========================= */
+/* ================================
+   BUTTONS
+================================ */
 button {
-    padding: 10px 16px;
-    background: var(--accent);
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
+    font-size: 16px;
+    background: linear-gradient(90deg,#ffb8c6,#b6d9ff,#ffe7a3,#e8c8ff);
+    color: #222;
     cursor: pointer;
     font-weight: bold;
-    color: #000;
-    transition: .2s;
+    transition: 0.2s;
 }
 
 button:hover {
-    opacity: .8;
+    filter: brightness(1.15);
 }
 
-/* =========================
-   PRESETS
-========================= */
-.preset-button {
-    background: var(--panel-light);
-    border: 1px solid var(--border);
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
-
-.preset-button:hover {
-    background: var(--accent);
-    color: #000;
-}
-
-/* =========================
-   LINK OBS
-========================= */
-#obs-link,
-#url-output {
-    width: 100%;
+#obs-link {
     margin-top: 10px;
-    padding: 10px;
-    background: var(--panel-light);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #777;
+    background: #0f0f15;
+    color: #eee;
 }
 
-/* =========================
-   PREVIEW
-========================= */
+/* ================================
+   PREVIEW AREA
+================================ */
 #preview-area {
-    flex: 1;
+    position: absolute;
+    left: 430px;
+    top: 0;
+    width: calc(100vw - 430px);
+    height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-    background: #0000004a;
+    justify-content: center;
 }
 
 #preview {
     width: 90%;
     height: 90%;
+    overflow: visible;
 }
 
-/* DEBUG */
-.grid-bg {
-    background-image: linear-gradient(#ffffff22 1px, transparent 1px),
-                      linear-gradient(90deg, #ffffff22 1px, transparent 1px);
-    background-size: 20px 20px;
+/* ================================
+   TAB CONTENT
+================================ */
+.tab-content {
+    display: none;
 }
 
-.viewbox-border {
-    outline: 2px dashed rgba(255,255,255,.3);
+.tab-content.active {
+    display: block;
 }
+
+/* ================================
+   SCROLLBAR
+================================ */
+#sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+#sidebar::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 20px;
+}
+
