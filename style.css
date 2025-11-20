@@ -289,19 +289,21 @@ body.light #sidebar::-webkit-scrollbar-thumb {
     left: 430px;
     top: 0;
     width: calc(100vw - 430px);
-    height: 100vh;
+    height: auto;  /* ← AGORA NÃO ESTICA O SVG */
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 40px 0; /* deixa espaço visual */
     z-index: 1;
 }
 
 #preview {
-    width: 90%;
-    height: 90%;
+    width: auto;     /* ← Mantém proporção real */
+    height: auto;    /* ← NÃO força 90% da tela */
+    max-width: 95%;
+    max-height: 95vh;
     overflow: visible;
 }
-
 /* ================================
    VIEWBOX DEBUG MODES
 ================================ */
