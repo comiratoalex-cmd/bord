@@ -20,50 +20,69 @@ const debugSel = document.getElementById("debug");
 
 const preview = document.getElementById("preview");
 
+
 /* =========================================================
-   UPDATE PREVIEW
+   UPDATE PREVIEW — LOOP PERFEITO
 ========================================================= */
-/* GRADIENTE DINÂMICO INFINITO (SEM PULO) */
-const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-grad.setAttribute("id", "g");
-grad.setAttribute("gradientUnits", "userSpaceOnUse");
-grad.setAttribute("x1", "0");
-grad.setAttribute("y1", "0");
-grad.setAttribute("x2", w);
-grad.setAttribute("y2", "0");
+function updatePreview() {
+    preview.innerHTML = "";
 
-/* Paradas do gradiente */
-function addStop(offset, color) {
-    const st = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-    st.setAttribute("offset", offset);
-    st.setAttribute("stop-color", color);
-    grad.appendChild(st);
-}
+    const w = +widthInput.value;
+    const h = +heightInput.value;
+    const r = +radiusInput.value;
+    const s = +strokeInput.value;
+    const op = +opacityInput.value;
+    const speed = +speedInput.value;
 
-if (mode === "2") {
-    addStop("0%", c1v);
-    addStop("100%", c2v);
-} else {
-    addStop("0%", c1v);
-    addStop("33%", c2v);
-    addStop("66%", c3v);
-    addStop("100%", c4v);
-}
+    const mode = modeSelect.value;
+    const c1v = color1.value;
+    const c2v = color2.value;
+    const c3v = color3.value;
+    const c4v = color4.value;
 
-/* ANIMAÇÃO INFINITA DE VERDADE (SEM RESET) */
-const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
-anim.setAttribute("attributeName", "gradientTransform");
-anim.setAttribute("type", "translate");
-anim.setAttribute("dur", `${speed}s`);
-anim.setAttribute("repeatCount", "indefinite");
+    preview.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-/* chave do loop perfeito */
-anim.setAttribute("keyTimes", "0;0.5;1");
-anim.setAttribute("values", `-${w} 0; 0 0; -${w} 0`);
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
 
-grad.appendChild(anim);
-defs.appendChild(grad);
-preview.appendChild(defs);
+    /* GRADIENTE DINÂMICO — LOOP REAL */
+    const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+    grad.setAttribute("id", "g");
+    grad.setAttribute("gradientUnits", "userSpaceOnUse");
+    grad.setAttribute("x1", "0");
+    grad.setAttribute("y1", "0");
+    grad.setAttribute("x2", w);
+    grad.setAttribute("y2", "0");
+
+    function addStop(offset, color) {
+        const st = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+        st.setAttribute("offset", offset);
+        st.setAttribute("stop-color", color);
+        grad.appendChild(st);
+    }
+
+    if (mode === "2") {
+        addStop("0%", c1v);
+        addStop("100%", c2v);
+    } else {
+        addStop("0%", c1v);
+        addStop("33%", c2v);
+        addStop("66%", c3v);
+        addStop("100%", c4v);
+    }
+
+    /* ANIMAÇÃO INFINITA — SEM PULO, SEM RESET */
+    const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
+    anim.setAttribute("attributeName", "gradientTransform");
+    anim.setAttribute("type", "translate");
+    anim.setAttribute("dur", `${speed}s`);
+    anim.setAttribute("repeatCount", "indefinite");
+
+    anim.setAttribute("keyTimes", "0;0.5;1");
+    anim.setAttribute("values", `-${w} 0; 0 0; -${w} 0`);
+
+    grad.appendChild(anim);
+    defs.appendChild(grad);
+    preview.appendChild(defs);
 
 
     /* SHAPE */
@@ -79,6 +98,7 @@ preview.appendChild(defs);
 
     preview.appendChild(shape);
 
+
     /* DEBUG */
     if (debugSel.value === "grid") preview.classList.add("grid-bg");
     else preview.classList.remove("grid-bg");
@@ -86,6 +106,7 @@ preview.appendChild(defs);
     if (debugSel.value === "viewbox") preview.classList.add("viewbox-border");
     else preview.classList.remove("viewbox-border");
 }
+
 
 /* =========================================================
    SHAPES
@@ -142,6 +163,7 @@ function createShape(type, w, h, r, s) {
     }
 }
 
+
 /* =========================================================
    EVENT LISTENERS
 ========================================================= */
@@ -152,6 +174,7 @@ function createShape(type, w, h, r, s) {
     glowSel, debugSel
 ].forEach(el => el.oninput = updatePreview);
 
+
 /* =========================================================
    THEME TOGGLE
 ========================================================= */
@@ -159,6 +182,7 @@ document.getElementById("toggle-theme").onclick = () => {
     document.body.classList.toggle("light");
     document.body.classList.toggle("dark");
 };
+
 
 /* =========================================================
    TABS
@@ -171,6 +195,7 @@ document.querySelectorAll(".tab").forEach(tab => {
         document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
     };
 });
+
 
 /* =========================================================
    PRESETS
@@ -195,8 +220,9 @@ document.querySelectorAll(".preset").forEach(btn => {
     };
 });
 
+
 /* =========================================================
-   COPIAR LINK
+   COPY
 ========================================================= */
 document.getElementById("copy").onclick = () => {
     navigator.clipboard.writeText(
@@ -204,8 +230,9 @@ document.getElementById("copy").onclick = () => {
     );
 };
 
+
 /* =========================================================
-   GENERATE URL FOR OBS
+   GENERATE OBS URL
 ========================================================= */
 document.getElementById("generate").onclick = () => {
     const params = new URLSearchParams({
@@ -228,6 +255,7 @@ document.getElementById("generate").onclick = () => {
     const url = base + "view.html?" + params.toString();
     document.getElementById("obs-link").value = url;
 };
+
 
 /* =========================================================
    PARTICLES
@@ -275,7 +303,8 @@ function drawParticles() {
 }
 drawParticles();
 
+
 /* =========================================================
-   INITIAL RENDER
+   INIT
 ========================================================= */
 updatePreview();
