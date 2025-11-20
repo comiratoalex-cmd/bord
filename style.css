@@ -1,287 +1,218 @@
-/* =========================================
-   PASTEL CANDY PREMIUM UI
-   Rosa bebê – Azul bebê – Amarelo – Lilás
-   Moderno, leve, responsivo, clean
-========================================= */
+/* ============================================================
+   Pastel Border Generator — PAINEL PREMIUM + PARTÍCULAS
+============================================================ */
 
 :root {
-    --bg-light: #faf7ff;
-    --panel-light: #ffffff;
-    --text-light: #444;
-    --border-light: #e8daff;
-
-    --bg-dark: #1f1d26;
-    --panel-dark: #2a2733;
-    --text-dark: #f7f2ff;
-    --border-dark: #483d66;
-
-    --candy-pink: #ffb8c6;
-    --candy-blue: #b6d9ff;
-    --candy-yellow: #ffe7a3;
-    --candy-lilac: #e8c8ff;
-
-    --radius: 18px;
-    --shadow: 0 4px 14px rgba(0,0,0,0.08);
+    --bg: #0d0d0f;
+    --panel: #16161a;
+    --panel-light: #1e1e23;
+    --text: #ffffff;
+    --subtext: #bbbb;
+    --accent: #79c0ff;
+    --border: #2b2b33;
 }
 
-/* =========================================
-   LIGHT / DARK MODE
-========================================= */
 body.light {
-    background: var(--bg-light);
-    color: var(--text-light);
+    --bg: #f6f7fb;
+    --panel: #ffffff;
+    --panel-light: #f1f1f1;
+    --text: #111;
+    --subtext: #444;
+    --border: #dcdcdc;
 }
 
-body.dark {
-    background: var(--bg-dark);
-    color: var(--text-dark);
-}
-
-body.light #container {
-    background: var(--panel-light);
-    border: 1px solid var(--border-light);
-}
-
-body.dark #container {
-    background: var(--panel-dark);
-    border: 1px solid var(--border-dark);
-}
-
-/* =========================================
-   HEADER
-========================================= */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 22px;
-    font-size: 22px;
-    font-weight: 700;
-}
-
-header h1 {
+/* GLOBAL */
+body {
     margin: 0;
-    font-size: 28px;
-    background: linear-gradient(90deg,
-        var(--candy-pink),
-        var(--candy-blue),
-        var(--candy-yellow),
-        var(--candy-lilac)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
 }
 
-#toggle-theme {
-    background: none;
-    border: none;
+/* =========================
+   CANVAS DE PARTÍCULAS
+========================= */
+#particles {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    opacity: .35;
+    filter: blur(1px);
+}
+
+/* =========================
+   PAINEL LATERAL
+========================= */
+#sidebar {
+    width: 420px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 25px;
+    overflow-y: auto;
+}
+
+#sidebar h1 {
     font-size: 26px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-#toggle-theme:hover {
-    transform: scale(1.2);
+    font-weight: 700;
+    margin-bottom: 15px;
 }
 
-/* =========================================
-   MAIN CONTAINER
-========================================= */
-#container {
-    max-width: 420px;
-    padding: 22px;
-    margin: 0 auto;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-}
-
-/* =========================================
+/* =========================
    TABS
-========================================= */
+========================= */
 #tabs {
     display: flex;
-    gap: 6px;
-    margin-bottom: 14px;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .tab {
-    flex: 1;
-    padding: 10px 0;
-    text-align: center;
-    border-radius: var(--radius);
-    border: 1px solid transparent;
+    padding: 8px 14px;
+    background: var(--panel-light);
+    border-radius: 8px;
     cursor: pointer;
-    background: var(--candy-blue);
-    font-weight: 600;
-    transition: 0.3s;
+    user-select: none;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    transition: .2s;
 }
 
 .tab:hover {
-    opacity: 0.85;
-}
-
-body.dark .tab {
-    background: #3d3a48;
+    background: var(--accent);
+    color: #000;
 }
 
 .tab.active {
-    background: var(--candy-pink);
-    color: #fff;
-    border: 1px solid #fff3f8;
-    box-shadow: 0 0 6px rgba(255,150,180,0.5);
+    background: var(--accent);
+    color: #000;
 }
 
-/* =========================================
-   TAB CONTENT
-========================================= */
-.tab-content {
-    display: none;
-}
-.tab-content.active {
-    display: block;
+#toggle-theme {
+    margin-left: auto;
+    cursor: pointer;
+    font-size: 20px;
 }
 
-/* =========================================
-   LABELS + INPUTS
-========================================= */
-label {
-    display: block;
-    margin-top: 12px;
-    font-size: 14px;
+/* =========================
+   SEÇÕES / GRID
+========================= */
+.section-title {
+    color: var(--accent);
+    margin: 20px 0 10px;
+    font-size: 15px;
     font-weight: 600;
 }
 
-select, input[type="number"], input[type="color"], input[type="text"] {
+.settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 20px;
+}
+
+.settings-grid.full {
+    grid-template-columns: 1fr;
+}
+
+/* =========================
+   INPUTS GERAIS
+========================= */
+label {
+    font-size: 13px;
+    opacity: .9;
+}
+
+input,
+select {
     width: 100%;
     padding: 8px 10px;
-    margin-top: 4px;
-    border-radius: var(--radius);
-    border: 1px solid #ddd;
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s;
+    background: var(--panel-light);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    color: var(--text);
 }
 
-body.dark select,
-body.dark input[type="number"],
-body.dark input[type="color"],
-body.dark input[type="text"] {
-    background: #37333f;
-    border: 1px solid #555;
-    color: var(--text-dark);
-}
-
-/* sliders */
 input[type="range"] {
-    width: 100%;
-    margin-top: 4px;
-    height: 6px;
-    background: linear-gradient(90deg,
-        var(--candy-pink),
-        var(--candy-blue),
-        var(--candy-yellow),
-        var(--candy-lilac)
-    );
-    border-radius: 6px;
-    outline: none;
-    -webkit-appearance: none;
-}
-
-/* slider thumb */
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    background: #fff;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    border: 3px solid var(--candy-pink);
-    transition: 0.2s;
     cursor: pointer;
 }
-input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-}
 
-/* =========================================
-   PRESETS
-========================================= */
-.preset {
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: var(--radius);
-    background: var(--candy-yellow);
-    cursor: pointer;
-    text-align: center;
-    font-weight: 600;
-    transition: 0.25s;
-}
-
-.preset:hover {
-    background: var(--candy-pink);
-    color: #fff;
-    transform: translateY(-3px);
-}
-
-/* =========================================
-   BUTTONS
-========================================= */
+/* =========================
+   BOTÕES
+========================= */
 button {
-    width: 100%;
-    padding: 12px;
-    border-radius: var(--radius);
+    padding: 10px 16px;
+    background: var(--accent);
     border: none;
-    margin-top: 14px;
-    background: linear-gradient(135deg,
-        var(--candy-pink),
-        var(--candy-blue)
-    );
-    color: #fff;
-    font-weight: 600;
+    border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s;
+    font-weight: bold;
+    color: #000;
+    transition: .2s;
 }
+
 button:hover {
-    opacity: 0.9;
-    transform: scale(1.02);
+    opacity: .8;
 }
 
-#copy {
-    margin-top: 6px;
-    background: var(--candy-lilac);
+/* =========================
+   PRESETS
+========================= */
+.preset-button {
+    background: var(--panel-light);
+    border: 1px solid var(--border);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
 
-/* =========================================
-   PREVIEW AREA
-========================================= */
-#preview-area {
+.preset-button:hover {
+    background: var(--accent);
+    color: #000;
+}
+
+/* =========================
+   LINK OBS
+========================= */
+#obs-link,
+#url-output {
     width: 100%;
-    text-align: center;
-    margin-top: 40px;
+    margin-top: 10px;
+    padding: 10px;
+    background: var(--panel-light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+/* =========================
+   PREVIEW
+========================= */
+#preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0000004a;
 }
 
 #preview {
     width: 90%;
-    height: auto;
-    min-height: 300px;
+    height: 90%;
 }
 
-/* =========================================
-   DEBUG MODES
-========================================= */
+/* DEBUG */
 .grid-bg {
-    background-image: linear-gradient(#ccc2 1px, transparent 1px),
-                      linear-gradient(90deg, #ccc2 1px, transparent 1px);
+    background-image: linear-gradient(#ffffff22 1px, transparent 1px),
+                      linear-gradient(90deg, #ffffff22 1px, transparent 1px);
     background-size: 20px 20px;
 }
 
 .viewbox-border {
-    outline: 3px dashed var(--candy-pink);
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-@media (max-width: 600px) {
-    #container {
-        max-width: 95%;
-    }
+    outline: 2px dashed rgba(255,255,255,.3);
 }
