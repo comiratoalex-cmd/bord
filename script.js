@@ -170,7 +170,6 @@ function makeShape(type, w, h, r, s) {
         });
     }
 
-    /* ========= LINHA HORIZONTAL ========= */
     if (type === "line-h") {
         return makeSVG("line", {
             x1: s,
@@ -181,7 +180,6 @@ function makeShape(type, w, h, r, s) {
         });
     }
 
-    /* ========= LINHA VERTICAL ========= */
     if (type === "line-v") {
         return makeSVG("line", {
             x1: w / 2,
@@ -232,7 +230,8 @@ generateBtn.onclick = () => {
         debug: debugSel.value
     });
 
-    obsLink.value = window.location.origin + "/view.html?" + params.toString();
+    obsLink.value =
+        window.location.origin + "/view.html?" + params.toString();
 };
 
 /* ============================================================
@@ -247,3 +246,50 @@ copyBtn.onclick = () => {
    INICIAR
 ============================================================ */
 updatePreview();
+
+/* ============================================================
+   PARTICLES EFFECT (canvas)
+============================================================ */
+const particleCanvas = document.getElementById("particles");
+const ctx = particleCanvas.getContext("2d");
+
+function resizeParticles() {
+    particleCanvas.width = window.innerWidth;
+    particleCanvas.height = window.innerHeight;
+}
+resizeParticles();
+window.addEventListener("resize", resizeParticles);
+
+let particles = [];
+for (let i = 0; i < 90; i++) {
+    particles.push({
+        x: Math.random() * particleCanvas.width,
+        y: Math.random() * particleCanvas.height,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.4,
+        dy: (Math.random() - 0.5) * 0.4,
+        color: `hsl(${Math.random() * 360}, 70%, 70%)`
+    });
+}
+
+function animateParticles() {
+    ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+    particles.forEach(p => {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > particleCanvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > particleCanvas.height) p.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+    });
+
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
