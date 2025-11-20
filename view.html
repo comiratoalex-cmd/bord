@@ -1,227 +1,201 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Borda OBS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastel Border View</title>
 
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        background: transparent;
-        overflow: hidden;
-    }
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+        }
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
 
-    #preview {
-        width: 100vw;
-        height: 100vh;
-        display: block;
-    }
+        svg {
+            width: 100vw;
+            height: 100vh;
+            overflow: visible;
+        }
 
-    body.debug-grid {
-        background-image:
-          linear-gradient(#ffffff22 1px, transparent 1px),
-          linear-gradient(90deg, #ffffff22 1px, transparent 1px);
-        background-size: 32px 32px;
-    }
+        @keyframes neonPulse {
+            0% { filter: drop-shadow(0 0 3px #fff4) drop-shadow(0 0 8px #ffb8c6); }
+            50% { filter: drop-shadow(0 0 6px #fff8) drop-shadow(0 0 18px #b6d9ff); }
+            100% { filter: drop-shadow(0 0 3px #fff4) drop-shadow(0 0 8px #ffe7a3); }
+        }
 
-    body.debug-viewbox svg {
-        outline: 2px dashed rgba(255,255,255,.4);
-    }
-</style>
+        .neon-active {
+            animation: neonPulse 2.8s ease-in-out infinite;
+        }
+
+        .grid-bg {
+            background-image:
+                linear-gradient(#ffffff22 1px, transparent 1px),
+                linear-gradient(90deg, #ffffff22 1px, transparent 1px);
+            background-size: 32px 32px;
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+        }
+
+        .viewbox-border {
+            outline: 2px dashed rgba(255,255,255,0.5);
+        }
+    </style>
 
 </head>
 <body>
 
-<svg id="preview"></svg>
+    <div id="root">
+        <svg id="view"></svg>
+    </div>
 
-<script>
-/* -----------------------------------------------------------
-   GET PARAMS
------------------------------------------------------------ */
-function param(key, fallback = null) {
-    const url = new URL(window.location.href);
-    return url.searchParams.get(key) || fallback;
-}
+    <script>
+        const svg = document.getElementById("view");
 
-/* -----------------------------------------------------------
-   PARAMETROS RECEBIDOS DO OBS LINK
------------------------------------------------------------ */
-const type  = param("shape", "rect");
-const w     = +param("w", 800);
-const h     = +param("h", 300);
-const r     = +param("r", 20);
-const stroke = +param("stroke", 10);
-const speed  = +param("speed", 10);
-const op     = +param("opacity", 1);
-const mode   = param("mode", "4");
+        function getParam(p, def = null) {
+            return new URLSearchParams(window.location.search).get(p) ?? def;
+        }
 
-let c1 = param("c1", "#ffb8c6");
-let c2 = param("c2", "#b6d9ff");
-let c3 = param("c3", "#ffe7a3");
-let c4 = param("c4", "#e8c8ff");
+        function makeSVG(tag, attrs) {
+            const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+            for (let k in attrs) el.setAttribute(k, attrs[k]);
+            return el;
+        }
 
-const glow  = param("glow", "none");
-const debug = param("debug", "off");
+        function render() {
+            svg.innerHTML = "";
 
-/* rainbow auto */
-let rainbowTick = 0;
+            const w = +getParam("w", 800);
+            const h = +getParam("h", 200);
+            const r = +getParam("r", 20);
+            const s = +getParam("s", 8);
+            const opacity = +getParam("o", 1);
+            const speed = +getParam("speed", 10);
+            const shape = getParam("shape", "rect");
 
-/* -----------------------------------------------------------
-   APLICAR DEBUG
------------------------------------------------------------ */
-if (debug === "grid") document.body.classList.add("debug-grid");
-if (debug === "viewbox") document.body.classList.add("debug-viewbox");
+            const mode = getParam("mode", "4");
+            const c1 = getParam("c1", "#ffb8c6");
+            const c2 = getParam("c2", "#b6d9ff");
+            const c3 = getParam("c3", "#ffe7a3");
+            const c4 = getParam("c4", "#e8c8ff");
 
-/* -----------------------------------------------------------
-   SVG
------------------------------------------------------------ */
-const svg = document.getElementById("preview");
-svg.innerHTML = "";
+            const glow = getParam("glow", "none");
+            const debug = getParam("debug", "off");
 
-/* -----------------------------------------------------------
-   RAINBOW MODE AUTO
------------------------------------------------------------ */
-if (mode === "rainbow-auto") {
-    function animateRainbow() {
-        rainbowTick += 0.02;
+            /* --------------------------
+               DEFINIÇÃO DO GRADIENTE
+            --------------------------- */
+            let stops = "";
 
-        c1 = `hsl(${(rainbowTick * 40) % 360}, 90%, 70%)`;
-        c2 = `hsl(${(rainbowTick * 40 + 90) % 360}, 90%, 70%)`;
-        c3 = `hsl(${(rainbowTick * 40 + 180) % 360}, 90%, 70%)`;
-        c4 = `hsl(${(rainbowTick * 40 + 270) % 360}, 90%, 70%)`;
+            if (mode === "2") {
+                stops = `
+                    <stop offset="0%" stop-color="${c1}" />
+                    <stop offset="100%" stop-color="${c2}" />
+                `;
+            }
 
-        build();
-        requestAnimationFrame(animateRainbow);
-    }
+            if (mode === "4") {
+                stops = `
+                    <stop offset="0%" stop-color="${c1}" />
+                    <stop offset="33%" stop-color="${c2}" />
+                    <stop offset="66%" stop-color="${c3}" />
+                    <stop offset="100%" stop-color="${c4}" />
+                `;
+            }
 
-    requestAnimationFrame(animateRainbow);
-} else {
-    build();
-}
+            const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+            defs.innerHTML = `
+                <linearGradient id="movingGradient" gradientUnits="userSpaceOnUse"
+                    x1="0" y1="0" x2="600" y2="0">
+                    ${stops}
+                    <animate attributeName="x1" values="0;-600" dur="${speed}s" repeatCount="indefinite"/>
+                    <animate attributeName="x2" values="600;0" dur="${speed}s" repeatCount="indefinite"/>
+                </linearGradient>
+            `;
+            svg.appendChild(defs);
 
-/* -----------------------------------------------------------
-   FUNÇÃO PRINCIPAL
------------------------------------------------------------ */
-function build() {
-    svg.innerHTML = "";
+            /* --------------------------
+               DESENHAR A FORMA
+            --------------------------- */
+            let element;
 
-    /* viewBox */
-    if (type === "line-h") svg.setAttribute("viewBox", `0 0 ${w} ${Math.max(stroke * 4, 40)}`);
-    else if (type === "line-v") svg.setAttribute("viewBox", `0 0 ${Math.max(stroke * 4, 40)} ${h}`);
-    else svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+            if (shape === "rect") {
+                element = makeSVG("rect", {
+                    x: s, y: s,
+                    width: w - s * 2,
+                    height: h - s * 2,
+                    rx: r
+                });
+            }
 
-    /* gradient */
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+            if (shape === "square") {
+                const size = Math.min(w, h);
+                element = makeSVG("rect", {
+                    x: s, y: s,
+                    width: size - s * 2,
+                    height: size - s * 2,
+                    rx: r
+                });
+            }
 
-    let stops = "";
+            if (shape === "ellipse") {
+                element = makeSVG("ellipse", {
+                    cx: w / 2,
+                    cy: h / 2,
+                    rx: w / 2 - s,
+                    ry: h / 2 - s
+                });
+            }
 
-    if (mode === "2") {
-        stops = `
-            <stop offset="0%" stop-color="${c1}" />
-            <stop offset="100%" stop-color="${c2}" />
-        `;
-    }
+            if (shape === "line-h") {
+                element = makeSVG("line", {
+                    x1: s,
+                    y1: h / 2,
+                    x2: w - s,
+                    y2: h / 2,
+                    "stroke-linecap": "round"
+                });
+            }
 
-    if (mode === "4" || mode === "rainbow-auto") {
-        stops = `
-            <stop offset="0%" stop-color="${c1}" />
-            <stop offset="33%" stop-color="${c2}" />
-            <stop offset="66%" stop-color="${c3}" />
-            <stop offset="100%" stop-color="${c4}" />
-        `;
-    }
+            if (shape === "line-v") {
+                element = makeSVG("line", {
+                    x1: w / 2,
+                    y1: s,
+                    x2: w / 2,
+                    y2: h - s,
+                    "stroke-linecap": "round"
+                });
+            }
 
-    defs.innerHTML = `
-        <linearGradient id="movingGradient" x1="0" y1="0" x2="600" y2="0">
-            ${stops}
-            <animate attributeName="x1" values="0;-600" dur="${speed}s" repeatCount="indefinite"/>
-            <animate attributeName="x2" values="600;0" dur="${speed}s" repeatCount="indefinite"/>
-        </linearGradient>
-    `;
+            element.setAttribute("stroke", "url(#movingGradient)");
+            element.setAttribute("stroke-width", s);
+            element.setAttribute("stroke-opacity", opacity);
+            element.setAttribute("fill", "none");
 
-    svg.appendChild(defs);
+            if (glow === "neon") {
+                element.classList.add("neon-active");
+            }
 
-    /* shape */
-    let shape;
+            if (debug === "grid") {
+                svg.classList.add("grid-bg");
+            }
 
-    if (type === "rect") {
-        shape = make("rect", {
-            x: stroke,
-            y: stroke,
-            width: w - stroke * 2,
-            height: h - stroke * 2,
-            rx: r
-        });
-    }
+            if (debug === "viewbox") {
+                element.classList.add("viewbox-border");
+            }
 
-    if (type === "square") {
-        const size = Math.min(w, h);
-        shape = make("rect", {
-            x: stroke,
-            y: stroke,
-            width: size - stroke * 2,
-            height: size - stroke * 2,
-            rx: r
-        });
-    }
+            svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+            svg.appendChild(element);
+        }
 
-    if (type === "ellipse") {
-        shape = make("ellipse", {
-            cx: w / 2,
-            cy: h / 2,
-            rx: w / 2 - stroke,
-            ry: h / 2 - stroke
-        });
-    }
+        render();
+    </script>
 
-    if (type === "line-h") {
-        const sh = Math.max(stroke * 4, 40);
-        shape = make("line", {
-            x1: 0,
-            y1: sh / 2,
-            x2: w,
-            y2: sh / 2
-        });
-    }
-
-    if (type === "line-v") {
-        const sw = Math.max(stroke * 4, 40);
-        shape = make("line", {
-            x1: sw / 2,
-            y1: 0,
-            x2: sw / 2,
-            y2: h
-        });
-    }
-
-    /* estilo */
-    shape.setAttribute("stroke", "url(#movingGradient)");
-    shape.setAttribute("stroke-width", stroke);
-    shape.setAttribute("stroke-linecap", "round");
-    shape.setAttribute("stroke-linejoin", "round");
-    shape.setAttribute("fill", "none");
-    shape.setAttribute("opacity", op);
-
-    /* glow */
-    if (glow === "soft") shape.style.filter = "drop-shadow(0 0 6px currentColor)";
-    if (glow === "neon") shape.style.filter = "drop-shadow(0 0 14px currentColor)";
-    if (glow === "blurred") shape.style.filter = "blur(2px) drop-shadow(0 0 12px currentColor)";
-    if (glow === "none") shape.style.filter = "none";
-
-    svg.appendChild(shape);
-}
-
-/* -----------------------------------------------------------
-   MAKE SVG
------------------------------------------------------------ */
-function make(tag, attrs) {
-    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    for (let k in attrs) el.setAttribute(k, attrs[k]);
-    return el;
-}
-
-</script>
 </body>
 </html>
