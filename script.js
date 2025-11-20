@@ -97,12 +97,17 @@ function updatePreview() {
 
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     defs.innerHTML = `
-        <linearGradient id="movingGradient" gradientUnits="userSpaceOnUse"
-            x1="0" y1="0" x2="600" y2="0">
-            ${stops}
-            <animate attributeName="x1" values="0;-600" dur="${speed}s" repeatCount="indefinite"/>
-            <animate attributeName="x2" values="600;0" dur="${speed}s" repeatCount="indefinite"/>
-        </linearGradient>
+       <linearGradient id="movingGradient" gradientUnits="userSpaceOnUse">
+    ${stops}
+    <animateTransform 
+        attributeName="gradientTransform"
+        type="translate"
+        from="-600 0"
+        to="600 0"
+        dur="${speed}s"
+        repeatCount="indefinite"
+    />
+</linearGradient>
     `;
     preview.appendChild(defs);
 
