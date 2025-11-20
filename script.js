@@ -29,7 +29,7 @@ const tabContents = document.querySelectorAll(".tab-content");
 const themeToggle = document.getElementById("toggle-theme");
 
 /* ============================================================
-   MUDAR TABS
+   TABS
 ============================================================ */
 tabs.forEach(tab => {
     tab.addEventListener("click", () => {
@@ -61,7 +61,7 @@ themeToggle.addEventListener("click", () => {
 });
 
 /* ============================================================
-   FUNÇÃO PRINCIPAL – DESENHAR PREVIEW
+   PREVIEW PRINCIPAL
 ============================================================ */
 function updatePreview() {
     preview.innerHTML = "";
@@ -74,9 +74,9 @@ function updatePreview() {
     const speed = +speedInput.value;
     const type = shapeSel.value;
 
-    /* =========================
-       GRADIENTE DINÂMICO
-    ========================== */
+    /* ============================
+       GRADIENTE — LOOP PERFEITO
+    ============================ */
     let stops = "";
 
     if (modeSelect.value === "2") {
@@ -97,23 +97,24 @@ function updatePreview() {
 
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     defs.innerHTML = `
-       <linearGradient id="movingGradient" gradientUnits="userSpaceOnUse">
-    ${stops}
-    <animateTransform 
-        attributeName="gradientTransform"
-        type="translate"
-        from="-600 0"
-        to="600 0"
-        dur="${speed}s"
-        repeatCount="indefinite"
-    />
-</linearGradient>
+        <linearGradient id="movingGradient" gradientUnits="userSpaceOnUse">
+            ${stops}
+
+            <animateTransform 
+                attributeName="gradientTransform"
+                type="translate"
+                from="-600 0"
+                to="600 0"
+                dur="${speed}s"
+                repeatCount="indefinite"
+            />
+        </linearGradient>
     `;
     preview.appendChild(defs);
 
-    /* =========================
-       CRIA A FORMA
-    ========================== */
+    /* --------------------------
+       DESENHAR SHAPE
+    --------------------------- */
     let shape = makeShape(type, w, h, r, s);
 
     shape.setAttribute("stroke", "url(#movingGradient)");
@@ -125,7 +126,6 @@ function updatePreview() {
         shape.classList.add("neon-active");
     }
 
-    /* DEBUG MODES */
     if (debugSel.value === "grid") {
         preview.classList.add("grid-bg");
     } else {
@@ -140,15 +140,14 @@ function updatePreview() {
     preview.appendChild(shape);
 }
 
-/* ============================================================
-   CRIA FORMAS (inclui linhas corrigidas)
-============================================================ */
+/* ============================
+   SHAPES
+============================ */
 function makeShape(type, w, h, r, s) {
 
     if (type === "rect") {
         return makeSVG("rect", {
-            x: s,
-            y: s,
+            x: s, y: s,
             width: w - s * 2,
             height: h - s * 2,
             rx: r
@@ -158,8 +157,7 @@ function makeShape(type, w, h, r, s) {
     if (type === "square") {
         const size = Math.min(w, h);
         return makeSVG("rect", {
-            x: s,
-            y: s,
+            x: s, y: s,
             width: size - s * 2,
             height: size - s * 2,
             rx: r
@@ -170,8 +168,8 @@ function makeShape(type, w, h, r, s) {
         return makeSVG("ellipse", {
             cx: w / 2,
             cy: h / 2,
-            rx: (w / 2) - s,
-            ry: (h / 2) - s
+            rx: w / 2 - s,
+            ry: h / 2 - s
         });
     }
 
@@ -196,9 +194,6 @@ function makeShape(type, w, h, r, s) {
     }
 }
 
-/* ============================================================
-   UTIL SVG
-============================================================ */
 function makeSVG(tag, attrs) {
     const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
     for (let k in attrs) el.setAttribute(k, attrs[k]);
@@ -206,7 +201,7 @@ function makeSVG(tag, attrs) {
 }
 
 /* ============================================================
-   EVENTOS
+   EVENTOS QUE ATUALIZAM O PREVIEW
 ============================================================ */
 [
     shapeSel, widthInput, heightInput, radiusInput, strokeInput,
@@ -215,7 +210,7 @@ function makeSVG(tag, attrs) {
 ].forEach(el => el.oninput = updatePreview);
 
 /* ============================================================
-   GERAR URL OBS
+   GERAR LINK OBS
 ============================================================ */
 generateBtn.onclick = () => {
     const params = new URLSearchParams({
@@ -251,50 +246,3 @@ copyBtn.onclick = () => {
    INICIAR
 ============================================================ */
 updatePreview();
-
-/* ============================================================
-   PARTICLES EFFECT (canvas)
-============================================================ */
-const particleCanvas = document.getElementById("particles");
-const ctx = particleCanvas.getContext("2d");
-
-function resizeParticles() {
-    particleCanvas.width = window.innerWidth;
-    particleCanvas.height = window.innerHeight;
-}
-resizeParticles();
-window.addEventListener("resize", resizeParticles);
-
-let particles = [];
-for (let i = 0; i < 90; i++) {
-    particles.push({
-        x: Math.random() * particleCanvas.width,
-        y: Math.random() * particleCanvas.height,
-        r: Math.random() * 2 + 1,
-        dx: (Math.random() - 0.5) * 0.4,
-        dy: (Math.random() - 0.5) * 0.4,
-        color: `hsl(${Math.random() * 360}, 70%, 70%)`
-    });
-}
-
-function animateParticles() {
-    ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-
-    particles.forEach(p => {
-        p.x += p.dx;
-        p.y += p.dy;
-
-        if (p.x < 0 || p.x > particleCanvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > particleCanvas.height) p.dy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = p.color;
-        ctx.fill();
-    });
-
-    requestAnimationFrame(animateParticles);
-}
-animateParticles();
