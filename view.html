@@ -1,14 +1,157 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<title>Pastel Border View</title>
-<link rel="stylesheet" href="view.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pastel Border - View</title>
+
+<style>
+    body {
+        margin: 0;
+        background: transparent;
+        overflow: hidden;
+    }
+
+    svg {
+        width: 100vw;
+        height: 100vh;
+        display: block;
+    }
+</style>
+
 </head>
 <body>
 
-<svg id="preview" xmlns="http://www.w3.org/2000/svg"></svg>
+<svg id="border"></svg>
 
-<script src="view.js"></script>
+<script>
+// ===============================
+// PEGAR PARAMETROS DA URL
+// ===============================
+const params = new URLSearchParams(window.location.search);
+
+const shape  = params.get("shape");
+const w      = +params.get("w");
+const h      = +params.get("h");
+const stroke = +params.get("stroke");
+const speed  = +params.get("speed");
+const mode   = params.get("mode");
+
+const c1 = params.get("c1") || "#ff00ff";
+const c2 = params.get("c2") || "#00ffff";
+const c3 = params.get("c3") || "#ffcc00";
+const c4 = params.get("c4") || "#ff8800";
+
+// ===============================
+// CRIAR SVG
+// ===============================
+const svg = document.getElementById("border");
+svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+// ===============================
+// CRIAR GRADIENTE
+// ===============================
+let stops = "";
+
+if (mode === "2") {
+    stops = `
+        <stop offset="0%" stop-color="${c1}" />
+        <stop offset="100%" stop-color="${c2}" />
+    `;
+}
+
+if (mode === "4") {
+    stops = `
+        <stop offset="0%" stop-color="${c1}" />
+        <stop offset="33%" stop-color="${c2}" />
+        <stop offset="66%" stop-color="${c3}" />
+        <stop offset="100%" stop-color="${c4}" />
+    `;
+}
+
+svg.innerHTML = `
+<defs>
+    <linearGradient id="movingGradient" x1="0" y1="0" x2="600" y2="0">
+        ${stops}
+        <animate attributeName="x1" values="0;-600" dur="${speed}s" repeatCount="indefinite"/>
+        <animate attributeName="x2" values="600;0"  dur="${speed}s" repeatCount="indefinite"/>
+    </linearGradient>
+</defs>
+`;
+
+// ===============================
+// CRIAR A FORMA
+// ===============================
+let shapeEl;
+
+if (shape === "rect") {
+    shapeEl = makeSVG("rect", {
+        x: stroke,
+        y: stroke,
+        width: w - stroke * 2,
+        height: h - stroke * 2,
+        rx: params.get("radius") || 0
+    });
+}
+
+if (shape === "square") {
+    const size = Math.min(w, h);
+    shapeEl = makeSVG("rect", {
+        x: stroke,
+        y: stroke,
+        width: size - stroke * 2,
+        height: size - stroke * 2,
+        rx: params.get("radius") || 0
+    });
+}
+
+if (shape === "ellipse") {
+    shapeEl = makeSVG("ellipse", {
+        cx: w / 2,
+        cy: h / 2,
+        rx: w / 2 - stroke,
+        ry: h / 2 - stroke
+    });
+}
+
+if (shape === "line-h") {
+    shapeEl = makeSVG("line", {
+        x1: 0,
+        y1: h / 2,
+        x2: w,
+        y2: h / 2
+    });
+}
+
+if (shape === "line-v") {
+    shapeEl = makeSVG("line", {
+        x1: w / 2,
+        y1: 0,
+        x2: w / 2,
+        y2: h
+    });
+}
+
+// ===============================
+// ESTILO
+// ===============================
+shapeEl.setAttribute("stroke", "url(#movingGradient)");
+shapeEl.setAttribute("stroke-width", stroke);
+shapeEl.setAttribute("fill", "none");
+shapeEl.setAttribute("stroke-linecap", "round");
+shapeEl.setAttribute("stroke-linejoin", "round");
+
+svg.appendChild(shapeEl);
+
+// ===============================
+// FUNÇÃO SVG
+// ===============================
+function makeSVG(tag, attrs) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (let k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+}
+</script>
+
 </body>
 </html>
