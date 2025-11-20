@@ -2,111 +2,158 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pastel Border - View</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Border View</title>
 
 <style>
-    body {
+    html, body {
         margin: 0;
+        padding: 0;
         background: transparent;
         overflow: hidden;
     }
 
-    svg {
+    #preview {
         width: 100vw;
         height: 100vh;
         display: block;
     }
+
+    body.debug-grid {
+        background-image: linear-gradient(#ffffff22 1px, transparent 1px),
+                          linear-gradient(90deg, #ffffff22 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+
+    body.debug-viewbox svg {
+        outline: 2px dashed rgba(255,255,255,.4);
+    }
 </style>
 
 </head>
+
 <body>
 
-<svg id="border"></svg>
+<svg id="preview"></svg>
 
 <script>
-// ===============================
-// PEGAR PARAMETROS DA URL
-// ===============================
-const params = new URLSearchParams(window.location.search);
+/* ============================================================
+   Função para buscar parâmetros na URL
+============================================================ */
+function getParam(key, fallback = null) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(key) || fallback;
+}
 
-const shape  = params.get("shape");
-const w      = +params.get("w");
-const h      = +params.get("h");
-const stroke = +params.get("stroke");
-const speed  = +params.get("speed");
-const mode   = params.get("mode");
+/* ============================================================
+   Obter parâmetros
+============================================================ */
 
-const c1 = params.get("c1") || "#ff00ff";
-const c2 = params.get("c2") || "#00ffff";
-const c3 = params.get("c3") || "#ffcc00";
-const c4 = params.get("c4") || "#ff8800";
+const type = getParam("shape", "rect");
+const w = +getParam("w", 800);
+const h = +getParam("h", 300);
+const stroke = +getParam("stroke", 10);
+const speed = +getParam("speed", 10);
+const opacity = +getParam("opacity", 1);
+const mode = getParam("mode", "4");
 
-// ===============================
-// CRIAR SVG
-// ===============================
-const svg = document.getElementById("border");
-svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+const c1 = getParam("c1", "#ffb8c6");
+const c2 = getParam("c2", "#b6d9ff");
+const c3 = getParam("c3", "#ffe7a3");
+const c4 = getParam("c4", "#e8c8ff");
 
-// ===============================
-// CRIAR GRADIENTE
-// ===============================
+const glow = getParam("glow", "none");
+
+/* DEBUG */
+const debugMode = getParam("debug", "off");
+if (debugMode === "grid") document.body.classList.add("debug-grid");
+if (debugMode === "viewbox") document.body.classList.add("debug-viewbox");
+
+/* ============================================================
+   Criar SVG
+============================================================ */
+
+const svg = document.getElementById("preview");
+svg.innerHTML = "";
+
+/* DEFINIR VIEWBOX */
+if (type === "line-h") {
+    svg.setAttribute("viewBox", `0 0 ${w} ${stroke * 4}`);
+} 
+else if (type === "line-v") {
+    svg.setAttribute("viewBox", `0 0 ${stroke * 4} ${h}`);
+} 
+else {
+    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+}
+
+/* GRADIENTE */
+const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+
 let stops = "";
 
 if (mode === "2") {
     stops = `
-        <stop offset="0%" stop-color="${c1}" />
-        <stop offset="100%" stop-color="${c2}" />
+        <stop offset="0%" stop-color="${c1}"/>
+        <stop offset="100%" stop-color="${c2}"/>
     `;
 }
 
 if (mode === "4") {
     stops = `
-        <stop offset="0%" stop-color="${c1}" />
-        <stop offset="33%" stop-color="${c2}" />
-        <stop offset="66%" stop-color="${c3}" />
-        <stop offset="100%" stop-color="${c4}" />
+        <stop offset="0%" stop-color="${c1}"/>
+        <stop offset="33%" stop-color="${c2}"/>
+        <stop offset="66%" stop-color="${c3}"/>
+        <stop offset="100%" stop-color="${c4}"/>
     `;
 }
 
-svg.innerHTML = `
-<defs>
-    <linearGradient id="movingGradient" x1="0" y1="0" x2="600" y2="0">
+defs.innerHTML = `
+    <linearGradient id="grad" x1="0" y1="0" x2="600" y2="0">
         ${stops}
         <animate attributeName="x1" values="0;-600" dur="${speed}s" repeatCount="indefinite"/>
-        <animate attributeName="x2" values="600;0"  dur="${speed}s" repeatCount="indefinite"/>
+        <animate attributeName="x2" values="600;0" dur="${speed}s" repeatCount="indefinite"/>
     </linearGradient>
-</defs>
 `;
 
-// ===============================
-// CRIAR A FORMA
-// ===============================
-let shapeEl;
+svg.appendChild(defs);
 
-if (shape === "rect") {
-    shapeEl = makeSVG("rect", {
+/* ============================================================
+   Criar shape
+============================================================ */
+
+function make(tag, attrs) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (let k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+}
+
+let shape;
+
+if (type === "rect") {
+    shape = make("rect", {
         x: stroke,
         y: stroke,
         width: w - stroke * 2,
         height: h - stroke * 2,
-        rx: params.get("radius") || 0
+        rx: getParam("r", 20)
     });
 }
 
-if (shape === "square") {
+if (type === "square") {
     const size = Math.min(w, h);
-    shapeEl = makeSVG("rect", {
+    shape = make("rect", {
         x: stroke,
         y: stroke,
         width: size - stroke * 2,
         height: size - stroke * 2,
-        rx: params.get("radius") || 0
+        rx: getParam("r", 20)
     });
 }
 
-if (shape === "ellipse") {
-    shapeEl = makeSVG("ellipse", {
+if (type === "ellipse") {
+    shape = make("ellipse", {
         cx: w / 2,
         cy: h / 2,
         rx: w / 2 - stroke,
@@ -114,43 +161,46 @@ if (shape === "ellipse") {
     });
 }
 
-if (shape === "line-h") {
-    shapeEl = makeSVG("line", {
+if (type === "line-h") {
+    shape = make("line", {
         x1: 0,
-        y1: h / 2,
+        y1: stroke * 2,
         x2: w,
-        y2: h / 2
+        y2: stroke * 2
     });
 }
 
-if (shape === "line-v") {
-    shapeEl = makeSVG("line", {
-        x1: w / 2,
+if (type === "line-v") {
+    shape = make("line", {
+        x1: stroke * 2,
         y1: 0,
-        x2: w / 2,
+        x2: stroke * 2,
         y2: h
     });
 }
 
-// ===============================
-// ESTILO
-// ===============================
-shapeEl.setAttribute("stroke", "url(#movingGradient)");
-shapeEl.setAttribute("stroke-width", stroke);
-shapeEl.setAttribute("fill", "none");
-shapeEl.setAttribute("stroke-linecap", "round");
-shapeEl.setAttribute("stroke-linejoin", "round");
+/* ============================================================
+   Estilo da borda
+============================================================ */
+shape.setAttribute("stroke", "url(#grad)");
+shape.setAttribute("stroke-width", stroke);
+shape.setAttribute("stroke-linecap", "round");
+shape.setAttribute("stroke-linejoin", "round");
+shape.setAttribute("fill", "none");
+shape.setAttribute("opacity", opacity);
 
-svg.appendChild(shapeEl);
-
-// ===============================
-// FUNÇÃO SVG
-// ===============================
-function makeSVG(tag, attrs) {
-    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    for (let k in attrs) el.setAttribute(k, attrs[k]);
-    return el;
+/* GLOW */
+if (glow === "soft") {
+    shape.style.filter = "drop-shadow(0 0 6px currentColor)";
 }
+if (glow === "neon") {
+    shape.style.filter = "drop-shadow(0 0 12px currentColor)";
+}
+if (glow === "blurred") {
+    shape.style.filter = "blur(2px) drop-shadow(0 0 10px currentColor)";
+}
+
+svg.appendChild(shape);
 </script>
 
 </body>
