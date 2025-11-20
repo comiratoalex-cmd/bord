@@ -35,8 +35,6 @@ function updatePreview() {
             <stop offset="50%" stop-color="#9ed6ff" />
             <stop offset="75%" stop-color="#7ff0e8" />
             <stop offset="100%" stop-color="#ffe7c0" />
-
-            <!-- MOVIMENTO DO GRADIENTE -->
             <animate attributeName="x1" values="0;-600" dur="${speed}s" repeatCount="indefinite"/>
             <animate attributeName="x2" values="600;0" dur="${speed}s" repeatCount="indefinite"/>
         </linearGradient>
@@ -50,7 +48,6 @@ function updatePreview() {
        FORMAS DISPONÍVEIS
     ====================================================== */
 
-    // RETÂNGULO
     if (type === "rect") {
         shape = makeSVG("rect", {
             x: s,
@@ -61,7 +58,6 @@ function updatePreview() {
         });
     }
 
-    // QUADRADO
     if (type === "square") {
         const size = Math.min(w, h);
         shape = makeSVG("rect", {
@@ -73,7 +69,6 @@ function updatePreview() {
         });
     }
 
-    // ELIPSE
     if (type === "ellipse") {
         shape = makeSVG("ellipse", {
             cx: w / 2,
@@ -83,7 +78,6 @@ function updatePreview() {
         });
     }
 
-    // LINHA HORIZONTAL
     if (type === "line-h") {
         shape = makeSVG("line", {
             x1: 0,
@@ -93,7 +87,6 @@ function updatePreview() {
         });
     }
 
-    // LINHA VERTICAL
     if (type === "line-v") {
         shape = makeSVG("line", {
             x1: w / 2,
@@ -103,10 +96,9 @@ function updatePreview() {
         });
     }
 
-    /* PNG — IMPLEMENTAÇÃO DEPOIS */
     if (type === "png") {
         preview.innerHTML =
-            "<text x='50%' y='50%' fill='white' font-size='20' text-anchor='middle'>Upload PNG ainda em construção</text>";
+            "<text x='50%' y='50%' fill='white' font-size='20' text-anchor='middle'>Upload PNG em construção</text>";
         return;
     }
 
