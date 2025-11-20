@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Border View</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Bord View</title>
 
     <style>
         html, body {
             margin: 0;
             padding: 0;
-            background: #000;
-            height: 100%;
+            background: transparent;
             overflow: hidden;
+            width: 100%;
+            height: 100%;
         }
 
         #container {
@@ -28,26 +29,27 @@
             overflow: visible;
         }
 
-        .neon-active {
-            animation: neonPulse 2.6s ease-in-out infinite;
-        }
-
+        /* NEON */
         @keyframes neonPulse {
             0% {
-                filter: drop-shadow(0 0 2px #ffffff55)
-                        drop-shadow(0 0 6px #ffffff44)
-                        drop-shadow(0 0 12px #ffb8c6);
+                filter: drop-shadow(0 0 3px #ffb8c6)
+                        drop-shadow(0 0 8px #b6d9ff)
+                        drop-shadow(0 0 16px #ffe7a3);
             }
             50% {
-                filter: drop-shadow(0 0 6px #ffffff88)
-                        drop-shadow(0 0 16px #b6d9ff)
-                        drop-shadow(0 0 32px #ffe7a3);
+                filter: drop-shadow(0 0 6px #ffe7a3)
+                        drop-shadow(0 0 14px #e8c8ff)
+                        drop-shadow(0 0 22px #ffb8c6);
             }
             100% {
-                filter: drop-shadow(0 0 2px #ffffff55)
-                        drop-shadow(0 0 6px #ffffff44)
-                        drop-shadow(0 0 12px #ffb8c6);
+                filter: drop-shadow(0 0 3px #ffb8c6)
+                        drop-shadow(0 0 8px #b6d9ff)
+                        drop-shadow(0 0 16px #ffe7a3);
             }
+        }
+
+        .neon-active {
+            animation: neonPulse 2.6s infinite ease-in-out;
         }
     </style>
 </head>
@@ -58,91 +60,89 @@
 </div>
 
 <script>
-    function param(name, fallback=null) {
+    function p(name, fallback = null) {
         const url = new URL(window.location.href);
         return url.searchParams.get(name) ?? fallback;
     }
 
-    function createShape(type, w, h, r, stroke) {
-        const svgNS = "http://www.w3.org/2000/svg";
+    function makeShape(type, w, h, r, s) {
+        const NS = "http://www.w3.org/2000/svg";
 
         if (type === "rect") {
-            const el = document.createElementNS(svgNS, "rect");
-            el.setAttribute("x", stroke);
-            el.setAttribute("y", stroke);
-            el.setAttribute("width", w - stroke*2);
-            el.setAttribute("height", h - stroke*2);
+            const el = document.createElementNS(NS, "rect");
+            el.setAttribute("x", s);
+            el.setAttribute("y", s);
             el.setAttribute("rx", r);
+            el.setAttribute("width", w - s * 2);
+            el.setAttribute("height", h - s * 2);
             return el;
         }
 
         if (type === "square") {
             const size = Math.min(w, h);
-            const el = document.createElementNS(svgNS, "rect");
-            el.setAttribute("x", stroke);
-            el.setAttribute("y", stroke);
-            el.setAttribute("width", size - stroke*2);
-            el.setAttribute("height", size - stroke*2);
+            const el = document.createElementNS(NS, "rect");
+            el.setAttribute("x", s);
+            el.setAttribute("y", s);
             el.setAttribute("rx", r);
+            el.setAttribute("width", size - s * 2);
+            el.setAttribute("height", size - s * 2);
             return el;
         }
 
         if (type === "ellipse") {
-            const el = document.createElementNS(svgNS, "ellipse");
-            el.setAttribute("cx", w/2);
-            el.setAttribute("cy", h/2);
-            el.setAttribute("rx", w/2 - stroke);
-            el.setAttribute("ry", h/2 - stroke);
+            const el = document.createElementNS(NS, "ellipse");
+            el.setAttribute("cx", w / 2);
+            el.setAttribute("cy", h / 2);
+            el.setAttribute("rx", w / 2 - s);
+            el.setAttribute("ry", h / 2 - s);
             return el;
         }
 
         if (type === "line-h") {
-            const el = document.createElementNS(svgNS, "line");
+            const el = document.createElementNS(NS, "line");
             el.setAttribute("x1", 0);
-            el.setAttribute("y1", h/2);
+            el.setAttribute("y1", h / 2);
             el.setAttribute("x2", w);
-            el.setAttribute("y2", h/2);
+            el.setAttribute("y2", h / 2);
             return el;
         }
 
         if (type === "line-v") {
-            const el = document.createElementNS(svgNS, "line");
-            el.setAttribute("x1", w/2);
+            const el = document.createElementNS(NS, "line");
+            el.setAttribute("x1", w / 2);
             el.setAttribute("y1", 0);
-            el.setAttribute("x2", w/2);
+            el.setAttribute("x2", w / 2);
             el.setAttribute("y2", h);
             return el;
         }
-
-        return null;
     }
 
     window.onload = () => {
         const svg = document.getElementById("svg");
 
-        const w = parseInt(param("w", 800));
-        const h = parseInt(param("h", 200));
-        const r = parseInt(param("r", 20));
-        const stroke = parseInt(param("s", 8));
-        const speed = parseFloat(param("spd", 10));
-        const op = parseFloat(param("op", 1));
+        const w = Number(p("w", 800));
+        const h = Number(p("h", 300));
+        const r = Number(p("r", 20));
+        const s = Number(p("s", 8));
+        const op = Number(p("op", 1));
+        const speed = Number(p("spd", 10));
 
-        const mode = param("mode", "4");
+        const mode = p("mode", "4");
 
-        const c1 = param("c1", "#ffb8c6");
-        const c2 = param("c2", "#b6d9ff");
-        const c3 = param("c3", "#ffe7a3");
-        const c4 = param("c4", "#e8c8ff");
+        const c1 = p("c1", "#ffb8c6");
+        const c2 = p("c2", "#b6d9ff");
+        const c3 = p("c3", "#ffe7a3");
+        const c4 = p("c4", "#e8c8ff");
 
-        const glow = param("glow", "none");
-
-        const shapeType = param("shape", "rect");
+        const glow = p("glow", "none");
+        const shapeType = p("shape", "rect");
 
         svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
-        // gradient
+        /* DEFINIR GRADIENTE */
         const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
         const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+
         grad.setAttribute("id", "g");
         grad.setAttribute("gradientUnits", "userSpaceOnUse");
         grad.setAttribute("x1", "0");
@@ -150,51 +150,45 @@
         grad.setAttribute("x2", w);
         grad.setAttribute("y2", "0");
 
-        const add = (offset, color) => {
-            const st = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-            st.setAttribute("offset", offset);
-            st.setAttribute("stop-color", color);
-            grad.appendChild(st);
-        };
-
-        if (mode === "2") {
-            add("0%", c1);
-            add("100%", c2);
-        } else {
-            add("0%", c1);
-            add("33%", c2);
-            add("66%", c3);
-            add("100%", c4);
+        function stop(offset, color) {
+            const s = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+            s.setAttribute("offset", offset);
+            s.setAttribute("stop-color", color);
+            grad.appendChild(s);
         }
 
-        const animX1 = document.createElementNS("http://www.w3.org/2000/svg", "animate");
-        animX1.setAttribute("attributeName", "x1");
-        animX1.setAttribute("values", `0;-${w}`);
-        animX1.setAttribute("dur", `${speed}s`);
-        animX1.setAttribute("repeatCount", "indefinite");
+        if (mode === "2") {
+            stop("0%", c1);
+            stop("100%", c2);
+        } else {
+            stop("0%", c1);
+            stop("33%", c2);
+            stop("66%", c3);
+            stop("100%", c4);
+        }
 
-        const animX2 = document.createElementNS("http://www.w3.org/2000/svg", "animate");
-        animX2.setAttribute("attributeName", "x2");
-        animX2.setAttribute("values", `${w};0`);
-        animX2.setAttribute("dur", `${speed}s`);
-        animX2.setAttribute("repeatCount", "indefinite");
+        /* LOOP PERFEITO — translate */
+        const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
+        anim.setAttribute("attributeName", "gradientTransform");
+        anim.setAttribute("type", "translate");
+        anim.setAttribute("from", `-${w} 0`);
+        anim.setAttribute("to", `${w} 0`);
+        anim.setAttribute("dur", `${speed}s`);
+        anim.setAttribute("repeatCount", "indefinite");
 
-        grad.appendChild(animX1);
-        grad.appendChild(animX2);
-
+        grad.appendChild(anim);
         defs.appendChild(grad);
         svg.appendChild(defs);
 
-        const shape = createShape(shapeType, w, h, r, stroke);
+        /* CRIA SHAPE */
+        const shape = makeShape(shapeType, w, h, r, s);
         shape.setAttribute("stroke", "url(#g)");
-        shape.setAttribute("stroke-width", stroke);
+        shape.setAttribute("stroke-width", s);
         shape.setAttribute("fill", "none");
         shape.setAttribute("opacity", op);
         shape.setAttribute("stroke-linecap", "round");
 
-        if (glow === "neon") {
-            shape.classList.add("neon-active");
-        }
+        if (glow === "neon") shape.classList.add("neon-active");
 
         svg.appendChild(shape);
     };
