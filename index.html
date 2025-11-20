@@ -4,34 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pastel Border Generator</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="dark">
 
-    <!-- ============================================================
-         SIDEBAR — PAINEL DE CONFIGURAÇÕES
-    ============================================================ -->
+    <!-- Fundo com partículas -->
+    <canvas id="particles"></canvas>
+
+    <!-- Painel lateral -->
     <aside id="sidebar">
 
         <h1>Pastel Border Generator</h1>
 
-        <!-- Tabs -->
         <div id="tabs">
             <span class="tab active" data-tab="border">Borda</span>
             <span class="tab" data-tab="colors">Cores</span>
             <span class="tab" data-tab="presets">Presets</span>
             <span class="tab" data-tab="advanced">Avançado</span>
-            <span id="toggle-theme" title="Trocar tema">🌙</span>
+            <span id="toggle-theme">🌙</span>
         </div>
 
-
-        <!-- ============================================================
-             ABA: BORDA
-        ============================================================ -->
+        <!-- BORDA -->
         <div id="tab-border" class="tab-content active">
-
             <div class="section-title">Formato & Tamanho</div>
 
             <div class="settings-grid">
@@ -58,22 +53,22 @@
                 </div>
 
                 <div>
-                    <label>Raio do Canto:</label>
+                    <label>Raio da Borda:</label>
                     <input id="radius" type="range" min="0" max="200" value="20">
                 </div>
 
                 <div>
-                    <label>Espessura da Borda:</label>
-                    <input id="stroke" type="range" min="1" max="50" value="8">
+                    <label>Espessura:</label>
+                    <input id="stroke" type="range" min="1" max="40" value="8">
                 </div>
 
                 <div>
-                    <label>Opacidade da Borda:</label>
+                    <label>Opacidade:</label>
                     <input id="opacity" type="range" min="0.1" max="1" step="0.05" value="1">
                 </div>
 
                 <div>
-                    <label>Velocidade da Animação:</label>
+                    <label>Velocidade:</label>
                     <input id="speed" type="range" min="2" max="30" value="12">
                 </div>
 
@@ -81,99 +76,65 @@
                     <label>Resolução OBS:</label>
                     <select id="resolution">
                         <option value="Custom">Personalizado</option>
-                        <option value="1920x1080">1920 × 1080</option>
-                        <option value="1600x900">1600 × 900</option>
-                        <option value="1280x720">1280 × 720</option>
-                        <option value="1024x576">1024 × 576</option>
+                        <option value="1920x1080">1920×1080</option>
+                        <option value="1280x720">1280×720</option>
+                        <option value="1024x576">1024×576</option>
                     </select>
                 </div>
 
             </div>
         </div>
 
-
-        <!-- ============================================================
-             ABA: CORES
-        ============================================================ -->
+        <!-- CORES -->
         <div id="tab-colors" class="tab-content">
-
-            <div class="section-title">Cores do Gradiente</div>
+            <div class="section-title">Cores</div>
 
             <div class="settings-grid">
                 <div>
-                    <label>Quantidade de Cores:</label>
+                    <label>Modo:</label>
                     <select id="color-mode">
-                        <option value="2">2 Cores</option>
-                        <option value="4" selected>4 Cores</option>
+                        <option value="2">2 cores</option>
+                        <option value="4" selected>4 cores</option>
                     </select>
                 </div>
 
-                <div>
-                    <label>Cor 1:</label>
-                    <input id="color1" type="color" value="#ffb8c6">
-                </div>
-
-                <div>
-                    <label>Cor 2:</label>
-                    <input id="color2" type="color" value="#b6d9ff">
-                </div>
-
-                <div>
-                    <label>Cor 3:</label>
-                    <input id="color3" type="color" value="#ffe7a3">
-                </div>
-
-                <div>
-                    <label>Cor 4:</label>
-                    <input id="color4" type="color" value="#e8c8ff">
-                </div>
+                <div><label>Cor 1:</label><input id="color1" type="color" value="#ffb8c6"></div>
+                <div><label>Cor 2:</label><input id="color2" type="color" value="#b6d9ff"></div>
+                <div><label>Cor 3:</label><input id="color3" type="color" value="#ffe7a3"></div>
+                <div><label>Cor 4:</label><input id="color4" type="color" value="#e8c8ff"></div>
             </div>
-
         </div>
 
-
-        <!-- ============================================================
-             ABA: PRESETS
-        ============================================================ -->
+        <!-- PRESETS -->
         <div id="tab-presets" class="tab-content">
 
-            <div class="section-title">Presets Pastel</div>
+            <div class="section-title">Presets</div>
 
-            <div class="settings-grid full">
-
-                <div class="preset-button preset" data-preset="pastel">🌸 Pastel Dream</div>
-                <div class="preset-button preset" data-preset="sakura">🌺 Sakura Pink</div>
-                <div class="preset-button preset" data-preset="ocean">🌊 Ocean Breeze</div>
-                <div class="preset-button preset" data-preset="space">🚀 Space Vaporwave</div>
-                <div class="preset-button preset" data-preset="toxic">☢️ Toxic Neon</div>
-                <div class="preset-button preset" data-preset="sunset">🌅 Sunset Mix</div>
-
-            </div>
+            <div class="preset-button preset" data-preset="pastel">🌸 Pastel Dream</div>
+            <div class="preset-button preset" data-preset="sakura">🌺 Sakura Pink</div>
+            <div class="preset-button preset" data-preset="ocean">🌊 Ocean Breeze</div>
+            <div class="preset-button preset" data-preset="space">🚀 Space Vaporwave</div>
+            <div class="preset-button preset" data-preset="toxic">☢️ Toxic Neon</div>
+            <div class="preset-button preset" data-preset="sunset">🌅 Sunset Mix</div>
 
             <br>
-
-            <button id="save-url">Gerar URL com Preset</button>
-            <input id="url-output" type="text" readonly>
-
+            <button id="save-url">Gerar URL</button>
+            <input id="url-output" readonly>
         </div>
 
-
-        <!-- ============================================================
-             ABA: AVANÇADO
-        ============================================================ -->
+        <!-- AVANÇADO -->
         <div id="tab-advanced" class="tab-content">
 
-            <div class="section-title">Efeitos & Depuração</div>
+            <div class="section-title">Avançado</div>
 
             <div class="settings-grid">
-
                 <div>
                     <label>Efeito Glow:</label>
                     <select id="glow">
                         <option value="none">Off</option>
-                        <option value="soft">Soft Glow</option>
+                        <option value="soft">Soft</option>
                         <option value="neon">Neon</option>
-                        <option value="blurred">Blurred Glow</option>
+                        <option value="blurred">Blurred</option>
                     </select>
                 </div>
 
@@ -182,42 +143,29 @@
                     <select id="debug">
                         <option value="off">Off</option>
                         <option value="grid">Grid</option>
-                        <option value="viewbox">ViewBox</option>
+                        <option value="viewbox">Viewbox</option>
                     </select>
                 </div>
             </div>
 
             <br>
-
-            <button id="export-svg">Exportar como SVG</button>
-
+            <button id="export-svg">Exportar SVG</button>
         </div>
 
-
-        <!-- ============================================================
-             LINK OBS
-        ============================================================ -->
+        <!-- OBS -->
         <div class="section-title">Link OBS</div>
 
-        <div class="settings-grid full">
+        <button id="generate">Gerar</button>
+        <button id="copy">Copiar</button>
 
-            <button id="generate">Gerar Link</button>
-            <button id="copy">Copiar</button>
-
-            <input id="obs-link" type="text" readonly>
-        </div>
+        <input id="obs-link" readonly>
 
     </aside>
 
-
-
-    <!-- ============================================================
-         PREVIEW
-    ============================================================ -->
+    <!-- Preview -->
     <div id="preview-area">
         <svg id="preview"></svg>
     </div>
-
 
     <script src="script.js"></script>
 </body>
