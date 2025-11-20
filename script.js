@@ -306,7 +306,12 @@ function updatePreview() {
        LINHA HORIZONTAL — corrigida
     ============================================================= */
     if (type === "line-h") {
-    const sh = Math.max(stroke * 4, 40);
+    const sh = Math.max(stroke * 2, stroke + 4);
+
+    // viewbox certo
+    svg.setAttribute("viewBox", `0 0 ${w} ${sh}`);
+
+    // linha exatamente no meio
     shape = make("line", {
         x1: 0,
         y1: sh / 2,
