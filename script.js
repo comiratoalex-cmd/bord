@@ -23,63 +23,48 @@ const preview = document.getElementById("preview");
 /* =========================================================
    UPDATE PREVIEW
 ========================================================= */
-function updatePreview() {
-    preview.innerHTML = "";
+/* GRADIENTE DINÂMICO INFINITO (SEM PULO) */
+const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+grad.setAttribute("id", "g");
+grad.setAttribute("gradientUnits", "userSpaceOnUse");
+grad.setAttribute("x1", "0");
+grad.setAttribute("y1", "0");
+grad.setAttribute("x2", w);
+grad.setAttribute("y2", "0");
 
-    const w = +widthInput.value;
-    const h = +heightInput.value;
-    const r = +radiusInput.value;
-    const s = +strokeInput.value;
-    const op = +opacityInput.value;
-    const speed = +speedInput.value;
+/* Paradas do gradiente */
+function addStop(offset, color) {
+    const st = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+    st.setAttribute("offset", offset);
+    st.setAttribute("stop-color", color);
+    grad.appendChild(st);
+}
 
-    const mode = modeSelect.value;
-    const c1v = color1.value;
-    const c2v = color2.value;
-    const c3v = color3.value;
-    const c4v = color4.value;
+if (mode === "2") {
+    addStop("0%", c1v);
+    addStop("100%", c2v);
+} else {
+    addStop("0%", c1v);
+    addStop("33%", c2v);
+    addStop("66%", c3v);
+    addStop("100%", c4v);
+}
 
-    preview.setAttribute("viewBox", `0 0 ${w} ${h}`);
+/* ANIMAÇÃO INFINITA DE VERDADE (SEM RESET) */
+const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
+anim.setAttribute("attributeName", "gradientTransform");
+anim.setAttribute("type", "translate");
+anim.setAttribute("dur", `${speed}s`);
+anim.setAttribute("repeatCount", "indefinite");
 
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+/* chave do loop perfeito */
+anim.setAttribute("keyTimes", "0;0.5;1");
+anim.setAttribute("values", `-${w} 0; 0 0; -${w} 0`);
 
-    /* GRADIENTE DINÂMICO EM LOOP PERFEITO */
-    const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-    grad.setAttribute("id", "g");
-    grad.setAttribute("gradientUnits", "userSpaceOnUse");
-    grad.setAttribute("x1", "0");
-    grad.setAttribute("y1", "0");
-    grad.setAttribute("x2", w);
-    grad.setAttribute("y2", "0");
+grad.appendChild(anim);
+defs.appendChild(grad);
+preview.appendChild(defs);
 
-    function addStop(offset, color) {
-        const st = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-        st.setAttribute("offset", offset);
-        st.setAttribute("stop-color", color);
-        grad.appendChild(st);
-    }
-
-    if (mode === "2") {
-        addStop("0%", c1v);
-        addStop("100%", c2v);
-    } else {
-        addStop("0%", c1v);
-        addStop("33%", c2v);
-        addStop("66%", c3v);
-        addStop("100%", c4v);
-    }
-
-    const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
-    anim.setAttribute("attributeName", "gradientTransform");
-    anim.setAttribute("type", "translate");
-    anim.setAttribute("from", `-${w} 0`);
-    anim.setAttribute("to", `${w} 0`);
-    anim.setAttribute("dur", `${speed}s`);
-    anim.setAttribute("repeatCount", "indefinite");
-
-    grad.appendChild(anim);
-    defs.appendChild(grad);
-    preview.appendChild(defs);
 
     /* SHAPE */
     const shape = createShape(shapeSel.value, w, h, r, s);
