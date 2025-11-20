@@ -179,3 +179,213 @@ input[type="range"] {
     width: 100%;
     appearance: none;
     height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(90deg,#ffb8c6,#b6d9ff,#ffe7a3,#e8c8ff);
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background: #ffd6e6;
+    border: 3px solid white;
+    border-radius: 50%;
+    cursor: grab;
+    transition: 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.15);
+}
+
+/* ================================
+   BUTTONS
+================================ */
+button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(90deg,#ffb8c6,#b6d9ff,#ffe7a3,#e8c8ff);
+    color: #222;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* ================================
+   OBS LINK BOX
+================================ */
+#obs-link,
+#url-output {
+    margin-top: 10px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #777;
+    background: #0f0f15;
+    color: #eee;
+    font-size: 14px;
+}
+
+body.light #obs-link,
+body.light #url-output {
+    background: #ffffff;
+    border-color: #ccc;
+    color: #222;
+}
+
+/* ================================
+   PRESET BUTTONS
+================================ */
+.preset-button {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+.preset-button:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateX(4px);
+}
+
+/* ================================
+   SCROLLBAR
+================================ */
+#sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 20px;
+}
+
+body.light #sidebar::-webkit-scrollbar-thumb {
+    background: #aaa;
+}
+
+/* ================================
+   PREVIEW AREA
+================================ */
+#preview-area {
+    position: absolute;
+    left: 430px;
+    top: 0;
+    width: calc(100vw - 430px);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+#preview {
+    width: 90%;
+    height: 90%;
+    overflow: visible;
+}
+
+/* ================================
+   DEBUG MODES
+================================ */
+.grid-bg {
+    background-image:
+        linear-gradient(#ffffff22 1px, transparent 1px),
+        linear-gradient(90deg, #ffffff22 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+.viewbox-border {
+    outline: 2px dashed rgba(255,255,255,0.5);
+}
+
+/* ================================
+   NEON & GLOW EFFECTS
+================================ */
+@keyframes neonPulse {
+    0% {
+        filter: drop-shadow(0 0 2px #ffffff55)
+                drop-shadow(0 0 6px #ffffff44)
+                drop-shadow(0 0 12px #ffb8c6);
+    }
+    50% {
+        filter: drop-shadow(0 0 6px #ffffff88)
+                drop-shadow(0 0 16px #b6d9ff)
+                drop-shadow(0 0 32px #ffe7a3);
+    }
+    100% {
+        filter: drop-shadow(0 0 2px #ffffff55)
+                drop-shadow(0 0 6px #ffffff44)
+                drop-shadow(0 0 12px #ffb8c6);
+    }
+}
+
+.neon-active {
+    animation: neonPulse 2.6s ease-in-out infinite;
+}
+
+/* ================================
+   BACKGROUND FOG
+================================ */
+.pastel-fog {
+    position: absolute;
+    width: 180%;
+    height: 180%;
+    top: -40%;
+    left: -40%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 20% 30%, #ffb8c630, transparent 40%),
+        radial-gradient(circle at 80% 20%, #b6d9ff30, transparent 40%),
+        radial-gradient(circle at 50% 80%, #ffe7a330, transparent 45%),
+        radial-gradient(circle at 30% 60%, #e8c8ff30, transparent 45%);
+    animation: fogMove 25s ease-in-out infinite alternate;
+    filter: blur(40px);
+}
+
+@keyframes fogMove {
+    0% { transform: scale(1) translate(0,0); }
+    50% { transform: scale(1.1) translate(30px,-20px); }
+    100% { transform: scale(1.05) translate(-20px,20px); }
+}
+
+/* ================================
+   MOBILE FIX
+================================ */
+@media (max-width: 800px) {
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    #preview-area {
+        position: relative;
+        width: 100%;
+        left: 0;
+        height: auto;
+    }
+    #preview {
+        width: 100%;
+        height: 60vh;
+    }
+}
