@@ -1,198 +1,116 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Bord View</title>
-
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            background: transparent;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-        }
-
-        #container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-
-        @keyframes neonPulse {
-            0% {
-                filter: drop-shadow(0 0 3px #ffb8c6)
-                        drop-shadow(0 0 8px #b6d9ff)
-                        drop-shadow(0 0 16px #ffe7a3);
-            }
-            50% {
-                filter: drop-shadow(0 0 6px #ffe7a3)
-                        drop-shadow(0 0 14px #e8c8ff)
-                        drop-shadow(0 0 22px #ffb8c6);
-            }
-            100% {
-                filter: drop-shadow(0 0 3px #ffb8c6)
-                        drop-shadow(0 0 8px #b6d9ff)
-                        drop-shadow(0 0 16px #ffe7a3);
-            }
-        }
-
-        .neon-active {
-            animation: neonPulse 2.6s infinite ease-in-out;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastel Border Generator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-<div id="container">
-    <svg id="svg"></svg>
-</div>
+<body class="dark">
 
-<script>
-    function p(name, fallback = null) {
-        const url = new URL(window.location.href);
-        return url.searchParams.get(name) ?? fallback;
-    }
+    <canvas id="particles"></canvas>
 
-    function makeShape(type, w, h, r, s) {
-        const NS = "http://www.w3.org/2000/svg";
+    <aside id="sidebar">
+        <h1>Pastel Border Generator</h1>
 
-        if (type === "rect") {
-            const el = document.createElementNS(NS, "rect");
-            el.setAttribute("x", s);
-            el.setAttribute("y", s);
-            el.setAttribute("rx", r);
-            el.setAttribute("width", w - s * 2);
-            el.setAttribute("height", h - s * 2);
-            return el;
-        }
+        <div id="tabs">
+            <span class="tab active" data-tab="border">Borda</span>
+            <span class="tab" data-tab="colors">Cores</span>
+            <span class="tab" data-tab="presets">Presets</span>
+            <span class="tab" data-tab="advanced">Avançado</span>
+            <span id="toggle-theme">🌙</span>
+        </div>
 
-        if (type === "square") {
-            const size = Math.min(w, h);
-            const el = document.createElementNS(NS, "rect");
-            el.setAttribute("x", s);
-            el.setAttribute("y", s);
-            el.setAttribute("rx", r);
-            el.setAttribute("width", size - s * 2);
-            el.setAttribute("height", size - s * 2);
-            return el;
-        }
+        <div id="tab-border" class="tab-content active">
+            <div class="section-title">Formato & Tamanho</div>
+            <div class="settings-grid">
+                <div><label>Forma:</label>
+                    <select id="shape">
+                        <option value="rect">Retângulo</option>
+                        <option value="square">Quadrado</option>
+                        <option value="ellipse">Elipse</option>
+                        <option value="line-h">Linha Horizontal</option>
+                        <option value="line-v">Linha Vertical</option>
+                    </select>
+                </div>
 
-        if (type === "ellipse") {
-            const el = document.createElementNS(NS, "ellipse");
-            el.setAttribute("cx", w / 2);
-            el.setAttribute("cy", h / 2);
-            el.setAttribute("rx", w / 2 - s);
-            el.setAttribute("ry", h / 2 - s);
-            return el;
-        }
+                <div><label>Largura:</label><input id="width" type="number" value="800"></div>
+                <div><label>Altura:</label><input id="height" type="number" value="200"></div>
+                <div><label>Raio da Borda:</label><input id="radius" type="range" min="0" max="250" value="20"></div>
+                <div><label>Espessura:</label><input id="stroke" type="range" min="1" max="40" value="8"></div>
+                <div><label>Opacidade:</label><input id="opacity" type="range" min="0.1" max="1" step="0.05" value="1"></div>
+                <div><label>Velocidade:</label><input id="speed" type="range" min="3" max="30" value="12"></div>
 
-        if (type === "line-h") {
-            const el = document.createElementNS(NS, "line");
-            el.setAttribute("x1", 0);
-            el.setAttribute("y1", h / 2);
-            el.setAttribute("x2", w);
-            el.setAttribute("y2", h / 2);
-            return el;
-        }
+                <div>
+                    <label>Resolução OBS:</label>
+                    <select id="resolution">
+                        <option value="Custom">Personalizado</option>
+                        <option value="1920x1080">1920×1080</option>
+                        <option value="1280x720">1280×720</option>
+                        <option value="1024x576">1024×576</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-        if (type === "line-v") {
-            const el = document.createElementNS(NS, "line");
-            el.setAttribute("x1", w / 2);
-            el.setAttribute("y1", 0);
-            el.setAttribute("x2", w / 2);
-            el.setAttribute("y2", h);
-            return el;
-        }
-    }
+        <div id="tab-colors" class="tab-content">
+            <div class="section-title">Cores</div>
+            <div class="settings-grid">
+                <div><label>Modo:</label>
+                    <select id="color-mode">
+                        <option value="2">2 cores</option>
+                        <option value="4" selected>4 cores</option>
+                    </select>
+                </div>
 
-    window.onload = () => {
-        const svg = document.getElementById("svg");
+                <div><label>Cor 1:</label><input id="color1" type="color" value="#ffb8c6"></div>
+                <div><label>Cor 2:</label><input id="color2" type="color" value="#b6d9ff"></div>
+                <div><label>Cor 3:</label><input id="color3" type="color" value="#ffe7a3"></div>
+                <div><label>Cor 4:</label><input id="color4" type="color" value="#e8c8ff"></div>
+            </div>
+        </div>
 
-        const w = Number(p("w", 800));
-        const h = Number(p("h", 300));
-        const r = Number(p("r", 20));
-        const s = Number(p("s", 8));
-        const op = Number(p("op", 1));
-        const speed = Number(p("spd", 10));
+        <div id="tab-presets" class="tab-content">
+            <div class="section-title">Presets</div>
 
-        const mode = p("mode", "4");
+            <div class="preset-button" data-preset="pastel">🌸 Pastel Dream</div>
+            <div class="preset-button" data-preset="sakura">🌺 Sakura Pink</div>
+            <div class="preset-button" data-preset="ocean">🌊 Ocean Breeze</div>
+            <div class="preset-button" data-preset="space">🚀 Space Vaporwave</div>
+            <div class="preset-button" data-preset="toxic">☢ Toxic Neon</div>
+            <div class="preset-button" data-preset="sunset">🌅 Sunset Mix</div>
 
-        const c1 = p("c1", "#ffb8c6");
-        const c2 = p("c2", "#b6d9ff");
-        const c3 = p("c3", "#ffe7a3");
-        const c4 = p("c4", "#e8c8ff");
+            <button id="save-url">Gerar URL</button>
+            <input id="url-output" readonly>
+        </div>
 
-        const glow = p("glow", "none");
-        const shapeType = p("shape", "rect");
+        <div id="tab-advanced" class="tab-content">
+            <div class="section-title">Avançado</div>
+            <div class="settings-grid">
+                <div><label>Efeito Glow:</label>
+                    <select id="glow">
+                        <option value="none">Off</option>
+                        <option value="soft">Soft</option>
+                        <option value="neon">Neon</option>
+                        <option value="blurred">Blur</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-        svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+        <div class="section-title">Link OBS</div>
 
-        const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-        const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+        <button id="generate">Gerar</button>
+        <button id="copy">Copiar</button>
+        <input id="obs-link" readonly>
 
-        grad.setAttribute("id", "g");
-        grad.setAttribute("gradientUnits", "userSpaceOnUse");
-        grad.setAttribute("x1", "0");
-        grad.setAttribute("y1", "0");
-        grad.setAttribute("x2", w);
-        grad.setAttribute("y2", "0");
+    </aside>
 
-        function stop(offset, color) {
-            const s = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-            s.setAttribute("offset", offset);
-            s.setAttribute("stop-color", color);
-            grad.appendChild(s);
-        }
+    <div id="preview-area">
+        <svg id="preview"></svg>
+    </div>
 
-        if (mode === "2") {
-            stop("0%", c1);
-            stop("100%", c2);
-        } else {
-            stop("0%", c1);
-            stop("33%", c2);
-            stop("66%", c3);
-            stop("100%", c4);
-        }
-
-        /* 🔥 LOOP PERFEITO — sem reset, sem pulo */
-        const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
-        anim.setAttribute("attributeName", "gradientTransform");
-        anim.setAttribute("type", "translate");
-        anim.setAttribute("dur", `${speed}s`);
-        anim.setAttribute("repeatCount", "indefinite");
-
-        anim.setAttribute("keyTimes", "0;0.5;1");
-        anim.setAttribute("values", `-${w} 0; 0 0; -${w} 0`);
-
-        grad.appendChild(anim);
-        defs.appendChild(grad);
-        svg.appendChild(defs);
-
-        const shape = makeShape(shapeType, w, h, r, s);
-        shape.setAttribute("stroke", "url(#g)");
-        shape.setAttribute("stroke-width", s);
-        shape.setAttribute("fill", "none");
-        shape.setAttribute("opacity", op);
-        shape.setAttribute("stroke-linecap", "round");
-
-        if (glow === "neon") {
-            shape.classList.add("neon-active");
-        }
-
-        svg.appendChild(shape);
-    };
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
