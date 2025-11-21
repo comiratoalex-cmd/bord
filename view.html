@@ -5,48 +5,43 @@
 <title>Bord View</title>
 
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
+html,body{
+    margin:0;
+    padding:0;
+    background:transparent;
+    width:100%;
+    height:100%;
+    overflow:hidden;
 }
-
-svg {
-    width: 100%;
-    height: 100%;
+svg{
+    width:100%;
+    height:100%;
 }
-
-.neon {
-    filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #ff9acb);
+.neon{
+    filter:drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #ff9acb);
 }
 </style>
-
 </head>
 <body>
 
 <svg id="svg"></svg>
 
 <script>
-function get(name, def=null){
-    const u=new URL(location.href);
-    return u.searchParams.get(name) ?? def;
+function get(p,def=null){
+    const u=new URL(window.location.href);
+    return u.searchParams.get(p) ?? def;
 }
 
-window.onload = () => {
+window.onload = ()=>{
 
-    const svg = document.getElementById("svg");
+    const w = Number(get("width",900));
+    const h = Number(get("height",300));
+    const r = Number(get("radius",20));
+    const s = Number(get("stroke",8));
+    const op = Number(get("opacity",1));
+    const speed = Number(get("speed",10));
 
     const shape = get("shape","rect");
-    const w = +get("width",900);
-    const h = +get("height",200);
-    const r = +get("radius",20);
-    const s = +get("stroke",8);
-    const op = +get("opacity",1);
-    const speed = +get("speed",10);
-
     const mode = get("colormode","4");
     const glow = get("glow","none");
     const anim = get("anim","horizontal");
@@ -56,119 +51,119 @@ window.onload = () => {
     const c3 = get("color3","#ffe7a3");
     const c4 = get("color4","#e8c8ff");
 
+    const NS="http://www.w3.org/2000/svg";
+    const svg=document.getElementById("svg");
     svg.setAttribute("viewBox",`0 0 ${w} ${h}`);
 
-    const NS="http://www.w3.org/2000/svg";
-
+    /* gradient */
     const defs=document.createElementNS(NS,"defs");
     const grad=document.createElementNS(NS,"linearGradient");
-
     grad.setAttribute("id","g");
     grad.setAttribute("gradientUnits","userSpaceOnUse");
 
-    if (anim==="horizontal"){
+    if(anim==="horizontal"){
         grad.setAttribute("x1","0");
         grad.setAttribute("y1","0");
         grad.setAttribute("x2",w);
         grad.setAttribute("y2","0");
     }
-    if (anim==="vertical"){
+    if(anim==="vertical"){
         grad.setAttribute("x1","0");
         grad.setAttribute("y1","0");
         grad.setAttribute("x2","0");
         grad.setAttribute("y2",h);
     }
-    if (anim==="diagonal"){
+    if(anim==="diagonal"){
         grad.setAttribute("x1","0");
         grad.setAttribute("y1","0");
         grad.setAttribute("x2",w);
         grad.setAttribute("y2",h);
     }
 
-    function stop(offset,color){
+    function stop(off,col){
         const st=document.createElementNS(NS,"stop");
-        st.setAttribute("offset",offset);
-        st.setAttribute("stop-color",color);
+        st.setAttribute("offset",off);
+        st.setAttribute("stop-color",col);
         grad.appendChild(st);
     }
 
-    if (mode==="2"){
+    if(mode==="2"){
         stop("0%",c1);
         stop("100%",c2);
-    } else {
+    }else{
         stop("0%",c1);
         stop("33%",c2);
         stop("66%",c3);
         stop("100%",c4);
     }
 
-    // loop infinito perfeito
-    const animLoop = document.createElementNS(NS,"animate");
+    const animLoop=document.createElementNS(NS,"animate");
     animLoop.setAttribute("attributeName","gradientTransform");
     animLoop.setAttribute("type","translate");
     animLoop.setAttribute("dur",`${speed}s`);
     animLoop.setAttribute("repeatCount","indefinite");
+    animLoop.setAttribute("values",`0 0; -${w} 0`);
     animLoop.setAttribute("keyTimes","0;1");
-    animLoop.setAttribute("values", `0 0; -${w} 0`);
     grad.appendChild(animLoop);
 
     defs.appendChild(grad);
     svg.appendChild(defs);
 
-    let shapeEl;
+    /* SHAPES FIXED ✔ */
+    let el;
 
-    if (shape==="rect"){
-        shapeEl=document.createElementNS(NS,"rect");
-        shapeEl.setAttribute("x",s);
-        shapeEl.setAttribute("y",s);
-        shapeEl.setAttribute("width", w-s*2);
-        shapeEl.setAttribute("height",h-s*2);
-        shapeEl.setAttribute("rx",r);
+    if(shape==="rect"){
+        el=document.createElementNS(NS,"rect");
+        el.setAttribute("x",s);
+        el.setAttribute("y",s);
+        el.setAttribute("width",w-s*2);
+        el.setAttribute("height",h-s*2);
+        el.setAttribute("rx",r);
     }
 
-    if (shape==="square"){
-        let size=Math.min(w,h);
-        shapeEl=document.createElementNS(NS,"rect");
-        shapeEl.setAttribute("x",s);
-        shapeEl.setAttribute("y",s);
-        shapeEl.setAttribute("width",size-s*2);
-        shapeEl.setAttribute("height",size-s*2);
-        shapeEl.setAttribute("rx",r);
+    if(shape==="square"){
+        const size=Math.min(w,h);
+        el=document.createElementNS(NS,"rect");
+        el.setAttribute("x",s);
+        el.setAttribute("y",s);
+        el.setAttribute("width",size-s*2);
+        el.setAttribute("height",size-s*2);
+        el.setAttribute("rx",r);
     }
 
-    if (shape==="ellipse"){
-        shapeEl=document.createElementNS(NS,"ellipse");
-        shapeEl.setAttribute("cx",w/2);
-        shapeEl.setAttribute("cy",h/2);
-        shapeEl.setAttribute("rx",w/2-s);
-        shapeEl.setAttribute("ry",h/2-s);
+    if(shape==="ellipse"){
+        el=document.createElementNS(NS,"ellipse");
+        el.setAttribute("cx",w/2);
+        el.setAttribute("cy",h/2);
+        el.setAttribute("rx",w/2-s);
+        el.setAttribute("ry",h/2-s);
     }
 
-    if (shape==="line-h"){
-        shapeEl=document.createElementNS(NS,"line");
-        shapeEl.setAttribute("x1","0");
-        shapeEl.setAttribute("y1",h/2);
-        shapeEl.setAttribute("x2",w);
-        shapeEl.setAttribute("y2",h/2);
+    if(shape==="line-h"){
+        el=document.createElementNS(NS,"line");
+        el.setAttribute("x1",0);
+        el.setAttribute("y1",h/2);
+        el.setAttribute("x2",w);
+        el.setAttribute("y2",h/2);
     }
 
-    if (shape==="line-v"){
-        shapeEl=document.createElementNS(NS,"line");
-        shapeEl.setAttribute("x1",w/2);
-        shapeEl.setAttribute("y1","0");
-        shapeEl.setAttribute("x2",w/2);
-        shapeEl.setAttribute("y2",h);
+    if(shape==="line-v"){
+        el=document.createElementNS(NS,"line");
+        el.setAttribute("x1",w/2);
+        el.setAttribute("y1",0);
+        el.setAttribute("x2",w/2);
+        el.setAttribute("y2",h);
     }
 
-    shapeEl.setAttribute("stroke","url(#g)");
-    shapeEl.setAttribute("stroke-width",s);
-    shapeEl.setAttribute("fill","none");
-    shapeEl.setAttribute("opacity",op);
+    el.setAttribute("stroke","url(#g)");
+    el.setAttribute("stroke-width",s);
+    el.setAttribute("fill","none");
+    el.setAttribute("opacity",op);
+    el.setAttribute("stroke-linecap","round");
 
-    if (glow==="neon") shapeEl.setAttribute("class","neon");
+    if(glow==="neon") el.classList.add("neon");
 
-    svg.appendChild(shapeEl);
-
+    svg.appendChild(el);
 };
 </script>
 
