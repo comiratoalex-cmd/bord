@@ -1,134 +1,66 @@
-/* =========================================================
-   SELECTORS
-========================================================= */
-const shapeSel = document.getElementById("shape");
-const widthInput = document.getElementById("width");
-const heightInput = document.getElementById("height");
-const radiusInput = document.getElementById("radius");
-const strokeInput = document.getElementById("stroke");
-const opacityInput = document.getElementById("opacity");
-const speedInput = document.getElementById("speed");
+/* ===========================================================
+   UTILIDADES
+=========================================================== */
+const $ = (sel) => document.querySelector(sel);
+const svgNS = "http://www.w3.org/2000/svg";
 
-const modeSelect = document.getElementById("color-mode");
-const color1 = document.getElementById("color1");
-const color2 = document.getElementById("color2");
-const color3 = document.getElementById("color3");
-const color4 = document.getElementById("color4");
+/* ===========================================================
+   ELEMENTOS PRINCIPAIS
+=========================================================== */
+const preview = $("#preview");
 
-const glowSel = document.getElementById("glow");
-const debugSel = document.getElementById("debug");
+const shapeSel = $("#shape");
+const widthInput = $("#width");
+const heightInput = $("#height");
+const radiusInput = $("#radius");
+const strokeInput = $("#stroke");
+const speedInput = $("#speed");
+const opacityInput = $("#opacity");
 
-const preview = document.getElementById("preview");
+const modeSelect = $("#color-mode");
+const color1 = $("#color1");
+const color2 = $("#color2");
+const color3 = $("#color3");
+const color4 = $("#color4");
 
+const glowSelect = $("#glow");
+const debugSelect = $("#debug");
 
-/* =========================================================
-   UPDATE PREVIEW (LOOP PERFEITO)
-========================================================= */
-function updatePreview() {
-    preview.innerHTML = "";
+const obsInput = $("#obs-link");
+const generateBtn = $("#generate");
 
-    const w = +widthInput.value;
-    const h = +heightInput.value;
-    const r = +radiusInput.value;
-    const s = +strokeInput.value;
-    const op = +opacityInput.value;
-    const speed = +speedInput.value;
+const tabButtons = document.querySelectorAll(".tab");
+const tabContents = document.querySelectorAll(".tab-content");
 
-    const mode = modeSelect.value;
-    const c1v = color1.value;
-    const c2v = color2.value;
-    const c3v = color3.value;
-    const c4v = color4.value;
+const animationGrid = $("#animation-grid");
 
-    preview.setAttribute("viewBox", `0 0 ${w} ${h}`);
+/* ===========================================================
+   TABS
+=========================================================== */
+tabButtons.forEach((tab) => {
+    tab.onclick = () => {
+        tabButtons.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
 
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        tabContents.forEach(c => c.classList.remove("active"));
+        $("#" + tab.dataset.tab).classList.add("active");
+    };
+});
 
-    /* GRADIENTE INFINITO */
-    const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-    grad.setAttribute("id", "g");
-    grad.setAttribute("gradientUnits", "userSpaceOnUse");
-    grad.setAttribute("x1", "0");
-    grad.setAttribute("y1", "0");
-    grad.setAttribute("x2", w);
-    grad.setAttribute("y2", "0");
-
-    function addStop(offset, color) {
-        const st = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-        st.setAttribute("offset", offset);
-        st.setAttribute("stop-color", color);
-        grad.appendChild(st);
-    }
-
-    if (mode === "2") {
-        addStop("0%", c1v);
-        addStop("100%", c2v);
-    } else {
-        addStop("0%", c1v);
-        addStop("33%", c2v);
-        addStop("66%", c3v);
-        addStop("100%", c4v);
-    }
-
-    /* LOOP REAL (SEM RESET) */
-    const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
-    anim.setAttribute("attributeName", "gradientTransform");
-    anim.setAttribute("type", "translate");
-    anim.setAttribute("dur", `${speed}s`);
-    anim.setAttribute("repeatCount", "indefinite");
-    anim.setAttribute("keyTimes", "0;0.5;1");
-    anim.setAttribute("values", `-${w} 0; 0 0; -${w} 0`);
-
-    grad.appendChild(anim);
-    defs.appendChild(grad);
-    preview.appendChild(defs);
-
-    /* SHAPE */
-    const shape = createShape(shapeSel.value, w, h, r, s);
-    shape.setAttribute("stroke", "url(#g)");
-    shape.setAttribute("stroke-width", s);
-    shape.setAttribute("fill", "none");
-    shape.setAttribute("opacity", op);
-    shape.setAttribute("stroke-linecap", "round");
-
-    if (glowSel.value === "neon") shape.classList.add("neon-active");
-    else shape.classList.remove("neon-active");
-
-    preview.appendChild(shape);
-
-    /* DEBUG */
-    preview.classList.toggle("grid-bg", debugSel.value === "grid");
-    preview.classList.toggle("viewbox-border", debugSel.value === "viewbox");
-}
-
-
-/* =========================================================
-   SHAPES
-========================================================= */
-function createShape(type, w, h, r, s) {
-    const svgNS = "http://www.w3.org/2000/svg";
-
-    if (type === "rect") {
+/* ===========================================================
+   SHAPES (principal e mini-previews)
+=========================================================== */
+function makeShape(type, w, h, r, s) {
+    if (type === "rect" || type === "square") {
+        const size = type === "square" ? Math.min(w, h) : null;
         const el = document.createElementNS(svgNS, "rect");
         el.setAttribute("x", s);
         el.setAttribute("y", s);
         el.setAttribute("rx", r);
-        el.setAttribute("width", w - s * 2);
-        el.setAttribute("height", h - s * 2);
+        el.setAttribute("width", (size ? size : w) - s * 2);
+        el.setAttribute("height", (size ? size : h) - s * 2);
         return el;
     }
-
-    if (type === "square") {
-        const size = Math.min(w, h);
-        const el = document.createElementNS(svgNS, "rect");
-        el.setAttribute("x", s);
-        el.setAttribute("y", s);
-        el.setAttribute("rx", r);
-        el.setAttribute("width", size - s * 2);
-        el.setAttribute("height", size - s * 2);
-        return el;
-    }
-
     if (type === "ellipse") {
         const el = document.createElementNS(svgNS, "ellipse");
         el.setAttribute("cx", w / 2);
@@ -137,7 +69,6 @@ function createShape(type, w, h, r, s) {
         el.setAttribute("ry", h / 2 - s);
         return el;
     }
-
     if (type === "line-h") {
         const el = document.createElementNS(svgNS, "line");
         el.setAttribute("x1", 0);
@@ -146,7 +77,6 @@ function createShape(type, w, h, r, s) {
         el.setAttribute("y2", h / 2);
         return el;
     }
-
     if (type === "line-v") {
         const el = document.createElementNS(svgNS, "line");
         el.setAttribute("x1", w / 2);
@@ -157,117 +87,269 @@ function createShape(type, w, h, r, s) {
     }
 }
 
+/* ===========================================================
+   GRADIENTES & EFEITOS
+=========================================================== */
 
-/* =========================================================
-   EVENT LISTENERS
-========================================================= */
+const animationEffects = {
+    "horizontal": { transform: "translate(-100%,0) ; translate(100%,0) ; translate(-100%,0)" },
+    "vertical":   { transform: "translate(0,-100%) ; translate(0,100%) ; translate(0,-100%)" },
+    "diagonal":   { transform: "translate(-100%,-100%) ; translate(100%,100%) ; translate(-100%,-100%)" },
+    "circular":   { transform: "rotate(0 0 0) ; rotate(360 0 0) ; rotate(0 0 0)" },
+
+    "pulse-slide": {
+        transform: "translate(-100%,0) ; translate(100%,0) ; translate(-100%,0)",
+        pulse: true
+    },
+
+    "rgb": { mode: "rgb" },
+    "vaporwave": { mode: "vaporwave" },
+    "prism": { mode: "prism" },
+    "cinema": { mode: "blend" }
+};
+
+let currentAnimation = "horizontal";
+
+/* ===========================================================
+   CRIAR GRADIENTE ANIMADO
+=========================================================== */
+function buildGradient(defs, id, w, h, speed) {
+    let grad = document.createElementNS(svgNS, "linearGradient");
+    grad.setAttribute("id", id);
+    grad.setAttribute("gradientUnits", "userSpaceOnUse");
+    grad.setAttribute("x1", "0");
+    grad.setAttribute("y1", "0");
+    grad.setAttribute("x2", w);
+    grad.setAttribute("y2", "0");
+
+    function addStop(offset, color) {
+        const s = document.createElementNS(svgNS, "stop");
+        s.setAttribute("offset", offset);
+        s.setAttribute("stop-color", color);
+        grad.appendChild(s);
+    }
+
+    const mode = modeSelect.value;
+    const c1 = color1.value;
+    const c2 = color2.value;
+    const c3 = color3.value;
+    const c4 = color4.value;
+
+    if (mode === "2") {
+        addStop("0%", c1);
+        addStop("100%", c2);
+    } else {
+        addStop("0%", c1);
+        addStop("33%", c2);
+        addStop("66%", c3);
+        addStop("100%", c4);
+    }
+
+    const anim = document.createElementNS(svgNS, "animateTransform");
+    anim.setAttribute("attributeName", "gradientTransform");
+    anim.setAttribute("type", "translate");
+    anim.setAttribute("dur", `${speed}s`);
+    anim.setAttribute("repeatCount", "indefinite");
+
+    let effect = animationEffects[currentAnimation];
+    if (!effect) effect = animationEffects["horizontal"];
+
+    anim.setAttribute("keyTimes", "0;0.5;1");
+
+    if (effect.transform) {
+        anim.setAttribute("values", effect.transform);
+    }
+
+    grad.appendChild(anim);
+    defs.appendChild(grad);
+}
+
+/* ===========================================================
+   ATUALIZAR PREVIEW PRINCIPAL
+=========================================================== */
+function updatePreview() {
+    const w = +widthInput.value;
+    const h = +heightInput.value;
+    const r = +radiusInput.value;
+    const s = +strokeInput.value;
+    const speed = +speedInput.value;
+    const op = +opacityInput.value;
+    const type = shapeSel.value;
+
+    preview.innerHTML = "";
+    preview.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+    const defs = document.createElementNS(svgNS, "defs");
+    preview.appendChild(defs);
+
+    buildGradient(defs, "grad1", w, h, speed);
+
+    const shape = makeShape(type, w, h, r, s);
+    shape.setAttribute("fill", "none");
+    shape.setAttribute("stroke", "url(#grad1)");
+    shape.setAttribute("stroke-width", s);
+    shape.setAttribute("opacity", op);
+    shape.setAttribute("stroke-linecap", "round");
+
+    // Glow
+    shape.classList.toggle("neon", glowSelect.value === "neon");
+
+    preview.appendChild(shape);
+
+    // Debug
+    $("#preview-area").classList.toggle("grid-bg", debugSelect.value === "grid");
+    preview.classList.toggle("viewbox-outline", debugSelect.value === "viewbox");
+}
+
+/* ===========================================================
+   MINI-PREVIEW (cards)
+=========================================================== */
+function createMiniPreview(effectName) {
+    const w = 160;
+    const h = 50;
+    const s = 4;
+
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+    const defs = document.createElementNS(svgNS, "defs");
+    svg.appendChild(defs);
+
+    buildGradient(defs, "gradMini", w, h, 6);
+
+    const shape = makeShape("rect", w, h, 10, s);
+    shape.setAttribute("fill", "none");
+    shape.setAttribute("stroke", "url(#gradMini)");
+    shape.setAttribute("stroke-width", s);
+
+    svg.appendChild(shape);
+
+    return svg;
+}
+
+/* ===========================================================
+   CARDS DE ANIMAÇÃO
+=========================================================== */
+function buildAnimationCards() {
+    animationGrid.innerHTML = "";
+
+    Object.keys(animationEffects).forEach(name => {
+        const card = document.createElement("div");
+        card.className = "animation-card";
+
+        const title = document.createElement("div");
+        title.className = "animation-card-title";
+        title.textContent = name;
+
+        const previewDiv = document.createElement("div");
+        previewDiv.className = "animation-preview";
+
+        const mini = createMiniPreview(name);
+        previewDiv.appendChild(mini);
+
+        card.appendChild(title);
+        card.appendChild(previewDiv);
+
+        card.onclick = () => {
+            currentAnimation = name;
+            updatePreview();
+        };
+
+        animationGrid.appendChild(card);
+    });
+}
+
+/* ===========================================================
+   GERAR URL OBS
+=========================================================== */
+generateBtn.onclick = () => {
+    const params = new URLSearchParams();
+
+    params.set("shape", shapeSel.value);
+    params.set("w", widthInput.value);
+    params.set("h", heightInput.value);
+    params.set("r", radiusInput.value);
+    params.set("s", strokeInput.value);
+    params.set("spd", speedInput.value);
+    params.set("op", opacityInput.value);
+
+    params.set("mode", modeSelect.value);
+    params.set("c1", color1.value);
+    params.set("c2", color2.value);
+    params.set("c3", color3.value);
+    params.set("c4", color4.value);
+
+    params.set("glow", glowSelect.value);
+    params.set("debug", debugSelect.value);
+
+    params.set("anim", currentAnimation);
+
+    obsInput.value = `${location.origin}/src/view.html?${params.toString()}`;
+};
+
+/* Copy button */
+$("#copy").onclick = () => {
+    navigator.clipboard.writeText(obsInput.value);
+    alert("URL copiada!");
+};
+
+/* ===========================================================
+   PARTICLES
+=========================================================== */
+function startParticles() {
+    const canvas = $("#particles");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+
+    const particles = [];
+    for (let i = 0; i < 70; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            s: Math.random() * 2 + 1,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4
+        });
+    }
+
+    function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let p of particles) {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+
+            ctx.fillStyle = "#ffffff44";
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        requestAnimationFrame(loop);
+    }
+    loop();
+}
+
+/* ===========================================================
+   EVENTOS
+=========================================================== */
 [
-    shapeSel, widthInput, heightInput, radiusInput,
-    strokeInput, opacityInput, speedInput,
+    shapeSel, widthInput, heightInput, radiusInput, strokeInput,
+    speedInput, opacityInput,
     modeSelect, color1, color2, color3, color4,
-    glowSel, debugSel
+    glowSelect, debugSelect
 ].forEach(el => el.oninput = updatePreview);
 
-
-/* =========================================================
-   TABS
-========================================================= */
-document.querySelectorAll(".tab").forEach(tab => {
-    tab.onclick = () => {
-        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-        tab.classList.add("active");
-
-        document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
-    };
-});
-
-
-/* =========================================================
-   COPY BUTTON
-========================================================= */
-document.getElementById("copy").onclick = () => {
-    navigator.clipboard.writeText(
-        document.getElementById("obs-link").value
-    );
-};
-
-
-/* =========================================================
-   GENERATE OBS URL
-========================================================= */
-document.getElementById("generate").onclick = () => {
-    const params = new URLSearchParams({
-        shape: shapeSel.value,
-        w: widthInput.value,
-        h: heightInput.value,
-        r: radiusInput.value,
-        s: strokeInput.value,
-        op: opacityInput.value,
-        spd: speedInput.value,
-        mode: modeSelect.value,
-        c1: color1.value,
-        c2: color2.value,
-        c3: color3.value,
-        c4: color4.value,
-        glow: glowSel.value
-    });
-
-    const base = window.location.href.replace("index.html", "");
-    const url = base + "view.html?" + params.toString();
-
-    document.getElementById("obs-link").value = url;
-};
-
-
-/* =========================================================
-   PARTICLES
-========================================================= */
-const partCanvas = document.getElementById("particles");
-const ctx = partCanvas.getContext("2d");
-let particles = [];
-
-function resizeParticles() {
-    partCanvas.width = window.innerWidth;
-    partCanvas.height = window.innerHeight;
-}
-resizeParticles();
-
-window.onresize = resizeParticles;
-
-for (let i = 0; i < 60; i++) {
-    particles.push({
-        x: Math.random() * innerWidth,
-        y: Math.random() * innerHeight,
-        r: 1 + Math.random() * 2,
-        s: 0.3 + Math.random() * 0.8,
-        dx: -0.5 + Math.random(),
-        dy: -0.5 + Math.random()
-    });
-}
-
-function drawParticles() {
-    ctx.clearRect(0, 0, partCanvas.width, partCanvas.height);
-    ctx.fillStyle = "#ffffff55";
-
-    particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-
-        p.x += p.dx * p.s;
-        p.y += p.dy * p.s;
-
-        if (p.x < 0 || p.x > innerWidth) p.dx *= -1;
-        if (p.y < 0 || p.y > innerHeight) p.dy *= -1;
-    });
-
-    requestAnimationFrame(drawParticles);
-}
-drawParticles();
-
-
-/* =========================================================
+/* ===========================================================
    INIT
-========================================================= */
+=========================================================== */
+startParticles();
+buildAnimationCards();
 updatePreview();
