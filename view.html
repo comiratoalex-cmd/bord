@@ -1,224 +1,175 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Border View</title>
+<meta charset="UTF-8">
+<title>Bord View</title>
 
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: transparent !important;
-        }
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
 
-        #wrap {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+svg {
+    width: 100%;
+    height: 100%;
+}
 
-        svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
+.neon {
+    filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #ff9acb);
+}
+</style>
 
-        /* Neon glow (quando ativado) */
-        .neon {
-            filter: drop-shadow(0 0 4px #ffb8c6)
-                    drop-shadow(0 0 10px #b6d9ff)
-                    drop-shadow(0 0 18px #ffe7a3);
-        }
-
-        /* Debug grid */
-        .grid-bg {
-            background-image:
-                linear-gradient(#ffffff22 1px, transparent 1px),
-                linear-gradient(90deg, #ffffff22 1px, transparent 1px);
-            background-size: 32px 32px;
-        }
-
-        /* Debug viewbox outline */
-        .viewbox-outline {
-            outline: 2px dashed rgba(255,255,255,0.7);
-        }
-    </style>
 </head>
-
 <body>
 
-<div id="wrap">
-    <svg id="svg"></svg>
-</div>
+<svg id="svg"></svg>
 
 <script>
-    const svgNS = "http://www.w3.org/2000/svg";
+function get(name, def=null){
+    const u=new URL(location.href);
+    return u.searchParams.get(name) ?? def;
+}
 
-    /* ==========================
-       Ler parâmetros da URL
-    ========================== */
-    function p(name, fallback = null) {
-        const url = new URL(window.location.href);
-        return url.searchParams.get(name) ?? fallback;
+window.onload = () => {
+
+    const svg = document.getElementById("svg");
+
+    const shape = get("shape","rect");
+    const w = +get("width",900);
+    const h = +get("height",200);
+    const r = +get("radius",20);
+    const s = +get("stroke",8);
+    const op = +get("opacity",1);
+    const speed = +get("speed",10);
+
+    const mode = get("colormode","4");
+    const glow = get("glow","none");
+    const anim = get("anim","horizontal");
+
+    const c1 = get("color1","#ffb8c6");
+    const c2 = get("color2","#b6d9ff");
+    const c3 = get("color3","#ffe7a3");
+    const c4 = get("color4","#e8c8ff");
+
+    svg.setAttribute("viewBox",`0 0 ${w} ${h}`);
+
+    const NS="http://www.w3.org/2000/svg";
+
+    const defs=document.createElementNS(NS,"defs");
+    const grad=document.createElementNS(NS,"linearGradient");
+
+    grad.setAttribute("id","g");
+    grad.setAttribute("gradientUnits","userSpaceOnUse");
+
+    if (anim==="horizontal"){
+        grad.setAttribute("x1","0");
+        grad.setAttribute("y1","0");
+        grad.setAttribute("x2",w);
+        grad.setAttribute("y2","0");
+    }
+    if (anim==="vertical"){
+        grad.setAttribute("x1","0");
+        grad.setAttribute("y1","0");
+        grad.setAttribute("x2","0");
+        grad.setAttribute("y2",h);
+    }
+    if (anim==="diagonal"){
+        grad.setAttribute("x1","0");
+        grad.setAttribute("y1","0");
+        grad.setAttribute("x2",w);
+        grad.setAttribute("y2",h);
     }
 
-    /* ==========================
-       Criar Forma
-    ========================== */
-    function makeShape(type, w, h, r, s) {
-        const el = document.createElementNS(svgNS, type === "ellipse" ? "ellipse" : 
-                                            (type.includes("line") ? "line" : "rect"));
-
-        if (type === "rect") {
-            el.setAttribute("x", s);
-            el.setAttribute("y", s);
-            el.setAttribute("rx", r);
-            el.setAttribute("width", w - s * 2);
-            el.setAttribute("height", h - s * 2);
-        }
-        if (type === "square") {
-            const size = Math.min(w, h);
-            el.setAttribute("x", s);
-            el.setAttribute("y", s);
-            el.setAttribute("rx", r);
-            el.setAttribute("width", size - s * 2);
-            el.setAttribute("height", size - s * 2);
-        }
-        if (type === "ellipse") {
-            el.setAttribute("cx", w / 2);
-            el.setAttribute("cy", h / 2);
-            el.setAttribute("rx", w / 2 - s);
-            el.setAttribute("ry", h / 2 - s);
-        }
-        if (type === "line-h") {
-            el.setAttribute("x1", 0);
-            el.setAttribute("y1", h / 2);
-            el.setAttribute("x2", w);
-            el.setAttribute("y2", h / 2);
-        }
-        if (type === "line-v") {
-            el.setAttribute("x1", w / 2);
-            el.setAttribute("y1", 0);
-            el.setAttribute("x2", w / 2);
-            el.setAttribute("y2", h);
-        }
-        return el;
+    function stop(offset,color){
+        const st=document.createElementNS(NS,"stop");
+        st.setAttribute("offset",offset);
+        st.setAttribute("stop-color",color);
+        grad.appendChild(st);
     }
 
-    /* ==========================
-       Efeitos Premium
-    ========================== */
-    const effects = {
-        "horizontal": "translate(-100%,0); translate(100%,0); translate(-100%,0)",
-        "vertical":   "translate(0,-100%); translate(0,100%); translate(0,-100%)",
-        "diagonal":   "translate(-100%,-100%); translate(100%,100%); translate(-100%,-100%)",
-        "circular":   "rotate(0 0 0); rotate(360 0 0); rotate(0 0 0)",
-        "pulse-slide":"translate(-100%,0); translate(100%,0); translate(-100%,0)",
-        "rgb":"rgb",
-        "vaporwave":"vapor",
-        "prism":"prism",
-        "blend":"blend"
-    };
+    if (mode==="2"){
+        stop("0%",c1);
+        stop("100%",c2);
+    } else {
+        stop("0%",c1);
+        stop("33%",c2);
+        stop("66%",c3);
+        stop("100%",c4);
+    }
 
-    /* ==========================
-       Inicializar
-    ========================== */
-    window.onload = () => {
-        const svg = document.getElementById("svg");
+    // loop infinito perfeito
+    const animLoop = document.createElementNS(NS,"animate");
+    animLoop.setAttribute("attributeName","gradientTransform");
+    animLoop.setAttribute("type","translate");
+    animLoop.setAttribute("dur",`${speed}s`);
+    animLoop.setAttribute("repeatCount","indefinite");
+    animLoop.setAttribute("keyTimes","0;1");
+    animLoop.setAttribute("values", `0 0; -${w} 0`);
+    grad.appendChild(animLoop);
 
-        const w    = +p("w", 900);
-        const h    = +p("h", 300);
-        const r    = +p("r", 20);
-        const s    = +p("s", 8);
-        const spd  = +p("spd", 10);
-        const op   = +p("op", 1);
+    defs.appendChild(grad);
+    svg.appendChild(defs);
 
-        const mode = p("mode", "4");
-        const c1   = p("c1", "#ffb8c6");
-        const c2   = p("c2", "#b6d9ff");
-        const c3   = p("c3", "#ffe7a3");
-        const c4   = p("c4", "#e8c8ff");
+    let shapeEl;
 
-        const glow = p("glow", "none");
-        const dbg  = p("debug", "off");
-        const anim = p("anim", "horizontal");
+    if (shape==="rect"){
+        shapeEl=document.createElementNS(NS,"rect");
+        shapeEl.setAttribute("x",s);
+        shapeEl.setAttribute("y",s);
+        shapeEl.setAttribute("width", w-s*2);
+        shapeEl.setAttribute("height",h-s*2);
+        shapeEl.setAttribute("rx",r);
+    }
 
-        svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    if (shape==="square"){
+        let size=Math.min(w,h);
+        shapeEl=document.createElementNS(NS,"rect");
+        shapeEl.setAttribute("x",s);
+        shapeEl.setAttribute("y",s);
+        shapeEl.setAttribute("width",size-s*2);
+        shapeEl.setAttribute("height",size-s*2);
+        shapeEl.setAttribute("rx",r);
+    }
 
-        const defs = document.createElementNS(svgNS, "defs");
-        svg.appendChild(defs);
+    if (shape==="ellipse"){
+        shapeEl=document.createElementNS(NS,"ellipse");
+        shapeEl.setAttribute("cx",w/2);
+        shapeEl.setAttribute("cy",h/2);
+        shapeEl.setAttribute("rx",w/2-s);
+        shapeEl.setAttribute("ry",h/2-s);
+    }
 
-        /* ===========
-           GRADIENTE
-        =========== */
-        const grad = document.createElementNS(svgNS, "linearGradient");
-        grad.setAttribute("id", "g");
-        grad.setAttribute("gradientUnits", "userSpaceOnUse");
-        grad.setAttribute("x1", "0");
-        grad.setAttribute("y1", "0");
-        grad.setAttribute("x2", w);
-        grad.setAttribute("y2", "0");
+    if (shape==="line-h"){
+        shapeEl=document.createElementNS(NS,"line");
+        shapeEl.setAttribute("x1","0");
+        shapeEl.setAttribute("y1",h/2);
+        shapeEl.setAttribute("x2",w);
+        shapeEl.setAttribute("y2",h/2);
+    }
 
-        function addStop(offset, color) {
-            const st = document.createElementNS(svgNS, "stop");
-            st.setAttribute("offset", offset);
-            st.setAttribute("stop-color", color);
-            grad.appendChild(st);
-        }
+    if (shape==="line-v"){
+        shapeEl=document.createElementNS(NS,"line");
+        shapeEl.setAttribute("x1",w/2);
+        shapeEl.setAttribute("y1","0");
+        shapeEl.setAttribute("x2",w/2);
+        shapeEl.setAttribute("y2",h);
+    }
 
-        if (mode === "2") {
-            addStop("0%", c1);
-            addStop("100%", c2);
-        } else {
-            addStop("0%", c1);
-            addStop("33%", c2);
-            addStop("66%", c3);
-            addStop("100%", c4);
-        }
+    shapeEl.setAttribute("stroke","url(#g)");
+    shapeEl.setAttribute("stroke-width",s);
+    shapeEl.setAttribute("fill","none");
+    shapeEl.setAttribute("opacity",op);
 
-        const animNode = document.createElementNS(svgNS, "animateTransform");
-        animNode.setAttribute("attributeName", "gradientTransform");
-        animNode.setAttribute("type", "translate");
-        animNode.setAttribute("dur", `${spd}s`);
-        animNode.setAttribute("repeatCount", "indefinite");
-        animNode.setAttribute("keyTimes", "0;0.5;1");
+    if (glow==="neon") shapeEl.setAttribute("class","neon");
 
-        const fx = effects[anim];
-        if (fx) animNode.setAttribute("values", fx);
+    svg.appendChild(shapeEl);
 
-        grad.appendChild(animNode);
-        defs.appendChild(grad);
-
-        /* ===========
-           SHAPE
-        =========== */
-        const shapeType = p("shape", "rect");
-        const shape = makeShape(shapeType, w, h, r, s);
-
-        shape.setAttribute("fill", "none");
-        shape.setAttribute("stroke", "url(#g)");
-        shape.setAttribute("stroke-width", s);
-        shape.setAttribute("stroke-linecap", "round");
-        shape.setAttribute("opacity", op);
-
-        if (glow === "neon") shape.classList.add("neon");
-
-        svg.appendChild(shape);
-
-        /* ===========
-           DEBUG
-        =========== */
-        const wrap = document.getElementById("wrap");
-
-        wrap.classList.toggle("grid-bg", dbg === "grid");
-        svg.classList.toggle("viewbox-outline", dbg === "viewbox");
-    };
+};
 </script>
 
 </body>
