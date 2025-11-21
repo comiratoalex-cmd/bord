@@ -1,129 +1,39 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-}
-
 body {
-    overflow: hidden;
+    margin: 0;
+    background: #0d0c11;
     color: white;
-    background: #0e0e13;
+    display: flex;
 }
 
-/* SIDEBAR ------------------------------------------------*/
-
-.sidebar {
-    width: 380px;
-    height: 100vh;
+#sidebar {
+    width: 370px;
     background: rgba(255,255,255,0.04);
-    backdrop-filter: blur(18px);
-    border-right: 1px solid rgba(255,255,255,0.08);
-    padding: 28px;
-    overflow-y: auto;
-    position: fixed;
-    left: 0;
-    top: 0;
-}
-
-#collapseBtn {
-    position: absolute;
-    left: 18px;
-    top: 18px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.25);
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    z-index: 20;
-}
-
-/* TITLES */
-
-.title-area h1 {
-    font-size: 28px;
-    margin-bottom: 4px;
-}
-
-.title-area h2 {
-    opacity: 0.6;
-    font-size: 14px;
-    margin-bottom: 25px;
-}
-
-/* SECTIONS */
-
-.section {
-    margin-bottom: 25px;
-}
-
-label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-}
-
-input[type="number"],
-input[type="range"],
-input[type="color"],
-select,
-#obsLink {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    background: #13131a;
-    color: white;
-    border: 1px solid #333;
-}
-
-.color-grid {
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap: 10px;
-}
-
-/* BUTTONS */
-
-button {
-    width: 100%;
-    padding: 13px;
-    border-radius: 10px;
-    background: linear-gradient(90deg,#ff9acb,#b6d9ff,#ffe7a3,#e8c8ff);
-    font-weight: bold;
-    cursor: pointer;
-    color: #000;
-    margin-top: 8px;
-}
-
-button:hover {
-    filter: brightness(1.15);
-}
-
-/* PREVIEW ------------------------------------------------*/
-
-.preview-container {
-    position: absolute;
-    left: 380px;
-    top: 0;
-    width: calc(100vw - 380px);
+    padding: 25px;
     height: 100vh;
+    overflow-y: auto;
+    backdrop-filter: blur(16px);
+}
+
+#preview-area {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
-#preview {
-    width: 90%;
-    height: 90%;
-    overflow: visible;
+/* PREVIEW SVG */
+#previewSvg {
+    width: 75%;
+    height: 75%;
+    display: none;
 }
 
-/* PARTICLES (BG) */
-
-#particles {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    inset: 0;
-    z-index: 0;
+/* PREVIEW DIV (Barras) */
+#previewBar {
+    width: 85%;
+    height: 18px;
+    border-radius: 12px;
+    background-size: 400% 400%;
+    display: none;
 }
