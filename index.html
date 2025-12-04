@@ -1,82 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Border View</title>
-
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        background: transparent;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-
-    .border {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        box-sizing: border-box;
-        animation: slide var(--spd, 10s) linear infinite;
-        filter: var(--glow, none);
-        border-radius: var(--radius, 0px);
-    }
-
-    @keyframes slide {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 400% 50%; }
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bord Pastel Generator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="border" class="border"></div>
+<div id="sidebar">
+    <h1>Pastel Border Generator</h1>
 
-<script>
-function p(name, fallback = null) {
-    const url = new URL(window.location.href);
-    return url.searchParams.get(name) ?? fallback;
-}
+    <label>Forma:</label>
+    <select id="shape">
+        <option value="rect">Retângulo</option>
+        <option value="square">Quadrado</option>
+        <option value="line-h">Linha Horizontal</option>
+        <option value="line-v">Linha Vertical</option>
+    </select>
 
-const el = document.getElementById("border");
+    <label>Largura:</label>
+    <input id="width" type="number" value="800">
 
-const w = Number(p("w", 800));
-const h = Number(p("h", 300));
-const s = Number(p("s", 10));
-const r = Number(p("r", 20));
-const spd = Number(p("spd", 10));
+    <label>Altura:</label>
+    <input id="height" type="number" value="300">
 
-const c1 = p("c1", "#ffb8c6");
-const c2 = p("c2", "#b6d9ff");
-const c3 = p("c3", "#ffe7a3");
-const c4 = p("c4", "#e8c8ff");
+    <label>Espessura da borda:</label>
+    <input id="stroke" type="number" value="12">
 
-const mode = p("mode", "4");
-const glow = p("glow", "none");
+    <label>Raio:</label>
+    <input id="radius" type="number" value="25">
 
-el.style.width = w + "px";
-el.style.height = h + "px";
-el.style.border = s + "px solid transparent";
-el.style.borderRadius = r + "px";
-el.style.setProperty("--spd", spd + "s");
+    <label>Velocidade:</label>
+    <input id="speed" type="number" value="10">
 
-const gradient = (mode === "2")
-    ? `linear-gradient(90deg, ${c1}, ${c2})`
-    : `linear-gradient(90deg, ${c1}, ${c2}, ${c3}, ${c4})`;
+    <label>Modo de cores:</label>
+    <select id="color-mode">
+        <option value="2">2 cores</option>
+        <option value="4" selected>4 cores</option>
+    </select>
 
-el.style.background = gradient;
-el.style.backgroundSize = "400% 400%";
+    <label>Cor 1:</label>
+    <input id="c1" type="color" value="#ffb8c6">
+    <label>Cor 2:</label>
+    <input id="c2" type="color" value="#b6d9ff">
+    <label>Cor 3:</label>
+    <input id="c3" type="color" value="#ffe7a3">
+    <label>Cor 4:</label>
+    <input id="c4" type="color" value="#e8c8ff">
 
-if (glow === "neon") {
-    el.style.setProperty("--glow",
-        "drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px #fff)");
-}
-</script>
+    <button id="generate">Gerar Link para OBS</button>
+    <input id="obs-link" readonly>
+</div>
+
+<div id="preview-area">
+    <div id="previewBar"></div>
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>
