@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bord Pastel Generator</title>
+    <title>Candy Neon Pastel Border Generator</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div id="sidebar">
-    <h1>Pastel Border Generator</h1>
+    <h1 class="title">Candy Neon Border</h1>
 
     <label>Forma:</label>
     <select id="shape">
@@ -26,7 +26,7 @@
     <label>Altura:</label>
     <input id="height" type="number" value="300">
 
-    <label>Espessura da borda:</label>
+    <label>Espessura:</label>
     <input id="stroke" type="number" value="4">
 
     <label>Raio:</label>
@@ -35,7 +35,7 @@
     <label>Velocidade:</label>
     <input id="speed" type="number" value="10">
 
-    <label>Modo de cores:</label>
+    <label>Modo de Cores:</label>
     <select id="color-mode">
         <option value="2">2 cores</option>
         <option value="4" selected>4 cores</option>
@@ -44,25 +44,27 @@
     <label>Efeito:</label>
     <select id="effect">
         <option value="none">Nenhum</option>
-        <option value="neon">Glow Neon</option>
-        <option value="emboss">Emboss 3D</option>
+        <option value="neon">Glow Neon Candy</option>
+        <option value="emboss">Emboss Pastel</option>
         <option value="shadow">Sombra Animada</option>
         <option value="turbo">TURBO (tudo)</option>
     </select>
 
     <label>Cor 1:</label>
-    <input id="c1" type="color" value="#b6d9ff">
+    <input id="c1" type="color" value="#aee7ff">
 
     <label>Cor 2:</label>
-    <input id="c2" type="color" value="#ffe7a3">
+    <input id="c2" type="color" value="#ffc0e6">
 
     <label>Cor 3:</label>
-    <input id="c3" type="color" value="#ffd6a3">
+    <input id="c3" type="color" value="#ffe4b3">
 
     <label>Cor 4:</label>
-    <input id="c4" type="color" value="#fff5a8">
+    <input id="c4" type="color" value="#ffd9c7">
 
-    <button id="generate">Gerar Link OBS</button>
+    <button id="presetButton">📦 Presets Candy</button>
+
+    <button id="generate" class="glow-btn">Gerar Link OBS</button>
     <input id="obs-link" readonly>
 </div>
 
@@ -71,6 +73,5 @@
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
