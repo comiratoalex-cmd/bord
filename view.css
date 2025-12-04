@@ -2,12 +2,11 @@ html, body {
     margin: 0;
     padding: 0;
     background: transparent;
+    overflow: hidden;
     height: 100%;
     width: 100%;
-    overflow: hidden;
 }
 
-/* BORDA PRINCIPAL */
 #border {
     position: absolute;
     top: 50%;
@@ -22,13 +21,11 @@ html, body {
     animation: slide var(--spd, 10s) linear infinite;
 }
 
-/* ANIMAÇÃO DO GRADIENTE */
 @keyframes slide {
     0% { background-position: 0% 50%; }
     100% { background-position: 400% 50%; }
 }
 
-/* 🔥 GLOW NEON PRO */
 .glow-neon {
     filter:
         drop-shadow(0 0 6px var(--c1))
@@ -36,7 +33,6 @@ html, body {
         drop-shadow(0 0 20px var(--c3));
 }
 
-/* ✨ EMBOSS 3D PASTEL */
 .emboss {
     box-shadow:
         inset 4px 4px 8px rgba(255,255,255,0.45),
@@ -44,25 +40,24 @@ html, body {
         0 0 6px rgba(255,255,255,0.15);
 }
 
-/* 🌈 SOMBRA ANIMADA */
 @keyframes shadowPulse {
     0% {
         box-shadow:
             0 0 14px var(--c1),
             0 0 24px var(--c2),
-            0 0 36px var(--c3);
+            0 0 32px var(--c3);
     }
     50% {
         box-shadow:
             0 0 20px var(--c3),
             0 0 28px var(--c1),
-            0 0 40px var(--c2);
+            0 0 38px var(--c2);
     }
     100% {
         box-shadow:
             0 0 14px var(--c1),
             0 0 24px var(--c2),
-            0 0 36px var(--c3);
+            0 0 32px var(--c3);
     }
 }
 
