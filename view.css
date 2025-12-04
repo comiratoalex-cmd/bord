@@ -1,8 +1,8 @@
 html, body {
     margin: 0;
     background: transparent;
-    overflow: hidden;
     height: 100%;
+    overflow: hidden;
 }
 
 #border {
@@ -12,6 +12,7 @@ html, body {
     transform: translate(-50%,-50%);
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
+
     background-size: 100% 100%, 400% 400%;
     animation: slide var(--spd,10s) linear infinite;
 }
@@ -25,7 +26,7 @@ html, body {
     filter:
         drop-shadow(0 0 8px #aee7ff)
         drop-shadow(0 0 16px #ffc0e6)
-        drop-shadow(0 0 22px #ffe4b3);
+        drop-shadow(0 0 24px #ffe4b3);
 }
 
 .emboss {
