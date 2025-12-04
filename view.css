@@ -1,35 +1,89 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Pastel Border View PRO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="view.css">
+</head>
+
+<body>
+
+<div id="border"></div>
+
+<script>
+function p(n, fb=null) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(n) ?? fb;
 }
 
-/* ELEMENTO PRINCIPAL DA BORDA */
-#border {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+const el = document.getElementById("border");
 
-    box-sizing: border-box;
+const shape = p("shape","rect");
+const w = Number(p("w",800));
+const h = Number(p("h",300));
+const s = Number(p("s",12));
+const r = Number(p("r",25));
+const spd = Number(p("spd",10));
 
-    /* ESSENCIAL PARA A BORDA GRADIENTE FUNCIONAR */
-    background-clip: padding-box, border-box;
-    background-origin: padding-box, border-box;
+const mode = p("mode","4");
+const fx = p("fx","none");
 
-    /* Dois backgrounds:
-       1 — transparente para "cavar" o centro
-       2 — borda pastel animada */
-    background-size: 100% 100%, 400% 400%;
+const c1 = p("c1","#ffb8c6");
+const c2 = p("c2","#b6d9ff");
+const c3 = p("c3","#ffe7a3");
+const c4 = p("c4","#e8c8ff");
 
-    animation: slide var(--spd, 10s) linear infinite;
+el.style.setProperty("--c1", c1);
+el.style.setProperty("--c2", c2);
+el.style.setProperty("--c3", c3);
+
+/* SHAPE */
+if (shape === "line-h") {
+    el.style.width = "85%";
+    el.style.height = "18px";
+}
+else if (shape === "line-v") {
+    el.style.width = "18px";
+    el.style.height = "85%";
+}
+else if (shape === "square") {
+    const size = Math.min(w,h);
+    el.style.width = size+"px";
+    el.style.height = size+"px";
+}
+else {
+    el.style.width = w+"px";
+    el.style.height = h+"px";
 }
 
-/* ANIMAÇÃO PRINCIPAL */
-@keyframes slide {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 400% 50%; }
-}
+el.style.border = `${s}px solid transparent`;
+el.style.borderRadius = `${r}px`;
+el.style.setProperty("--spd", `${spd}s`);
+
+const gradient =
+    (mode === "2")
+        ? `linear-gradient(90deg,
+            ${c1} 0%,
+            ${c1} 40%,
+            ${c2} 60%,
+            ${c2} 100%)`
+        : `linear-gradient(90deg,
+            ${c1} 0%,
+            ${c1} 20%,
+            ${c2} 30%,
+            ${c2} 45%,
+            ${c3} 55%,
+            ${c3} 70%,
+            ${c4} 80%,
+            ${c4} 100%)`;
+
+el.style.backgroundImage = `linear-gradient(#0000,#0000), ${gradient}`;
+
+if (fx === "neon") el.classList.add("glow-neon");
+if (fx === "emboss") el.classList.add("emboss");
+if (fx === "shadow") el.classList.add("shadow-animated");
+if (fx === "turbo") el.classList.add("glow-neon","emboss","shadow-animated");
+</script>
+</body>
+</html>
