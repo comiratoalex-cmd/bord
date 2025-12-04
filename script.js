@@ -117,3 +117,15 @@ $("generate").onclick = () => {
 document.addEventListener("input", updatePreview);
 document.addEventListener("change", updatePreview);
 updatePreview();
+/* ======== GERAR LINK OBS TRANSPARENTE ======== */
+$("generateOBS").onclick = () => {
+    const u = new URL(location.href);
+    u.pathname = "obs.html";
+
+    [
+        "shape","width","height","stroke","radius","speed",
+        "color-mode","effect","c1","c2","c3","c4"
+    ].forEach(key => u.searchParams.set(key, $(key).value));
+
+    $("obs-transparent-link").value = u.toString();
+};
