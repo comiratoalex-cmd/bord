@@ -17,23 +17,15 @@ body {
 #preview-area {
     flex: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
-    position: relative;
+    align-items: center;
 }
 
-/* PREVIEW SVG */
-#previewSvg {
-    width: 75%;
-    height: 75%;
-    display: none;
-}
-
-/* PREVIEW DIV (Barras) */
 #previewBar {
-    width: 85%;
-    height: 18px;
-    border-radius: 12px;
-    background-size: 400% 400%;
-    display: none;
+    border: solid transparent;
+}
+
+@keyframes slide {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
 }
