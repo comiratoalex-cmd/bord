@@ -1,89 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<title>Pastel Border View PRO</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="view.css">
-</head>
-
-<body>
-
-<div id="border"></div>
-
-<script>
-function p(n, fb=null) {
-    const url = new URL(window.location.href);
-    return url.searchParams.get(n) ?? fb;
+html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
-const el = document.getElementById("border");
+/* BORDA PRINCIPAL */
+#border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
 
-const shape = p("shape","rect");
-const w = Number(p("w",800));
-const h = Number(p("h",300));
-const s = Number(p("s",12));
-const r = Number(p("r",25));
-const spd = Number(p("spd",10));
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
 
-const mode = p("mode","4");
-const fx = p("fx","none");
-
-const c1 = p("c1","#ffb8c6");
-const c2 = p("c2","#b6d9ff");
-const c3 = p("c3","#ffe7a3");
-const c4 = p("c4","#e8c8ff");
-
-el.style.setProperty("--c1", c1);
-el.style.setProperty("--c2", c2);
-el.style.setProperty("--c3", c3);
-
-/* SHAPE */
-if (shape === "line-h") {
-    el.style.width = "85%";
-    el.style.height = "18px";
-}
-else if (shape === "line-v") {
-    el.style.width = "18px";
-    el.style.height = "85%";
-}
-else if (shape === "square") {
-    const size = Math.min(w,h);
-    el.style.width = size+"px";
-    el.style.height = size+"px";
-}
-else {
-    el.style.width = w+"px";
-    el.style.height = h+"px";
+    background-size: 100% 100%, 400% 400%;
+    animation: slide var(--spd, 10s) linear infinite;
 }
 
-el.style.border = `${s}px solid transparent`;
-el.style.borderRadius = `${r}px`;
-el.style.setProperty("--spd", `${spd}s`);
+/* ANIMAÇÃO DO GRADIENTE */
+@keyframes slide {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
+}
 
-const gradient =
-    (mode === "2")
-        ? `linear-gradient(90deg,
-            ${c1} 0%,
-            ${c1} 40%,
-            ${c2} 60%,
-            ${c2} 100%)`
-        : `linear-gradient(90deg,
-            ${c1} 0%,
-            ${c1} 20%,
-            ${c2} 30%,
-            ${c2} 45%,
-            ${c3} 55%,
-            ${c3} 70%,
-            ${c4} 80%,
-            ${c4} 100%)`;
+/* 🔥 GLOW NEON PRO */
+.glow-neon {
+    filter:
+        drop-shadow(0 0 6px var(--c1))
+        drop-shadow(0 0 14px var(--c2))
+        drop-shadow(0 0 20px var(--c3));
+}
 
-el.style.backgroundImage = `linear-gradient(#0000,#0000), ${gradient}`;
+/* ✨ EMBOSS 3D PASTEL */
+.emboss {
+    box-shadow:
+        inset 4px 4px 8px rgba(255,255,255,0.45),
+        inset -4px -4px 8px rgba(0,0,0,0.25),
+        0 0 6px rgba(255,255,255,0.15);
+}
 
-if (fx === "neon") el.classList.add("glow-neon");
-if (fx === "emboss") el.classList.add("emboss");
-if (fx === "shadow") el.classList.add("shadow-animated");
-if (fx === "turbo") el.classList.add("glow-neon","emboss","shadow-animated");
-</script>
-</body>
-</html>
+/* 🌈 SOMBRA ANIMADA */
+@keyframes shadowPulse {
+    0% {
+        box-shadow:
+            0 0 14px var(--c1),
+            0 0 24px var(--c2),
+            0 0 36px var(--c3);
+    }
+    50% {
+        box-shadow:
+            0 0 20px var(--c3),
+            0 0 28px var(--c1),
+            0 0 40px var(--c2);
+    }
+    100% {
+        box-shadow:
+            0 0 14px var(--c1),
+            0 0 24px var(--c2),
+            0 0 36px var(--c3);
+    }
+}
+
+.shadow-animated {
+    animation: shadowPulse 3s ease-in-out infinite;
+}
