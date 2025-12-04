@@ -15,21 +15,16 @@ body {
     backdrop-filter: blur(16px);
 }
 
-#sidebar h1 {
-    margin-bottom: 15px;
-}
-
 #sidebar label {
     margin-top: 14px;
     display: block;
-    font-size: 14px;
 }
 
 #sidebar input,
 #sidebar select {
     width: 100%;
     padding: 8px;
-    margin-top: 5px;
+    margin-top: 4px;
     border: none;
     border-radius: 6px;
     background: rgba(255,255,255,0.15);
@@ -37,14 +32,13 @@ body {
 }
 
 #sidebar button {
-    margin-top: 20px;
     width: 100%;
     padding: 12px;
+    margin-top: 18px;
     border: none;
-    border-radius: 8px;
     background: #7f6eff;
     color: white;
-    font-weight: bold;
+    border-radius: 8px;
 }
 
 #preview-area {
@@ -54,6 +48,7 @@ body {
     align-items: center;
 }
 
+/* PREVIEW */
 #previewBar {
     position: relative;
     border: solid transparent;
@@ -72,36 +67,38 @@ body {
     100% { background-position: 400% 50%; }
 }
 
-/* EFFECTS */
 .glow-neon {
     filter:
-        drop-shadow(0 0 5px var(--c1))
-        drop-shadow(0 0 12px var(--c2))
-        drop-shadow(0 0 18px var(--c3));
+        drop-shadow(0 0 6px var(--c1))
+        drop-shadow(0 0 14px var(--c2))
+        drop-shadow(0 0 20px var(--c3));
 }
 
 .emboss {
     box-shadow:
-        inset 3px 3px 6px rgba(255,255,255,0.4),
-        inset -3px -3px 6px rgba(0,0,0,0.25),
-        0 0 5px rgba(255,255,255,0.15);
+        inset 4px 4px 8px rgba(255,255,255,0.45),
+        inset -4px -4px 8px rgba(0,0,0,0.25),
+        0 0 6px rgba(255,255,255,0.15);
 }
 
 @keyframes shadowPulse {
     0% {
-        box-shadow:0 0 12px var(--c1),
-                    0 0 22px var(--c2),
-                    0 0 32px var(--c3);
+        box-shadow:
+            0 0 14px var(--c1),
+            0 0 24px var(--c2),
+            0 0 32px var(--c3);
     }
     50% {
-        box-shadow:0 0 18px var(--c3),
-                    0 0 28px var(--c1),
-                    0 0 40px var(--c2);
+        box-shadow:
+            0 0 20px var(--c3),
+            0 0 28px var(--c1),
+            0 0 38px var(--c2);
     }
     100% {
-        box-shadow:0 0 12px var(--c1),
-                    0 0 22px var(--c2),
-                    0 0 32px var(--c3);
+        box-shadow:
+            0 0 14px var(--c1),
+            0 0 24px var(--c2),
+            0 0 32px var(--c3);
     }
 }
 
