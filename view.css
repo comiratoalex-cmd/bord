@@ -1,88 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Border View</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        background: transparent;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-    }
-
-    #border {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        box-sizing: border-box;
-
-        /* ESSENCIAL PARA MOSTRAR A BORDA */
-        background-clip: padding-box, border-box;
-        background-origin: padding-box, border-box;
-
-        /* Movimento */
-        animation: slide var(--spd, 10s) linear infinite;
-        background-size: 400% 400%;
-    }
-
-    @keyframes slide {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 400% 50%; }
-    }
-</style>
-</head>
-
-<body>
-
-<div id="border"></div>
-
-<script>
-function p(name, fallback=null) {
-    const url = new URL(window.location.href);
-    return url.searchParams.get(name) ?? fallback;
+html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
-const el = document.getElementById("border");
+/* ELEMENTO PRINCIPAL DA BORDA */
+#border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-const w = Number(p("w", 800));
-const h = Number(p("h", 300));
-const s = Number(p("s", 10));
-const r = Number(p("r", 20));
-const spd = Number(p("spd", 10));
+    box-sizing: border-box;
 
-const c1 = p("c1", "#ffb8c6");
-const c2 = p("c2", "#b6d9ff");
-const c3 = p("c3", "#ffe7a3");
-const c4 = p("c4", "#e8c8ff");
+    /* ESSENCIAL PARA A BORDA GRADIENTE FUNCIONAR */
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
 
-const mode = p("mode", "4");
-const glow = p("glow", "none");
+    /* Dois backgrounds:
+       1 — transparente para "cavar" o centro
+       2 — borda pastel animada */
+    background-size: 100% 100%, 400% 400%;
 
-el.style.width = w + "px";
-el.style.height = h + "px";
-el.style.borderRadius = r + "px";
-el.style.border = s + "px solid transparent";
-el.style.setProperty("--spd", spd + "s");
-
-const gradient = (mode === "2")
-    ? `linear-gradient(90deg, ${c1}, ${c2})`
-    : `linear-gradient(90deg, ${c1}, ${c2}, ${c3}, ${c4})`;
-
-/* Aqui criamos a borda pastel ANIMADA */
-el.style.backgroundImage =
-    `linear-gradient(#0000, #0000), ${gradient}`;
-el.style.backgroundSize = "100% 100%, 400% 400%";
-
-if (glow === "neon") {
-    el.style.filter =
-        "drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #fff)";
+    animation: slide var(--spd, 10s) linear infinite;
 }
-</script>
-</body>
-</html>
+
+/* ANIMAÇÃO PRINCIPAL */
+@keyframes slide {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
+}
