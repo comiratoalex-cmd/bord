@@ -22,17 +22,15 @@
         transform: translate(-50%, -50%);
         box-sizing: border-box;
 
-        /* ESSENCIAL PARA MOSTRAR A BORDA */
         background-clip: padding-box, border-box;
         background-origin: padding-box, border-box;
 
-        /* Movimento */
+        background-size: 100% 100%, 400% 400%;
         animation: slide var(--spd, 10s) linear infinite;
-        background-size: 400% 400%;
     }
 
     @keyframes slide {
-        0% { background-position: 0% 50%; }
+        0%   { background-position: 0% 50%; }
         100% { background-position: 400% 50%; }
     }
 </style>
@@ -50,6 +48,7 @@ function p(name, fallback=null) {
 
 const el = document.getElementById("border");
 
+const shape = p("shape", "rect");
 const w = Number(p("w", 800));
 const h = Number(p("h", 300));
 const s = Number(p("s", 10));
@@ -62,27 +61,33 @@ const c3 = p("c3", "#ffe7a3");
 const c4 = p("c4", "#e8c8ff");
 
 const mode = p("mode", "4");
-const glow = p("glow", "none");
 
-el.style.width = w + "px";
-el.style.height = h + "px";
-el.style.borderRadius = r + "px";
-el.style.border = s + "px solid transparent";
-el.style.setProperty("--spd", spd + "s");
+/* FORMAS */
+if (shape === "line-h") {
+    el.style.width = "85%";
+    el.style.height = "18px";
+}
+else if (shape === "line-v") {
+    el.style.width = "18px";
+    el.style.height = "85%";
+}
+else {
+    el.style.width = w + "px";
+    el.style.height = h + "px";
+}
 
-const gradient = (mode === "2")
-    ? `linear-gradient(90deg, ${c1}, ${c2})`
-    : `linear-gradient(90deg, ${c1}, ${c2}, ${c3}, ${c4})`;
+el.style.border = `${s}px solid transparent`;
+el.style.borderRadius = `${r}px`;
+el.style.setProperty("--spd", `${spd}s`);
 
-/* Aqui criamos a borda pastel ANIMADA */
+const gradient =
+    mode === "2"
+        ? `linear-gradient(90deg, ${c1}, ${c2})`
+        : `linear-gradient(90deg, ${c1}, ${c2}, ${c3}, ${c4})`;
+
 el.style.backgroundImage =
     `linear-gradient(#0000, #0000), ${gradient}`;
-el.style.backgroundSize = "100% 100%, 400% 400%";
-
-if (glow === "neon") {
-    el.style.filter =
-        "drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #fff)";
-}
 </script>
+
 </body>
 </html>
