@@ -1,24 +1,19 @@
 html, body {
     margin: 0;
-    padding: 0;
     background: transparent;
     overflow: hidden;
     height: 100%;
-    width: 100%;
 }
 
 #border {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    box-sizing: border-box;
-
+    transform: translate(-50%,-50%);
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
-
     background-size: 100% 100%, 400% 400%;
-    animation: slide var(--spd, 10s) linear infinite;
+    animation: slide var(--spd,10s) linear infinite;
 }
 
 @keyframes slide {
@@ -26,19 +21,17 @@ html, body {
     100% { background-position: 400% 50%; }
 }
 
-/* Effects */
 .glow-neon {
     filter:
-        drop-shadow(0 0 6px var(--c1))
-        drop-shadow(0 0 14px var(--c2))
-        drop-shadow(0 0 22px var(--c3));
+        drop-shadow(0 0 8px #aee7ff)
+        drop-shadow(0 0 16px #ffc0e6)
+        drop-shadow(0 0 22px #ffe4b3);
 }
 
 .emboss {
     box-shadow:
-        inset 4px 4px 8px rgba(255,255,255,0.45),
-        inset -4px -4px 8px rgba(0,0,0,0.25),
-        0 0 5px rgba(255,255,255,0.15);
+        inset 4px 4px 8px rgba(255,255,255,0.4),
+        inset -4px -4px 8px rgba(0,0,0,0.2);
 }
 
 .shadow-animated {
@@ -46,22 +39,7 @@ html, body {
 }
 
 @keyframes shadowPulse {
-    0% {
-        box-shadow:
-            0 0 14px var(--c1),
-            0 0 24px var(--c2),
-            0 0 34px var(--c3);
-    }
-    50% {
-        box-shadow:
-            0 0 20px var(--c3),
-            0 0 28px var(--c1),
-            0 0 38px var(--c2);
-    }
-    100% {
-        box-shadow:
-            0 0 14px var(--c1),
-            0 0 24px var(--c2),
-            0 0 34px var(--c3);
-    }
+    0% { box-shadow:0 0 14px #aee7ff; }
+    50% { box-shadow:0 0 26px #ffd9c7; }
+    100% { box-shadow:0 0 14px #aee7ff; }
 }
