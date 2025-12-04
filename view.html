@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Pastel Border View PRO</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Candy Neon Border</title>
 <link rel="stylesheet" href="view.css">
 </head>
 
@@ -12,79 +11,59 @@
 <div id="border"></div>
 
 <script>
-function p(n, fb=null) {
-    const url = new URL(window.location.href);
-    return url.searchParams.get(n) ?? fb;
-}
+const p = (k,f=null)=> new URL(location.href).searchParams.get(k) ?? f;
 
 const el = document.getElementById("border");
 
 const shape = p("shape","rect");
-const w = Number(p("w",800));
-const h = Number(p("h",300));
-const s = Number(p("s",4));
-const r = Number(p("r",25));
-const spd = Number(p("spd",10));
-const fx = p("fx","none");
-const mode = p("mode","4");
+const w = +p("width",800);
+const h = +p("height",300);
+const s = +p("stroke",4);
+const r = +p("radius",25);
+const spd = +p("speed",10);
+const mode = p("color-mode","4");
+const fx = p("effect","none");
 
-const c1 = p("c1","#b6d9ff");
-const c2 = p("c2","#ffe7a3");
-const c3 = p("c3","#ffd6a3");
-const c4 = p("c4","#fff5a8");
+const c1 = p("c1","#aee7ff");
+const c2 = p("c2","#ffc0e6");
+const c3 = p("c3","#ffe4b3");
+const c4 = p("c4","#ffd9c7");
 
-el.style.setProperty("--c1", c1);
-el.style.setProperty("--c2", c2);
-el.style.setProperty("--c3", c3);
+el.style.setProperty("--c1",c1);
+el.style.setProperty("--c2",c2);
+el.style.setProperty("--c3",c3);
 
-/* Shapes */
-if (shape === "line-h") {
-    el.style.width = "85%";
-    el.style.height = "10px";
-}
-else if (shape === "line-v") {
-    el.style.width = "10px";
-    el.style.height = "85%";
-}
-else if (shape === "square") {
-    const size = Math.min(w,h);
-    el.style.width = size+"px";
-    el.style.height = size+"px";
-} else {
-    el.style.width = w+"px";
-    el.style.height = h+"px";
-}
+/* SHAPE */
+if(shape==="line-h"){el.style.width="85%";el.style.height="10px";}
+else if(shape==="line-v"){el.style.width="10px";el.style.height="85%";}
+else{ el.style.width=w+"px"; el.style.height=h+"px"; }
 
-/* Border */
+/* BORDER */
 el.style.border = `${s}px solid transparent`;
 el.style.borderRadius = `${r}px`;
-el.style.setProperty("--spd", `${spd}s`);
+el.style.setProperty("--spd",`${spd}s`);
 
-/* Gradient fade suave */
+/* GRADIENT LOOP PERFEITO */
 const gradient =
-    (mode === "2")
-        ? `linear-gradient(90deg,
-            ${c1} 0%,
-            ${c1} 40%,
-            ${c2} 60%,
-            ${c2} 100%)`
-        : `linear-gradient(90deg,
-            ${c1} 0%,
-            ${c1} 20%,
-            ${c2} 35%,
-            ${c2} 50%,
-            ${c3} 65%,
-            ${c3} 80%,
-            ${c4} 90%,
-            ${c4} 100%)`;
+`linear-gradient(90deg,
+    ${c1} 0%,
+    ${c1} 15%,
+    ${c2} 30%,
+    ${c2} 45%,
+    ${c3} 60%,
+    ${c3} 75%,
+    ${c4} 90%,
+    ${c1} 100%
+)`;
 
+/* APPLY */
 el.style.backgroundImage =
     `linear-gradient(#0000,#0000), ${gradient}`;
 
-if (fx === "neon") el.classList.add("glow-neon");
-if (fx === "emboss") el.classList.add("emboss");
-if (fx === "shadow") el.classList.add("shadow-animated");
-if (fx === "turbo") el.classList.add("glow-neon","emboss","shadow-animated");
+if(fx==="neon") el.classList.add("glow-neon");
+if(fx==="emboss") el.classList.add("emboss");
+if(fx==="shadow") el.classList.add("shadow-animated");
+if(fx==="turbo") el.classList.add("glow-neon","emboss","shadow-animated");
 </script>
 
 </body>
