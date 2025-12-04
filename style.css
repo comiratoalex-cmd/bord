@@ -6,31 +6,32 @@ body {
     font-family: "Poppins", sans-serif;
 }
 
+/* Sidebar */
 #sidebar {
     width: 300px;
     height: 100vh;
     padding: 25px;
     overflow-y: auto;
     background: rgba(255,255,255,0.04);
-    border-right: 1px solid rgba(255,255,255,0.05);
+    border-right: 1px solid rgba(255,255,255,0.08);
     backdrop-filter: blur(12px);
 }
 
 .title {
     text-align: center;
     font-size: 22px;
-    margin-bottom: 15px;
-    background: linear-gradient(90deg, #aee7ff, #ffc0e6);
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #aee7ff, #ffc0e6, #ffe4b3);
     -webkit-background-clip: text;
     color: transparent;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 /* Inputs */
 #sidebar input,
 #sidebar select {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     background: rgba(255,255,255,0.12);
     color: white;
     border: none;
@@ -38,37 +39,37 @@ body {
     margin-top: 6px;
 }
 
-/* Dropdown fix */
 #sidebar select option {
     background: #1e1d26;
     color: white;
 }
 
-#presetButton {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    margin-top: 18px;
-    background: linear-gradient(90deg, #ffc0e6, #aee7ff);
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* Glow button */
+/* Buttons */
 .glow-btn {
     width: 100%;
     padding: 12px;
-    margin-top: 15px;
     border-radius: 10px;
     border: none;
+    margin-top: 15px;
     background: #aee7ff;
-    color: #0e0d12;
     font-weight: bold;
     cursor: pointer;
+    color: #0e0d12;
+
     box-shadow:
         0 0 10px #aee7ff,
         0 0 20px #ffc0e6;
+}
+
+.preset-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(90deg, #ffc0e6, #aee7ff);
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
 }
 
 /* Preview */
@@ -80,21 +81,21 @@ body {
 }
 
 #previewBar {
-    position: relative;
     border: solid transparent;
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
+    position: relative;
     background-size: 100% 100%, 400% 400%;
     animation: slide 10s linear infinite;
-    border-radius: 20px;
 }
 
-/* Neon Candy Effects */
+/* Effects */
+
 .glow-neon {
     filter:
         drop-shadow(0 0 8px #aee7ff)
         drop-shadow(0 0 16px #ffc0e6)
-        drop-shadow(0 0 22px #ffe4b3);
+        drop-shadow(0 0 24px #ffe4b3);
 }
 
 .emboss {
@@ -108,24 +109,11 @@ body {
 }
 
 @keyframes shadowPulse {
-    0% {
-        box-shadow:
-            0 0 14px #aee7ff,
-            0 0 18px #ffc0e6;
-    }
-    50% {
-        box-shadow:
-            0 0 22px #ffe4b3,
-            0 0 26px #ffd9c7;
-    }
-    100% {
-        box-shadow:
-            0 0 14px #aee7ff,
-            0 0 18px #ffc0e6;
-    }
+    0% { box-shadow:0 0 14px #aee7ff; }
+    50% { box-shadow:0 0 26px #ffd9c7; }
+    100% { box-shadow:0 0 14px #aee7ff; }
 }
 
-/* Animation */
 @keyframes slide {
     0% { background-position: 0% 50%; }
     100% { background-position: 400% 50%; }
