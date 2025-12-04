@@ -1,97 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<title>Pastel Border View PRO</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="view.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bord Pastel Generator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="border"></div>
+<div id="sidebar">
+    <h1>Pastel Border Generator</h1>
 
-<script>
-function p(n, fb=null) {
-    const url = new URL(window.location.href);
-    return url.searchParams.get(n) ?? fb;
-}
+    <label>Forma:</label>
+    <select id="shape">
+        <option value="rect">Retângulo</option>
+        <option value="square">Quadrado</option>
+        <option value="line-h">Linha Horizontal</option>
+        <option value="line-v">Linha Vertical</option>
+    </select>
 
-const el = document.getElementById("border");
+    <label>Largura:</label>
+    <input id="width" type="number" value="800">
 
-/* PARAMS */
-const shape = p("shape","rect");
-const w = Number(p("w",800));
-const h = Number(p("h",300));
-const s = Number(p("s",4));     // ESPESSURA PADRÃO BEM FINA
-const r = Number(p("r",25));
-const spd = Number(p("spd",10));
+    <label>Altura:</label>
+    <input id="height" type="number" value="300">
 
-const mode = p("mode","4");
-const fx = p("fx","none");
+    <label>Espessura da borda:</label>
+    <input id="stroke" type="number" value="4">
 
-const c1 = p("c1","#ffb8c6");
-const c2 = p("c2","#b6d9ff");
-const c3 = p("c3","#ffe7a3");
-const c4 = p("c4","#e8c8ff");
+    <label>Raio:</label>
+    <input id="radius" type="number" value="25">
 
-/* VARIÁVEIS PARA EFEITOS */
-el.style.setProperty("--c1", c1);
-el.style.setProperty("--c2", c2);
-el.style.setProperty("--c3", c3);
+    <label>Velocidade:</label>
+    <input id="speed" type="number" value="10">
 
-/* TAMANHO DA FORMA */
-if (shape === "line-h") {
-    el.style.width = "85%";
-    el.style.height = "10px";
-}
-else if (shape === "line-v") {
-    el.style.width = "10px";
-    el.style.height = "85%";
-}
-else if (shape === "square") {
-    const size = Math.min(w,h);
-    el.style.width = size+"px";
-    el.style.height = size+"px";
-} else {
-    el.style.width = w+"px";
-    el.style.height = h+"px";
-}
+    <label>Modo de cores:</label>
+    <select id="color-mode">
+        <option value="2">2 cores</option>
+        <option value="4" selected>4 cores</option>
+    </select>
 
-/* BORDA */
-el.style.border = `${s}px solid transparent`;
-el.style.borderRadius = `${r}px`;
-el.style.setProperty("--spd", `${spd}s`);
+    <label>Efeito:</label>
+    <select id="effect">
+        <option value="none">Nenhum</option>
+        <option value="neon">Glow Neon</option>
+        <option value="emboss">Emboss 3D</option>
+        <option value="shadow">Sombra Animada</option>
+        <option value="turbo">TURBO (tudo)</option>
+    </select>
 
-/* GRADIENTE SUAVE (SEM LINHA DURA) */
-const gradient =
-    (mode === "2")
-        ? `linear-gradient(90deg,
-            ${c1} 0%,
-            ${c1} 40%,
-            ${c2} 60%,
-            ${c2} 100%)`
-        : `linear-gradient(90deg,
-            ${c1} 0%,
-            ${c1} 20%,
-            ${c2} 35%,
-            ${c2} 50%,
-            ${c3} 65%,
-            ${c3} 80%,
-            ${c4} 90%,
-            ${c4} 100%)`;
+    <label>Cor 1:</label>
+    <input id="c1" type="color" value="#ffb8c6">
+    <label>Cor 2:</label>
+    <input id="c2" type="color" value="#b6d9ff">
+    <label>Cor 3:</label>
+    <input id="c3" type="color" value="#ffe7a3">
+    <label>Cor 4:</label>
+    <input id="c4" type="color" value="#e8c8ff">
 
-el.style.backgroundImage = `
-    linear-gradient(#0000,#0000),
-    ${gradient}
-`;
+    <button id="generate">Gerar Link OBS</button>
+    <input id="obs-link" readonly>
+</div>
 
-/* APLICAR EFEITOS */
-if (fx === "neon") el.classList.add("glow-neon");
-if (fx === "emboss") el.classList.add("emboss");
-if (fx === "shadow") el.classList.add("shadow-animated");
-if (fx === "turbo") el.classList.add("glow-neon","emboss","shadow-animated");
-</script>
+<div id="preview-area">
+    <div id="previewBar"></div>
+</div>
 
+<script src="script.js"></script>
 </body>
 </html>
