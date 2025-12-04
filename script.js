@@ -1,7 +1,8 @@
+/* ======== UTIL ======== */
 const $ = id => document.getElementById(id);
 const preview = $("previewBar");
 
-/* 25 Presets Professional Theowoo Pastel */
+/* ======== 25 PRESETS THEOWOO PASTEL ======== */
 const THEOWOO_PRESETS = [
     ["#aee7ff","#ffc0e6","#ffe4b3","#ffd9c7"],
     ["#cbe9ff","#ffcdf2","#ffe6cc","#fff2d9"],
@@ -30,8 +31,8 @@ const THEOWOO_PRESETS = [
     ["#c6f9ff","#ffcbef","#fff0c7","#ffeafa"]
 ];
 
-/* GRADIENTE LOOP PERFEITO */
-const gradientSmooth = (c1, c2, c3, c4, mode) => {
+/* ======== LOOP DO GRADIENTE PERFEITO ======== */
+function gradientSmooth(c1, c2, c3, c4, mode) {
     if (mode === "2") {
         return `linear-gradient(90deg,
             ${c1} 0%, ${c1} 25%,
@@ -45,9 +46,9 @@ const gradientSmooth = (c1, c2, c3, c4, mode) => {
         ${c3} 60%, ${c3} 75%,
         ${c4} 90%, ${c1} 100%
     )`;
-};
+}
 
-/* Atualiza Preview */
+/* ======== PREVIEW ======== */
 function updatePreview() {
     const shape = $("shape").value;
     const w = +$("width").value;
@@ -65,9 +66,8 @@ function updatePreview() {
     preview.style.animation = `slide ${spd}s linear infinite`;
     preview.style.border = `${s}px solid transparent`;
     preview.style.borderRadius = `${r}px`;
-
     preview.style.backgroundImage =
-        `linear-gradient(#0000,#0000), ${gradientSmooth(c1,c2,c3,c4,mode)}`;
+        `linear-gradient(#0000,#0000), ${gradientSmooth(c1, c2, c3, c4, mode)}`;
 
     if (shape === "line-h") {
         preview.style.width = "85%";
@@ -88,7 +88,7 @@ function updatePreview() {
     if (fx === "turbo") preview.classList.add("glow-neon","emboss","shadow-animated");
 }
 
-/* Presets */
+/* ======== BOTÃO DE PRESETS ======== */
 $("presetButton").onclick = () => {
     const p = THEOWOO_PRESETS[Math.floor(Math.random() * THEOWOO_PRESETS.length)];
     $("c1").value = p[0];
@@ -98,19 +98,20 @@ $("presetButton").onclick = () => {
     updatePreview();
 };
 
-/* Gera link OBS */
+/* ======== GERAR LINK OBS ======== */
 $("generate").onclick = () => {
     const u = new URL(location.href);
     u.pathname = "view.html";
 
-    ["shape","width","height","stroke","radius","speed","color-mode",
-     "effect","c1","c2","c3","c4"]
-        .forEach(k => u.searchParams.set(k, $(k).value));
+    [
+        "shape","width","height","stroke","radius","speed",
+        "color-mode","effect","c1","c2","c3","c4"
+    ].forEach(key => u.searchParams.set(key, $(key).value));
 
     $("obs-link").value = u.toString();
 };
 
+/* ======== AUTO UPDATE ======== */
 document.addEventListener("input", updatePreview);
 document.addEventListener("change", updatePreview);
-
 updatePreview();
