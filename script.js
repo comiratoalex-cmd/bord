@@ -1,22 +1,24 @@
-const shapeSel = document.getElementById("shape");
-const wInput = document.getElementById("width");
-const hInput = document.getElementById("height");
-const strokeInput = document.getElementById("stroke");
-const radiusInput = document.getElementById("radius");
-const speedInput = document.getElementById("speed");
+const sel = (id) => document.getElementById(id);
 
-const modeInput = document.getElementById("color-mode");
-const fxInput = document.getElementById("effect");
+const shapeSel = sel("shape");
+const wInput = sel("width");
+const hInput = sel("height");
+const strokeInput = sel("stroke");
+const radiusInput = sel("radius");
+const speedInput = sel("speed");
 
-const c1Input = document.getElementById("c1");
-const c2Input = document.getElementById("c2");
-const c3Input = document.getElementById("c3");
-const c4Input = document.getElementById("c4");
+const modeInput = sel("color-mode");
+const fxInput = sel("effect");
 
-const preview = document.getElementById("previewBar");
-const linkBox = document.getElementById("obs-link");
+const c1Input = sel("c1");
+const c2Input = sel("c2");
+const c3Input = sel("c3");
+const c4Input = sel("c4");
 
-/* Gradiente suave */
+const preview = sel("previewBar");
+const linkBox = sel("obs-link");
+
+/* FADE SUAVE */
 function smoothGradient(c1, c2, c3, c4, mode) {
     if (mode === "2") {
         return `
@@ -26,6 +28,7 @@ function smoothGradient(c1, c2, c3, c4, mode) {
             ${c2} 60%,
             ${c2} 100%)`;
     }
+
     return `
     linear-gradient(90deg,
         ${c1} 0%,
@@ -38,6 +41,7 @@ function smoothGradient(c1, c2, c3, c4, mode) {
         ${c4} 100%)`;
 }
 
+/* ATUALIZA PREVIEW */
 function updatePreview() {
     const w = Number(wInput.value);
     const h = Number(hInput.value);
@@ -50,6 +54,7 @@ function updatePreview() {
     const c2 = c2Input.value;
     const c3 = c3Input.value;
     const c4 = c4Input.value;
+
     const mode = modeInput.value;
 
     preview.className = "";
@@ -66,6 +71,7 @@ function updatePreview() {
     preview.style.backgroundImage = `linear-gradient(#0000,#0000), ${g}`;
 
     const shape = shapeSel.value;
+
     if (shape === "line-h") {
         preview.style.width = "85%";
         preview.style.height = "10px";
@@ -83,7 +89,7 @@ function updatePreview() {
     if (fx === "turbo") preview.classList.add("glow-neon","emboss","shadow-animated");
 }
 
-document.getElementById("generate").onclick = () => {
+sel("generate").onclick = () => {
     const url = new URL(location.href);
     url.pathname = "view.html";
 
@@ -93,8 +99,8 @@ document.getElementById("generate").onclick = () => {
     url.searchParams.set("s", strokeInput.value);
     url.searchParams.set("r", radiusInput.value);
     url.searchParams.set("spd", speedInput.value);
-    url.searchParams.set("mode", modeInput.value);
     url.searchParams.set("fx", fxInput.value);
+    url.searchParams.set("mode", modeInput.value);
 
     url.searchParams.set("c1", c1Input.value);
     url.searchParams.set("c2", c2Input.value);
@@ -104,6 +110,7 @@ document.getElementById("generate").onclick = () => {
     linkBox.value = url.toString();
 };
 
+/* Detect changes */
 ["input","change"].forEach(ev =>
     document.addEventListener(ev, updatePreview)
 );
