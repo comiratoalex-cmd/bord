@@ -2,78 +2,88 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Pastel Border View</title>
+<title>Pastel Border View PRO</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<!-- CSS EXTERNO -->
 <link rel="stylesheet" href="view.css">
 </head>
 
 <body>
 
-<!-- DIV PRINCIPAL DA BORDA -->
 <div id="border"></div>
 
 <script>
-/* Função de captura de parâmetros */
-function p(name, fallback = null) {
+function p(n, fb=null) {
     const url = new URL(window.location.href);
-    return url.searchParams.get(name) ?? fallback;
+    return url.searchParams.get(n) ?? fb;
 }
 
 const el = document.getElementById("border");
 
-/* Parâmetros */
-const shape = p("shape", "rect");
-const w = Number(p("w", 800));
-const h = Number(p("h", 300));
-const s = Number(p("s", 12));
-const r = Number(p("r", 25));
-const spd = Number(p("spd", 10));
+const shape = p("shape","rect");
+const w = Number(p("w",800));
+const h = Number(p("h",300));
+const s = Number(p("s",4));
+const r = Number(p("r",25));
+const spd = Number(p("spd",10));
+const mode = p("mode","4");
+const fx = p("fx","none");
 
-/* Cores */
-const c1 = p("c1", "#ffb8c6");
-const c2 = p("c2", "#b6d9ff");
-const c3 = p("c3", "#ffe7a3");
-const c4 = p("c4", "#e8c8ff");
+const c1 = p("c1","#ffb8c6");
+const c2 = p("c2","#b6d9ff");
+const c3 = p("c3","#ffe7a3");
+const c4 = p("c4","#e8c8ff");
 
-const mode = p("mode", "4");
+el.style.setProperty("--c1", c1);
+el.style.setProperty("--c2", c2);
+el.style.setProperty("--c3", c3);
 
-/* Definir tamanhos conforme forma */
+/* SHAPE */
 if (shape === "line-h") {
     el.style.width = "85%";
-    el.style.height = "18px";
+    el.style.height = "10px";
 }
 else if (shape === "line-v") {
-    el.style.width = "18px";
+    el.style.width = "10px";
     el.style.height = "85%";
 }
 else if (shape === "square") {
-    const size = Math.min(w, h);
-    el.style.width = size + "px";
-    el.style.height = size + "px";
-}
-else {
-    el.style.width = w + "px";
-    el.style.height = h + "px";
+    const size = Math.min(w,h);
+    el.style.width = size+"px";
+    el.style.height = size+"px";
+} else {
+    el.style.width = w+"px";
+    el.style.height = h+"px";
 }
 
-/* Stroke / raio / velocidade */
+/* BORDA */
 el.style.border = `${s}px solid transparent`;
 el.style.borderRadius = `${r}px`;
 el.style.setProperty("--spd", `${spd}s`);
 
-/* Gradient */
+/* GRADIENTE SUAVE */
 const gradient =
     (mode === "2")
-        ? `linear-gradient(90deg, ${c1}, ${c2})`
-        : `linear-gradient(90deg, ${c1}, ${c2}, ${c3}, ${c4})`;
+        ? `linear-gradient(90deg,
+            ${c1} 0%,
+            ${c1} 40%,
+            ${c2} 60%,
+            ${c2} 100%)`
+        : `linear-gradient(90deg,
+            ${c1} 0%,
+            ${c1} 20%,
+            ${c2} 35%,
+            ${c2} 50%,
+            ${c3} 65%,
+            ${c3} 80%,
+            ${c4} 90%,
+            ${c4} 100%)`;
 
-/* Define a borda pastel animada */
-el.style.backgroundImage = `
-    linear-gradient(#0000, #0000),
-    ${gradient}
-`;
+el.style.backgroundImage = `linear-gradient(#0000,#0000), ${gradient}`;
+
+if (fx === "neon") el.classList.add("glow-neon");
+if (fx === "emboss") el.classList.add("emboss");
+if (fx === "shadow") el.classList.add("shadow-animated");
+if (fx === "turbo") el.classList.add("glow-neon","emboss","shadow-animated");
 </script>
 
 </body>
