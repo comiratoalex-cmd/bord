@@ -6,6 +6,8 @@ const radiusInput = document.getElementById("radius");
 const speedInput = document.getElementById("speed");
 
 const modeInput = document.getElementById("color-mode");
+const fxInput = document.getElementById("effect");
+
 const c1Input = document.getElementById("c1");
 const c2Input = document.getElementById("c2");
 const c3Input = document.getElementById("c3");
@@ -14,21 +16,57 @@ const c4Input = document.getElementById("c4");
 const preview = document.getElementById("previewBar");
 const linkBox = document.getElementById("obs-link");
 
+function smoothGradient(c1, c2, c3, c4, mode) {
+    if (mode === "2") {
+        return `
+        linear-gradient(90deg,
+            ${c1} 0%,
+            ${c1} 40%,
+            ${c2} 60%,
+            ${c2} 100%)`;
+    }
+
+    return `
+    linear-gradient(90deg,
+        ${c1} 0%,
+        ${c1} 20%,
+        ${c2} 30%,
+        ${c2} 45%,
+        ${c3} 55%,
+        ${c3} 70%,
+        ${c4} 80%,
+        ${c4} 100%)`;
+}
+
 function updatePreview() {
-    const shape = shapeSel.value;
     const w = Number(wInput.value);
     const h = Number(hInput.value);
     const s = Number(strokeInput.value);
     const r = Number(radiusInput.value);
     const spd = Number(speedInput.value);
+    const fx = fxInput.value;
 
-    const mode = modeInput.value;
     const c1 = c1Input.value;
     const c2 = c2Input.value;
     const c3 = c3Input.value;
     const c4 = c4Input.value;
 
-    /* Forma */
+    const mode = modeInput.value;
+
+    preview.className = "";
+    preview.style.animation = `slide ${spd}s linear infinite`;
+
+    preview.style.setProperty("--c1", c1);
+    preview.style.setProperty("--c2", c2);
+    preview.style.setProperty("--c3", c3);
+
+    const g = smoothGradient(c1, c2, c3, c4, mode);
+
+    preview.style.border = `${s}px solid transparent`;
+    preview.style.borderRadius = `${r}px`;
+    preview.style.backgroundImage = `linear-gradient(#0000,#0000), ${g}`;
+
+    const shape = shapeSel.value;
     if (shape === "line-h") {
         preview.style.width = "85%";
         preview.style.height = "18px";
@@ -40,22 +78,12 @@ function updatePreview() {
         preview.style.height = h + "px";
     }
 
-    preview.style.border = `${s}px solid transparent`;
-    preview.style.borderRadius = `${r}px`;
-
-    const gradient =
-        mode === "2"
-            ? `linear-gradient(90deg, ${c1}, ${c2})`
-            : `linear-gradient(90deg, ${c1}, ${c2}, ${c3}, ${c4})`;
-
-    preview.style.backgroundImage =
-        `linear-gradient(#0000, #0000), ${gradient}`;
-
-    preview.style.backgroundSize = "100% 100%, 400% 400%";
-    preview.style.animation = `slide ${spd}s linear infinite`;
+    if (fx === "neon") preview.classList.add("glow-neon");
+    if (fx === "emboss") preview.classList.add("emboss");
+    if (fx === "shadow") preview.classList.add("shadow-animated");
+    if (fx === "turbo") preview.classList.add("glow-neon","emboss","shadow-animated");
 }
 
-/* GERAR LINK OBS */
 document.getElementById("generate").onclick = () => {
     const url = new URL(location.href);
     url.pathname = "view.html";
@@ -67,6 +95,7 @@ document.getElementById("generate").onclick = () => {
     url.searchParams.set("r", radiusInput.value);
     url.searchParams.set("spd", speedInput.value);
     url.searchParams.set("mode", modeInput.value);
+    url.searchParams.set("fx", fxInput.value);
 
     url.searchParams.set("c1", c1Input.value);
     url.searchParams.set("c2", c2Input.value);
@@ -76,7 +105,7 @@ document.getElementById("generate").onclick = () => {
     linkBox.value = url.toString();
 };
 
-["input", "change"].forEach(ev => {
+["input","change"].forEach(ev => {
     document.addEventListener(ev, updatePreview);
 });
 
