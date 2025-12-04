@@ -6,12 +6,13 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Sidebar */
 #sidebar {
     width: 320px;
-    background: rgba(255,255,255,0.06);
-    padding: 22px;
     height: 100vh;
     overflow-y: auto;
+    padding: 22px;
+    background: rgba(255,255,255,0.06);
     backdrop-filter: blur(16px);
 }
 
@@ -24,23 +25,34 @@ body {
 #sidebar select {
     width: 100%;
     padding: 8px;
-    margin-top: 4px;
     border: none;
     border-radius: 6px;
+    margin-top: 4px;
     background: rgba(255,255,255,0.15);
     color: white;
+}
+
+/* Dropdown estilizado */
+#sidebar select option {
+    background: #1c1c22;
+    color: white;
+}
+
+#sidebar select option:hover {
+    background: #3a3a3a !important;
 }
 
 #sidebar button {
     width: 100%;
     padding: 12px;
-    margin-top: 18px;
+    margin-top: 20px;
+    border-radius: 8px;
     border: none;
     background: #7f6eff;
     color: white;
-    border-radius: 8px;
 }
 
+/* Preview Area */
 #preview-area {
     flex: 1;
     display: flex;
@@ -48,13 +60,13 @@ body {
     align-items: center;
 }
 
-/* PREVIEW */
+/* Preview Bar */
 #previewBar {
     position: relative;
     border: solid transparent;
     box-sizing: border-box;
-    border-radius: 20px;
 
+    /* Essencial para borda pastel real */
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
 
@@ -67,18 +79,23 @@ body {
     100% { background-position: 400% 50%; }
 }
 
+/* Effects */
 .glow-neon {
     filter:
         drop-shadow(0 0 6px var(--c1))
         drop-shadow(0 0 14px var(--c2))
-        drop-shadow(0 0 20px var(--c3));
+        drop-shadow(0 0 22px var(--c3));
 }
 
 .emboss {
     box-shadow:
         inset 4px 4px 8px rgba(255,255,255,0.45),
         inset -4px -4px 8px rgba(0,0,0,0.25),
-        0 0 6px rgba(255,255,255,0.15);
+        0 0 5px rgba(255,255,255,0.15);
+}
+
+.shadow-animated {
+    animation: shadowPulse 3s ease-in-out infinite;
 }
 
 @keyframes shadowPulse {
@@ -86,22 +103,18 @@ body {
         box-shadow:
             0 0 14px var(--c1),
             0 0 24px var(--c2),
-            0 0 32px var(--c3);
+            0 0 34px var(--c3);
     }
     50% {
         box-shadow:
             0 0 20px var(--c3),
             0 0 28px var(--c1),
-            0 0 38px var(--c2);
+            0 0 40px var(--c2);
     }
     100% {
         box-shadow:
             0 0 14px var(--c1),
             0 0 24px var(--c2),
-            0 0 32px var(--c3);
+            0 0 34px var(--c3);
     }
-}
-
-.shadow-animated {
-    animation: shadowPulse 3s ease-in-out infinite;
 }
