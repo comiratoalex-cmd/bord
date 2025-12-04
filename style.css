@@ -1,31 +1,111 @@
+/* ============================
+   LAYOUT GERAL
+============================ */
 body {
     margin: 0;
     background: #0d0c11;
     color: white;
     display: flex;
+    font-family: sans-serif;
 }
 
 #sidebar {
-    width: 370px;
-    background: rgba(255,255,255,0.04);
+    width: 340px;
+    background: rgba(255,255,255,0.05);
     padding: 25px;
     height: 100vh;
     overflow-y: auto;
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(18px);
+    border-right: 1px solid rgba(255,255,255,0.08);
 }
 
+#sidebar h1 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+#sidebar label {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+#sidebar input,
+#sidebar select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.12);
+    color: white;
+}
+
+#sidebar button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #947bff;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#obs-link {
+    margin-top: 10px;
+    background: rgba(255,255,255,0.18);
+}
+
+
+/* ============================
+   ÁREA DE PREVIEW
+============================ */
 #preview-area {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
+
+/* ============================
+   PREVIEW — DIV COM BORDA PASTEL
+============================ */
 #previewBar {
+    position: relative;
     border: solid transparent;
+    box-sizing: border-box;
+
+    /* ESSENCIAL PARA BORDA GRADIENTE */
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+
+    /* Animação */
+    background-size: 100% 100%, 400% 400%;
+    animation: slide 10s linear infinite;
+
+    border-radius: 20px;
 }
 
+
+/* ============================
+   PREVIEW — SVG (NÃO USADO AGORA)
+============================ */
+#previewSvg {
+    display: none; /* Preview agora é 100% DIV */
+}
+
+
+/* ============================
+   ANIMAÇÃO PRINCIPAL
+============================ */
 @keyframes slide {
-    0% { background-position: 0% 50%; }
+    0%   { background-position: 0% 50%; }
     100% { background-position: 400% 50%; }
 }
