@@ -41,6 +41,15 @@
         <option value="4" selected>4 cores</option>
     </select>
 
+    <label>Efeito:</label>
+    <select id="effect">
+        <option value="none">Nenhum</option>
+        <option value="neon">Glow Neon</option>
+        <option value="emboss">Emboss 3D</option>
+        <option value="shadow">Sombras Animadas</option>
+        <option value="turbo">Theowoo Turbo</option>
+    </select>
+
     <label>Cor 1:</label>
     <input id="c1" type="color" value="#ffb8c6">
     <label>Cor 2:</label>
@@ -50,7 +59,7 @@
     <label>Cor 4:</label>
     <input id="c4" type="color" value="#e8c8ff">
 
-    <button id="generate">Gerar Link para OBS</button>
+    <button id="generate">Gerar Link OBS</button>
     <input id="obs-link" readonly>
 </div>
 
@@ -59,6 +68,5 @@
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
