@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>OBS Border</title>
+<link rel="stylesheet" href="obs.css">
+</head>
+
+<body>
+
+<div id="border"></div>
+
+<script>
+const p = (k, fb=null) => new URL(location.href).searchParams.get(k) ?? fb;
+
+const el = document.getElementById("border");
+
+const shape = p("shape","rect");
+const w = +p("width",800);
+const h = +p("height",300);
+const s = +p("stroke",4);
+const r = +p("radius",25);
+const spd = +p("speed",10);
+const fx = p("effect","none");
+const mode = p("color-mode","4");
+
+const c1 = p("c1","#aee7ff");
+const c2 = p("c2","#ffc0e6");
+const c3 = p("c3","#ffe4b3");
+const c4 = p("c4","#ffd9c7");
+
+/* SHAPES */
+if (shape==="line-h"){ el.style.width="85%"; el.style.height="10px"; }
+else if(shape==="line-v"){ el.style.width="10px"; el.style.height="85%"; }
+else { el.style.width=w+"px"; el.style.height=h+"px"; }
+
+el.style.border = `${s}px solid transparent`;
+el.style.borderRadius = `${r}px`;
+el.style.setProperty("--spd", `${spd}s`);
+
+/* GRADIENTE PERFEITO */
+const grad = `linear-gradient(90deg,
+    ${c1} 0%, ${c1} 15%,
+    ${c2} 30%, ${c2} 45%,
+    ${c3} 60%, ${c3} 75%,
+    ${c4} 90%, ${c1} 100%
+)`;
+
+el.style.backgroundImage = 
+    `linear-gradient(#0000,#0000), ${grad}`;
+
+if (fx==="neon") el.classList.add("glow-neon");
+if (fx==="emboss") el.classList.add("emboss");
+if (fx==="shadow") el.classList.add("shadow-animated");
+if (fx==="turbo") el.classList.add("glow-neon","emboss","shadow-animated");
+</script>
+
+</body>
+</html>
