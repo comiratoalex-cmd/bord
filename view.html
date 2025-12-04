@@ -1,60 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Border View</title>
+<meta charset="UTF-8" />
+<title>Pastel Border View</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        background: transparent;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-    }
-
-    #border {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        box-sizing: border-box;
-
-        background-clip: padding-box, border-box;
-        background-origin: padding-box, border-box;
-
-        background-size: 100% 100%, 400% 400%;
-        animation: slide var(--spd, 10s) linear infinite;
-    }
-
-    @keyframes slide {
-        0%   { background-position: 0% 50%; }
-        100% { background-position: 400% 50%; }
-    }
-</style>
+<!-- CSS EXTERNO -->
+<link rel="stylesheet" href="view.css">
 </head>
 
 <body>
 
+<!-- DIV PRINCIPAL DA BORDA -->
 <div id="border"></div>
 
 <script>
-function p(name, fallback=null) {
+/* Função de captura de parâmetros */
+function p(name, fallback = null) {
     const url = new URL(window.location.href);
     return url.searchParams.get(name) ?? fallback;
 }
 
 const el = document.getElementById("border");
 
+/* Parâmetros */
 const shape = p("shape", "rect");
 const w = Number(p("w", 800));
 const h = Number(p("h", 300));
-const s = Number(p("s", 10));
-const r = Number(p("r", 20));
+const s = Number(p("s", 12));
+const r = Number(p("r", 25));
 const spd = Number(p("spd", 10));
 
+/* Cores */
 const c1 = p("c1", "#ffb8c6");
 const c2 = p("c2", "#b6d9ff");
 const c3 = p("c3", "#ffe7a3");
@@ -62,7 +39,7 @@ const c4 = p("c4", "#e8c8ff");
 
 const mode = p("mode", "4");
 
-/* FORMAS */
+/* Definir tamanhos conforme forma */
 if (shape === "line-h") {
     el.style.width = "85%";
     el.style.height = "18px";
@@ -71,22 +48,32 @@ else if (shape === "line-v") {
     el.style.width = "18px";
     el.style.height = "85%";
 }
+else if (shape === "square") {
+    const size = Math.min(w, h);
+    el.style.width = size + "px";
+    el.style.height = size + "px";
+}
 else {
     el.style.width = w + "px";
     el.style.height = h + "px";
 }
 
+/* Stroke / raio / velocidade */
 el.style.border = `${s}px solid transparent`;
 el.style.borderRadius = `${r}px`;
 el.style.setProperty("--spd", `${spd}s`);
 
+/* Gradient */
 const gradient =
-    mode === "2"
+    (mode === "2")
         ? `linear-gradient(90deg, ${c1}, ${c2})`
         : `linear-gradient(90deg, ${c1}, ${c2}, ${c3}, ${c4})`;
 
-el.style.backgroundImage =
-    `linear-gradient(#0000, #0000), ${gradient}`;
+/* Define a borda pastel animada */
+el.style.backgroundImage = `
+    linear-gradient(#0000, #0000),
+    ${gradient}
+`;
 </script>
 
 </body>
