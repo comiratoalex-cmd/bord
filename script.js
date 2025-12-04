@@ -31,7 +31,7 @@ const THEOWOO_PRESETS = [
     ["#c6f9ff","#ffcbef","#fff0c7","#ffeafa"]
 ];
 
-/* ======== LOOP DO GRADIENTE PERFEITO ======== */
+/* ======== GRADIENTE LOOP PERFEITO ======== */
 function gradientSmooth(c1, c2, c3, c4, mode) {
     if (mode === "2") {
         return `linear-gradient(90deg,
@@ -88,13 +88,15 @@ function updatePreview() {
     if (fx === "turbo") preview.classList.add("glow-neon","emboss","shadow-animated");
 }
 
-/* ======== BOTÃO DE PRESETS ======== */
+/* ======== PRESETS ======== */
 $("presetButton").onclick = () => {
     const p = THEOWOO_PRESETS[Math.floor(Math.random() * THEOWOO_PRESETS.length)];
+
     $("c1").value = p[0];
     $("c2").value = p[1];
     $("c3").value = p[2];
     $("c4").value = p[3];
+
     updatePreview();
 };
 
