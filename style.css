@@ -1,97 +1,106 @@
 body {
     margin: 0;
-    background: #0d0c11;
+    background: #0e0d12;
     color: white;
     display: flex;
-    font-family: Arial, sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
-/* Sidebar */
 #sidebar {
-    width: 320px;
+    width: 300px;
     height: 100vh;
+    padding: 25px;
     overflow-y: auto;
-    padding: 22px;
-    background: rgba(255,255,255,0.06);
-    backdrop-filter: blur(16px);
+    background: rgba(255,255,255,0.04);
+    border-right: 1px solid rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
 }
 
-#sidebar label {
-    margin-top: 14px;
-    display: block;
+.title {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #aee7ff, #ffc0e6);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 600;
 }
 
+/* Inputs */
 #sidebar input,
 #sidebar select {
     width: 100%;
     padding: 8px;
+    background: rgba(255,255,255,0.12);
+    color: white;
     border: none;
-    border-radius: 6px;
-    margin-top: 4px;
-    background: rgba(255,255,255,0.15);
-    color: white;
+    border-radius: 8px;
+    margin-top: 6px;
 }
 
-/* Dropdown estilizado */
+/* Dropdown fix */
 #sidebar select option {
-    background: #1c1c22;
+    background: #1e1d26;
     color: white;
 }
 
-#sidebar select option:hover {
-    background: #3a3a3a !important;
-}
-
-#sidebar button {
+#presetButton {
     width: 100%;
     padding: 12px;
-    margin-top: 20px;
-    border-radius: 8px;
+    border-radius: 10px;
+    margin-top: 18px;
+    background: linear-gradient(90deg, #ffc0e6, #aee7ff);
     border: none;
-    background: #7f6eff;
-    color: white;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-/* Preview Area */
+/* Glow button */
+.glow-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border: none;
+    background: #aee7ff;
+    color: #0e0d12;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow:
+        0 0 10px #aee7ff,
+        0 0 20px #ffc0e6;
+}
+
+/* Preview */
 #preview-area {
     flex: 1;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
-/* Preview Bar */
 #previewBar {
     position: relative;
     border: solid transparent;
-    box-sizing: border-box;
-
-    /* Essencial para borda pastel real */
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
-
     background-size: 100% 100%, 400% 400%;
     animation: slide 10s linear infinite;
+    border-radius: 20px;
 }
 
-@keyframes slide {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 400% 50%; }
-}
-
-/* Effects */
+/* Neon Candy Effects */
 .glow-neon {
     filter:
-        drop-shadow(0 0 6px var(--c1))
-        drop-shadow(0 0 14px var(--c2))
-        drop-shadow(0 0 22px var(--c3));
+        drop-shadow(0 0 8px #aee7ff)
+        drop-shadow(0 0 16px #ffc0e6)
+        drop-shadow(0 0 22px #ffe4b3);
 }
 
 .emboss {
     box-shadow:
-        inset 4px 4px 8px rgba(255,255,255,0.45),
-        inset -4px -4px 8px rgba(0,0,0,0.25),
-        0 0 5px rgba(255,255,255,0.15);
+        inset 4px 4px 8px rgba(255,255,255,0.4),
+        inset -4px -4px 8px rgba(0,0,0,0.2);
 }
 
 .shadow-animated {
@@ -101,20 +110,23 @@ body {
 @keyframes shadowPulse {
     0% {
         box-shadow:
-            0 0 14px var(--c1),
-            0 0 24px var(--c2),
-            0 0 34px var(--c3);
+            0 0 14px #aee7ff,
+            0 0 18px #ffc0e6;
     }
     50% {
         box-shadow:
-            0 0 20px var(--c3),
-            0 0 28px var(--c1),
-            0 0 40px var(--c2);
+            0 0 22px #ffe4b3,
+            0 0 26px #ffd9c7;
     }
     100% {
         box-shadow:
-            0 0 14px var(--c1),
-            0 0 24px var(--c2),
-            0 0 34px var(--c3);
+            0 0 14px #aee7ff,
+            0 0 18px #ffc0e6;
     }
+}
+
+/* Animation */
+@keyframes slide {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
 }
