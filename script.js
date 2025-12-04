@@ -16,6 +16,7 @@ const c4Input = document.getElementById("c4");
 const preview = document.getElementById("previewBar");
 const linkBox = document.getElementById("obs-link");
 
+/* Gradiente suave */
 function smoothGradient(c1, c2, c3, c4, mode) {
     if (mode === "2") {
         return `
@@ -25,16 +26,15 @@ function smoothGradient(c1, c2, c3, c4, mode) {
             ${c2} 60%,
             ${c2} 100%)`;
     }
-
     return `
     linear-gradient(90deg,
         ${c1} 0%,
         ${c1} 20%,
-        ${c2} 30%,
-        ${c2} 45%,
-        ${c3} 55%,
-        ${c3} 70%,
-        ${c4} 80%,
+        ${c2} 35%,
+        ${c2} 50%,
+        ${c3} 65%,
+        ${c3} 80%,
+        ${c4} 90%,
         ${c4} 100%)`;
 }
 
@@ -50,7 +50,6 @@ function updatePreview() {
     const c2 = c2Input.value;
     const c3 = c3Input.value;
     const c4 = c4Input.value;
-
     const mode = modeInput.value;
 
     preview.className = "";
@@ -69,9 +68,9 @@ function updatePreview() {
     const shape = shapeSel.value;
     if (shape === "line-h") {
         preview.style.width = "85%";
-        preview.style.height = "18px";
+        preview.style.height = "10px";
     } else if (shape === "line-v") {
-        preview.style.width = "18px";
+        preview.style.width = "10px";
         preview.style.height = "85%";
     } else {
         preview.style.width = w + "px";
@@ -105,8 +104,8 @@ document.getElementById("generate").onclick = () => {
     linkBox.value = url.toString();
 };
 
-["input","change"].forEach(ev => {
-    document.addEventListener(ev, updatePreview);
-});
+["input","change"].forEach(ev =>
+    document.addEventListener(ev, updatePreview)
+);
 
 updatePreview();
