@@ -1,8 +1,10 @@
-/* ======== UTIL ======== */
+/* ======== SHORTCUT ======== */
 const $ = id => document.getElementById(id);
 const preview = $("previewBar");
 
-/* ======== 25 PRESETS THEOWOO PASTEL ======== */
+/* ============================================================
+   25 PRESETS THEOWOO PASTEL
+============================================================ */
 const THEOWOO_PRESETS = [
     ["#aee7ff","#ffc0e6","#ffe4b3","#ffd9c7"],
     ["#cbe9ff","#ffcdf2","#ffe6cc","#fff2d9"],
@@ -31,7 +33,9 @@ const THEOWOO_PRESETS = [
     ["#c6f9ff","#ffcbef","#fff0c7","#ffeafa"]
 ];
 
-/* ======== GRADIENTE LOOP PERFEITO ======== */
+/* ============================================================
+   GRADIENTE PERFEITO (SEM LINHAS DURAS)
+============================================================ */
 function gradientSmooth(c1, c2, c3, c4, mode) {
     if (mode === "2") {
         return `linear-gradient(90deg,
@@ -40,6 +44,7 @@ function gradientSmooth(c1, c2, c3, c4, mode) {
             ${c1} 75%, ${c1} 100%
         )`;
     }
+
     return `linear-gradient(90deg,
         ${c1} 0%, ${c1} 15%,
         ${c2} 30%, ${c2} 45%,
@@ -48,7 +53,9 @@ function gradientSmooth(c1, c2, c3, c4, mode) {
     )`;
 }
 
-/* ======== PREVIEW ======== */
+/* ============================================================
+   ATUALIZAÇÃO DO PREVIEW
+============================================================ */
 function updatePreview() {
     const shape = $("shape").value;
     const w = +$("width").value;
@@ -66,29 +73,69 @@ function updatePreview() {
     preview.style.animation = `slide ${spd}s linear infinite`;
     preview.style.border = `${s}px solid transparent`;
     preview.style.borderRadius = `${r}px`;
+
     preview.style.backgroundImage =
         `linear-gradient(#0000,#0000), ${gradientSmooth(c1, c2, c3, c4, mode)}`;
 
+    /* SHAPES */
     if (shape === "line-h") {
-        preview.style.width = "85%";
-        preview.style.height = "10px";
+        preview.style.width = "90%";
+        preview.style.height = "12px";
     } else if (shape === "line-v") {
-        preview.style.width = "10px";
-        preview.style.height = "85%";
+        preview.style.width = "12px";
+        preview.style.height = "90%";
     } else {
         preview.style.width = `${w}px`;
         preview.style.height = `${h}px`;
     }
 
+    /* EFFECTS */
     preview.className = "";
     const fx = $("effect").value;
+
     if (fx === "neon") preview.classList.add("glow-neon");
     if (fx === "emboss") preview.classList.add("emboss");
     if (fx === "shadow") preview.classList.add("shadow-animated");
     if (fx === "turbo") preview.classList.add("glow-neon","emboss","shadow-animated");
 }
 
-/* ======== PRESETS ======== */
+/* ============================================================
+   BOTÃO: GERAR LINK VIEW (VIEWER)
+============================================================ */
+$("generate").onclick = () => {
+    const u = new URL(location.href);
+
+    // 🔥 Caminho correto no GitHub Pages
+    u.pathname = "/bord/view.html";
+
+    [
+        "shape","width","height","stroke","radius","speed",
+        "color-mode","effect","c1","c2","c3","c4"
+    ].forEach(key => u.searchParams.set(key, $(key).value));
+
+    $("obs-link").value = u.toString();
+};
+
+/* ============================================================
+   BOTÃO: GERAR LINK OBS TRANSPARENTE
+============================================================ */
+$("generateOBS").onclick = () => {
+    const u = new URL(location.href);
+
+    // 🔥 Caminho correto para OBS (fundo transparente)
+    u.pathname = "/bord/obs.html";
+
+    [
+        "shape","width","height","stroke","radius","speed",
+        "color-mode","effect","c1","c2","c3","c4"
+    ].forEach(key => u.searchParams.set(key, $(key).value));
+
+    $("obs-transparent-link").value = u.toString();
+};
+
+/* ============================================================
+   BOTÃO DE PRESETS
+============================================================ */
 $("presetButton").onclick = () => {
     const p = THEOWOO_PRESETS[Math.floor(Math.random() * THEOWOO_PRESETS.length)];
 
@@ -100,32 +147,9 @@ $("presetButton").onclick = () => {
     updatePreview();
 };
 
-/* ======== GERAR LINK OBS ======== */
-$("generate").onclick = () => {
-    const u = new URL(location.href);
-    u.pathname = "view.html";
-
-    [
-        "shape","width","height","stroke","radius","speed",
-        "color-mode","effect","c1","c2","c3","c4"
-    ].forEach(key => u.searchParams.set(key, $(key).value));
-
-    $("obs-link").value = u.toString();
-};
-
-/* ======== AUTO UPDATE ======== */
+/* ============================================================
+   AUTO-UPDATE DO PREVIEW
+============================================================ */
 document.addEventListener("input", updatePreview);
 document.addEventListener("change", updatePreview);
 updatePreview();
-/* ======== GERAR LINK OBS TRANSPARENTE ======== */
-$("generateOBS").onclick = () => {
-    const u = new URL(location.href);
-  u.pathname = "/bord/obs.html";
-
-    [
-        "shape","width","height","stroke","radius","speed",
-        "color-mode","effect","c1","c2","c3","c4"
-    ].forEach(key => u.searchParams.set(key, $(key).value));
-
-    $("obs-transparent-link").value = u.toString();
-};
