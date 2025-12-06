@@ -120,7 +120,7 @@ updatePreview();
 /* ======== GERAR LINK OBS TRANSPARENTE ======== */
 $("generateOBS").onclick = () => {
     const u = new URL(location.href);
-    u.pathname = "obs.html";
+  u.pathname = "/bord/obs.html";
 
     [
         "shape","width","height","stroke","radius","speed",
