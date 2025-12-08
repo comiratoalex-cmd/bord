@@ -1,58 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<title>OBS Border</title>
-<link rel="stylesheet" href="obs.css">
+<meta charset="UTF-8">
+<title>COMIAL PRO — OBS</title>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: transparent !important;
+        overflow: hidden;
+    }
+
+    #preview {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+    }
+</style>
 </head>
 
 <body>
 
-<div id="border"></div>
+<div id="preview"></div>
 
 <script>
-const p = (k, fb=null) => new URL(location.href).searchParams.get(k) ?? fb;
+/* Lê os parâmetros da URL */
+const params = new URLSearchParams(location.search);
 
-const el = document.getElementById("border");
+function get(id, def = null) {
+    return params.get(id) ?? def;
+}
 
-const shape = p("shape","rect");
-const w = +p("width",800);
-const h = +p("height",300);
-const s = +p("stroke",4);
-const r = +p("radius",25);
-const spd = +p("speed",10);
-const fx = p("effect","none");
-const mode = p("color-mode","4");
+/* Carrega scripts principais dinamicamente */
+function loadScript(src) {
+    return new Promise(res => {
+        const tag = document.createElement("script");
+        tag.src = src;
+        tag.onload = res;
+        document.body.appendChild(tag);
+    });
+}
 
-const c1 = p("c1","#aee7ff");
-const c2 = p("c2","#ffc0e6");
-const c3 = p("c3","#ffe4b3");
-const c4 = p("c4","#ffd9c7");
+(async () => {
+    await loadScript("renderer-extreme.js");
+    await loadScript("layers-turbo.js");
+    await loadScript("audio-reactor.js");
 
-/* SHAPES */
-if (shape==="line-h"){ el.style.width="85%"; el.style.height="10px"; }
-else if(shape==="line-v"){ el.style.width="10px"; el.style.height="85%"; }
-else { el.style.width=w+"px"; el.style.height=h+"px"; }
+    /* Preenche valores no DOM virtual */
+    window.fx3d = { checked: get("fx3d") === "true" };
+    window.fxWet = { checked: get("fxWet") === "true" };
+    window.fxTurbo = { checked: get("fxTurbo") === "true" };
+    window.fxAudio = { checked: get("fxAudio") === "true" };
 
-el.style.border = `${s}px solid transparent`;
-el.style.borderRadius = `${r}px`;
-el.style.setProperty("--spd", `${spd}s`);
+    document.body.insertAdjacentHTML("beforeend", `
+        <input id="shape" value="${get("shape")}">
+        <input id="width" value="${get("width")}">
+        <input id="height" value="${get("height")}">
+        <input id="stroke" value="${get("stroke")}">
+        <input id="radius" value="${get("radius")}">
+        <input id="speed" value="${get("speed")}">
 
-/* GRADIENTE PERFEITO */
-const grad = `linear-gradient(90deg,
-    ${c1} 0%, ${c1} 15%,
-    ${c2} 30%, ${c2} 45%,
-    ${c3} 60%, ${c3} 75%,
-    ${c4} 90%, ${c1} 100%
-)`;
+        <input id="c1" value="${get("c1")}">
+        <input id="c2" value="${get("c2")}">
+        <input id="c3" value="${get("c3")}">
+        <input id="c4" value="${get("c4")}">
+    `);
 
-el.style.backgroundImage = 
-    `linear-gradient(#0000,#0000), ${grad}`;
-
-if (fx==="neon") el.classList.add("glow-neon");
-if (fx==="emboss") el.classList.add("emboss");
-if (fx==="shadow") el.classList.add("shadow-animated");
-if (fx==="turbo") el.classList.add("glow-neon","emboss","shadow-animated");
+    renderAllLayers();
+})();
 </script>
 
 </body>
