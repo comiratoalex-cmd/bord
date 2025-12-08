@@ -59,13 +59,46 @@ input,select{
     background:linear-gradient(90deg,#00c8ff,#00ffd5);
 }
 
-/* PREVIEW ----------------------------------- */
-.preview-area{
-    flex:1;display:flex;
-    justify-content:center;
-    align-items:center;
+/* AREA DO PREVIEW */
+.preview-area {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
-#preview{position:relative;}
+
+/* FUNDO COM PARTÍCULAS */
+#bgCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* A BORDA EM SI */
+#preview {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Tam fixo até o JS atualizar */
+    width: 300px;
+    height: 200px;
+}
+
+/* A camada que realmente desenha a borda */
+.shape-layer {
+    width: 100%;
+    height: 100%;
+    border-style: solid;
+    box-sizing: border-box;
+}
+
 
 /* 3D NEON */
 .neon-3d{
