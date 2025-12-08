@@ -117,3 +117,15 @@ body {
     0% { background-position: 0% 50%; }
     100% { background-position: 400% 50%; }
 }
+/* ANIMAÇÃO DO GRADIENTE NA BORDA */
+@keyframes borderFlow {
+    0% { border-image-slice: 1; border-image-width: 1; }
+    50% { border-image-slice: 1; border-image-width: 1; }
+    100% { border-image-slice: 1; border-image-width: 1; }
+}
+
+.shape-layer {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
+    background: transparent !important; /* sem preenchimento */
