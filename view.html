@@ -1,79 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>COMIAL PRO — VIEW</title>
+    <meta charset="UTF-8">
+    <title>COMIAL PRO — VIEW</title>
 
-<link rel="stylesheet" href="style.css">
-
-<style>
-body { overflow:hidden; }
-.preview-holder {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
-#preview {
-    pointer-events:none;
-}
-</style>
+    <link rel="stylesheet" href="view.css">
 </head>
 
 <body>
 
 <canvas id="bgCanvas"></canvas>
 
-<div class="preview-holder">
-    <div id="preview"></div>
-</div>
+<div id="preview"></div>
 
+<!-- ENGINE -->
+<script src="renderer-extreme.js"></script>
+<script src="layers-turbo.js"></script>
+
+<!-- SCRIPT VIEWER -->
 <script>
-const params = new URLSearchParams(location.search);
-const get = (k, d=null) => params.get(k) ?? d;
-
-function injectInputs() {
-    const inputs = `
-        <input id="shape" value="${get("shape")}">
-        <input id="width" value="${get("width")}">
-        <input id="height" value="${get("height")}">
-        <input id="stroke" value="${get("stroke")}">
-        <input id="radius" value="${get("radius")}">
-        <input id="speed" value="${get("speed")}">
-
-        <input id="c1" value="${get("c1")}">
-        <input id="c2" value="${get("c2")}">
-        <input id="c3" value="${get("c3")}">
-        <input id="c4" value="${get("c4")}">
-
-        <input id="fx3d" ${get("fx3d")==="true"?"checked":""}>
-        <input id="fxWet" ${get("fxWet")==="true"?"checked":""}>
-        <input id="fxTurbo" ${get("fxTurbo")==="true"?"checked":""}>
-        <input id="fxAudio" ${get("fxAudio")==="true"?"checked":""}>
-    `;
-    document.body.insertAdjacentHTML("beforeend", inputs);
+function getParam(id, def=null){
+    const p = new URLSearchParams(location.search);
+    return p.get(id) ?? def;
 }
 
-/* Carregar scripts */
-function load(src) {
-    return new Promise(ok=>{
-        let s=document.createElement("script");
-        s.src=src;
-        s.onload=ok;
-        document.body.appendChild(s);
-    });
-}
+window.fx3d    = { checked: getParam("fx3d") === "true" };
+window.fxWet   = { checked: getParam("fxWet") === "true" };
+window.fxTurbo = { checked: getParam("fxTurbo") === "true" };
+window.fxAudio = { checked: getParam("fxAudio") === "true" };
 
-(async()=>{
-    injectInputs();
+let params = `
+<input id="shape" value="${getParam("shape")}">
+<input id="width" value="${getParam("width")}">
+<input id="height" value="${getParam("height")}">
+<input id="stroke" value="${getParam("stroke")}">
+<input id="radius" value="${getParam("radius")}">
+<input id="speed" value="${getParam("speed")}">
 
-    await load("background.js");
-    await load("renderer-extreme.js");
-    await load("layers-turbo.js");
-    await load("audio-reactor.js");
+<input id="c1" value="${getParam("c1")}">
+<input id="c2" value="${getParam("c2")}">
+<input id="c3" value="${getParam("c3")}">
+<input id="c4" value="${getParam("c4")}">
+`;
 
+document.body.insertAdjacentHTML("beforeend", params);
+
+setTimeout(() => {
     renderAllLayers();
-})();
+}, 50);
 </script>
 
 </body>
