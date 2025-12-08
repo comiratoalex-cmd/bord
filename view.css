@@ -7,23 +7,18 @@
 body{
     background:#0b0b10;
     overflow:hidden;
+    width:100vw;
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
 }
 
-/* Inputs invisíveis */
+/* Inputs escondidos */
 input {
     position: absolute;
     opacity: 0;
-    pointer-events: none;
-}
-
-/* PREVIEW */
-#preview{
-    position:relative;
-    z-index:3;
+    pointer-events:none;
 }
 
 /* FUNDO ANIMADO */
@@ -31,4 +26,24 @@ input {
     position:fixed;
     inset:0;
     z-index:1;
+}
+
+/* PREVIEW */
+#preview{
+    position: relative;
+    z-index: 4;
+}
+
+/* Camada da borda */
+.shape-layer {
+    width: 100%;
+    height: 100%;
+    border-style: solid;
+    box-sizing: border-box;
+}
+
+/* Animação */
+@keyframes borderFlow {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
