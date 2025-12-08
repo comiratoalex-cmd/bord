@@ -1,75 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>COMIAL PRO — OBS</title>
+    <meta charset="UTF-8">
+    <title>COMIAL PRO — OBS</title>
 
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        background: transparent !important;
-        overflow: hidden;
-    }
-
-    #preview {
-        position: absolute;
-        inset: 0;
-        margin: auto;
-    }
-</style>
+    <link rel="stylesheet" href="obs.css">
 </head>
 
 <body>
 
+<canvas id="bgCanvas"></canvas>
+
 <div id="preview"></div>
 
-<script>
-/* Lê os parâmetros da URL */
-const params = new URLSearchParams(location.search);
+<!-- ENGINE -->
+<script src="renderer-extreme.js"></script>
+<script src="layers-turbo.js"></script>
+<script src="audio-reactor.js"></script>
 
-function get(id, def = null) {
-    return params.get(id) ?? def;
-}
-
-/* Carrega scripts principais dinamicamente */
-function loadScript(src) {
-    return new Promise(res => {
-        const tag = document.createElement("script");
-        tag.src = src;
-        tag.onload = res;
-        document.body.appendChild(tag);
-    });
-}
-
-(async () => {
-    await loadScript("renderer-extreme.js");
-    await loadScript("layers-turbo.js");
-    await loadScript("audio-reactor.js");
-
-    /* Preenche valores no DOM virtual */
-    window.fx3d = { checked: get("fx3d") === "true" };
-    window.fxWet = { checked: get("fxWet") === "true" };
-    window.fxTurbo = { checked: get("fxTurbo") === "true" };
-    window.fxAudio = { checked: get("fxAudio") === "true" };
-
-    document.body.insertAdjacentHTML("beforeend", `
-        <input id="shape" value="${get("shape")}">
-        <input id="width" value="${get("width")}">
-        <input id="height" value="${get("height")}">
-        <input id="stroke" value="${get("stroke")}">
-        <input id="radius" value="${get("radius")}">
-        <input id="speed" value="${get("speed")}">
-
-        <input id="c1" value="${get("c1")}">
-        <input id="c2" value="${get("c2")}">
-        <input id="c3" value="${get("c3")}">
-        <input id="c4" value="${get("c4")}">
-    `);
-
-    renderAllLayers();
-})();
-</script>
+<script src="obs.js"></script>
 
 </body>
 </html>
