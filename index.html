@@ -2,86 +2,106 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candy Neon Pastel Border Generator</title>
+    <title>COMIAL PRO — EXTREME</title>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="fx/glass.css">
+    <link rel="stylesheet" href="fx/double.css">
+    <link rel="stylesheet" href="fx/tokyo.css">
 </head>
 
 <body>
 
-<div id="sidebar">
-    <h1 class="title">Candy Neon Border</h1>
+<!-- FUNDO ANIMADO -->
+<canvas id="bgCanvas"></canvas>
 
-    <label>Forma</label>
-    <select id="shape">
-        <option value="rect">Retângulo</option>
-        <option value="square">Quadrado</option>
-        <option value="line-h">Linha Horizontal</option>
-        <option value="line-v">Linha Vertical</option>
-    </select>
+<!-- BOTÃO MOBILE -->
+<button id="mobileToggle" class="mobile-toggle">☰</button>
 
-    <label>Largura</label>
-    <input id="width" type="number" value="800">
+<!-- SIDEBAR -->
+<div class="sidebar">
 
-    <label>Altura</label>
-    <input id="height" type="number" value="300">
+    <h1 class="logo">COMIAL<span>PRO</span></h1>
 
-    <label>Espessura da Borda</label>
-    <input id="stroke" type="number" value="4">
+    <!-- Formato -->
+    <div class="module">
+        <label>Forma</label>
+        <select id="shape">
+            <option value="rect">Retângulo</option>
+            <option value="square">Quadrado</option>
+            <option value="line-h">Linha Horizontal</option>
+            <option value="line-v">Linha Vertical</option>
+        </select>
 
-    <label>Raio</label>
-    <input id="radius" type="number" value="25">
+        <label>Largura</label>
+        <input id="width" type="text" value="800">
 
-    <label>Velocidade</label>
-    <input id="speed" type="number" value="10">
+        <label>Altura</label>
+        <input id="height" type="text" value="300">
 
-    <label>Modo de Cores</label>
-    <select id="color-mode">
-        <option value="2">2 cores</option>
-        <option value="4" selected>4 cores</option>
-    </select>
+        <label>Espessura da Borda</label>
+        <input id="stroke" type="text" value="4">
 
-    <label>Efeito</label>
-    <select id="effect">
-        <option value="none">Nenhum</option>
-        <option value="neon">Glow Neon Candy</option>
-        <option value="emboss">Emboss Pastel</option>
-        <option value="shadow">Sombra Animada</option>
-        <option value="turbo">TURBO (tudo)</option>
-    </select>
+        <label>Raio</label>
+        <input id="radius" type="text" value="25">
 
-    <label>Cor 1</label>
-    <input id="c1" type="color" value="#aee7ff">
+        <label>Velocidade</label>
+        <input id="speed" type="text" value="10">
+    </div>
 
-    <label>Cor 2</label>
-    <input id="c2" type="color" value="#ffc0e6">
+    <!-- Cores -->
+    <div class="module">
+        <label>Cor 1</label>
+        <input id="c1" type="color" value="#ffaad7">
 
-    <label>Cor 3</label>
-    <input id="c3" type="color" value="#ffe4b3">
+        <label>Cor 2</label>
+        <input id="c2" type="color" value="#a6d8ff">
 
-    <label>Cor 4</label>
-    <input id="c4" type="color" value="#ffd9c7">
+        <label>Cor 3</label>
+        <input id="c3" type="color" value="#ffe7ba">
 
-    <!-- Presets -->
-    <button id="presetButton" class="preset-btn">🎨 Presets Candy</button>
+        <label>Cor 4</label>
+        <input id="c4" type="color" value="#ffd6f1">
+    </div>
 
-    <!-- Gerar link de preview normal -->
-    <button id="generate" class="glow-btn">Gerar Link VIEW</button>
-    <input id="obs-link" readonly>
+    <!-- Efeitos -->
+    <div class="module">
+        <label><input type="checkbox" id="fx3d"> Modo 3D Neon</label>
+        <label><input type="checkbox" id="fxWet"> Wet Glow</label>
+        <label><input type="checkbox" id="fxTurbo"> Theowoo Turbo</label>
+        <label><input type="checkbox" id="fxAudio"> Áudio Reativo</label>
+    </div>
 
-    <!-- Gerar link OBS transparente -->
-    <button id="generateOBS" class="glow-btn">Gerar Link OBS Transparente</button>
-    <input id="obs-transparent-link" readonly>
+    <div class="module">
+        <button id="exportViewer" class="btn">Gerar Link VIEW</button>
+        <input id="viewerLink" class="output" readonly>
+
+        <button id="exportOBS" class="btn btn-pro">Gerar Link OBS Transparente</button>
+        <input id="obsLink" class="output" readonly>
+    </div>
 
 </div>
 
-<div id="preview-area">
-    <div id="previewBar"></div>
+<!-- PREVIEW -->
+<div class="preview-area">
+    <div id="preview"></div>
 </div>
+
+<!-- SCRIPTS -->
+<script src="renderer-extreme.js"></script>
+<script src="layers-turbo.js"></script>
+<script src="audio-reactor.js"></script>
+<script src="background.js"></script>
 
 <script src="script.js"></script>
-    <canvas id="bgCanvas"></canvas>
-<script src="background.js"></script>
+
+<!-- MOBILE MENU -->
+<script>
+document.getElementById("mobileToggle").onclick = () => {
+    document.querySelector(".sidebar").classList.toggle("open");
+};
+</script>
 
 </body>
 </html>
