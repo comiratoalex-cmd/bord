@@ -1,46 +1,36 @@
-html, body {
-    margin: 0;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
     background: transparent !important;
-    height: 100%;
-    overflow: hidden;
+    overflow:hidden;
+    width:100vw;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-#border {
+/* Inputs invisíveis */
+input {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    background-clip: padding-box, border-box;
-    background-origin: padding-box, border-box;
-
-    background-size: 100% 100%, 400% 400%;
-    animation: slide var(--spd,10s) linear infinite;
+    opacity: 0;
+    pointer-events: none;
 }
 
-@keyframes slide {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 400% 50%; }
+/* PREVIEW */
+#preview{
+    position: relative;
+    z-index: 3;
 }
 
-.glow-neon {
-    filter:
-        drop-shadow(0 0 8px #aee7ff)
-        drop-shadow(0 0 16px #ffc0e6)
-        drop-shadow(0 0 24px #ffe4b3);
-}
-
-.emboss {
-    box-shadow:
-        inset 4px 4px 8px rgba(255,255,255,0.4),
-        inset -4px -4px 8px rgba(0,0,0,0.2);
-}
-
-.shadow-animated {
-    animation: shadowPulse 3s ease-in-out infinite;
-}
-
-@keyframes shadowPulse {
-    0% { box-shadow:0 0 14px #aee7ff; }
-    50% { box-shadow:0 0 26px #ffd9c7; }
-    100% { box-shadow:0 0 14px #aee7ff; }
+/* FUNDO ANIMADO */
+#bgCanvas{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
 }
