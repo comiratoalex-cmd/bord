@@ -1,9 +1,30 @@
-/* ======== SHORTCUT ======== */
+/* ============================================================
+   SHORTCUT
+============================================================ */
 const $ = id => document.getElementById(id);
-const preview = $("previewBar");
 
 /* ============================================================
-   25 PRESETS THEOWOO PASTEL
+   RENDER AUTOMÁTICO AO MUDAR QUALQUER CONTROLE
+============================================================ */
+
+function attachAutoRender() {
+    [
+        "shape", "width", "height", "stroke", "radius", "speed",
+        "c1", "c2", "c3", "c4",
+        "fx3d", "fxWet", "fxTurbo", "fxAudio"
+    ].forEach(id => {
+        const el = $(id);
+        if (el) {
+            el.addEventListener("input", renderAllLayers);
+            el.addEventListener("change", renderAllLayers);
+        }
+    });
+}
+
+attachAutoRender();
+
+/* ============================================================
+   PRESETS PASTEL
 ============================================================ */
 const THEOWOO_PRESETS = [
     ["#aee7ff","#ffc0e6","#ffe4b3","#ffd9c7"],
@@ -33,123 +54,60 @@ const THEOWOO_PRESETS = [
     ["#c6f9ff","#ffcbef","#fff0c7","#ffeafa"]
 ];
 
-/* ============================================================
-   GRADIENTE PERFEITO (SEM LINHAS DURAS)
-============================================================ */
-function gradientSmooth(c1, c2, c3, c4, mode) {
-    if (mode === "2") {
-        return `linear-gradient(90deg,
-            ${c1} 0%, ${c1} 25%,
-            ${c2} 50%,
-            ${c1} 75%, ${c1} 100%
-        )`;
-    }
-
-    return `linear-gradient(90deg,
-        ${c1} 0%, ${c1} 15%,
-        ${c2} 30%, ${c2} 45%,
-        ${c3} 60%, ${c3} 75%,
-        ${c4} 90%, ${c1} 100%
-    )`;
-}
-
-/* ============================================================
-   ATUALIZAÇÃO DO PREVIEW
-============================================================ */
-function updatePreview() {
-    const shape = $("shape").value;
-    const w = +$("width").value;
-    const h = +$("height").value;
-    const s = +$("stroke").value;
-    const r = +$("radius").value;
-    const spd = +$("speed").value;
-    const mode = $("color-mode").value;
-
-    const c1 = $("c1").value;
-    const c2 = $("c2").value;
-    const c3 = $("c3").value;
-    const c4 = $("c4").value;
-
-    preview.style.animation = `slide ${spd}s linear infinite`;
-    preview.style.border = `${s}px solid transparent`;
-    preview.style.borderRadius = `${r}px`;
-
-    preview.style.backgroundImage =
-        `linear-gradient(#0000,#0000), ${gradientSmooth(c1, c2, c3, c4, mode)}`;
-
-    /* SHAPES */
-    if (shape === "line-h") {
-        preview.style.width = "90%";
-        preview.style.height = "12px";
-    } else if (shape === "line-v") {
-        preview.style.width = "12px";
-        preview.style.height = "90%";
-    } else {
-        preview.style.width = `${w}px`;
-        preview.style.height = `${h}px`;
-    }
-
-    /* EFFECTS */
-    preview.className = "";
-    const fx = $("effect").value;
-
-    if (fx === "neon") preview.classList.add("glow-neon");
-    if (fx === "emboss") preview.classList.add("emboss");
-    if (fx === "shadow") preview.classList.add("shadow-animated");
-    if (fx === "turbo") preview.classList.add("glow-neon","emboss","shadow-animated");
-}
-
-/* ============================================================
-   BOTÃO: GERAR LINK VIEW (VIEWER)
-============================================================ */
-$("generate").onclick = () => {
-    const u = new URL(location.href);
-
-    // 🔥 Caminho correto no GitHub Pages
-    u.pathname = "/bord/view.html";
-
-    [
-        "shape","width","height","stroke","radius","speed",
-        "color-mode","effect","c1","c2","c3","c4"
-    ].forEach(key => u.searchParams.set(key, $(key).value));
-
-    $("obs-link").value = u.toString();
-};
-
-/* ============================================================
-   BOTÃO: GERAR LINK OBS TRANSPARENTE
-============================================================ */
-$("generateOBS").onclick = () => {
-    const u = new URL(location.href);
-
-    // 🔥 Caminho correto para OBS (fundo transparente)
-    u.pathname = "/bord/obs.html";
-
-    [
-        "shape","width","height","stroke","radius","speed",
-        "color-mode","effect","c1","c2","c3","c4"
-    ].forEach(key => u.searchParams.set(key, $(key).value));
-
-    $("obs-transparent-link").value = u.toString();
-};
-
-/* ============================================================
-   BOTÃO DE PRESETS
-============================================================ */
-$("presetButton").onclick = () => {
+$("presetButton")?.addEventListener("click", () => {
     const p = THEOWOO_PRESETS[Math.floor(Math.random() * THEOWOO_PRESETS.length)];
-
     $("c1").value = p[0];
     $("c2").value = p[1];
     $("c3").value = p[2];
     $("c4").value = p[3];
-
-    updatePreview();
-};
+    renderAllLayers();
+});
 
 /* ============================================================
-   AUTO-UPDATE DO PREVIEW
+   GERAR LINK VIEWER
 ============================================================ */
-document.addEventListener("input", updatePreview);
-document.addEventListener("change", updatePreview);
-updatePreview();
+$("exportViewer")?.addEventListener("click", () => {
+    const u = new URL(location.href);
+    u.pathname = "/bord/view.html";
+
+    [
+        "shape","width","height","stroke","radius","speed",
+        "c1","c2","c3","c4",
+        "fx3d","fxWet","fxTurbo","fxAudio"
+    ].forEach(key => {
+        const el = $(key);
+        if (el) {
+            u.searchParams.set(key, el.type === "checkbox" ? el.checked : el.value);
+        }
+    });
+
+    $("viewerLink").value = u.toString();
+});
+
+/* ============================================================
+   GERAR LINK OBS TRANSPARENTE
+============================================================ */
+$("exportOBS")?.addEventListener("click", () => {
+    const u = new URL(location.href);
+    u.pathname = "/bord/obs.html";
+
+    [
+        "shape","width","height","stroke","radius","speed",
+        "c1","c2","c3","c4",
+        "fx3d","fxWet","fxTurbo","fxAudio"
+    ].forEach(key => {
+        const el = $(key);
+        if (el) {
+            u.searchParams.set(key, el.type === "checkbox" ? el.checked : el.value);
+        }
+    });
+
+    $("obsLink").value = u.toString();
+});
+
+/* ============================================================
+   INICIALIZAÇÃO
+============================================================ */
+window.onload = () => {
+    renderAllLayers();
+};
